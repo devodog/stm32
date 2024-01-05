@@ -61,8 +61,8 @@ all:
 main-build: bare-metal.elf secondary-outputs
 
 # Tool invocations
-bare-metal.elf: $(OBJS) $(USER_OBJS) C:\Users\dagak\STM32CubeIDE\workspace_1.8.0\Nucleo-F302R8\bare-metal\STM32F302R8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "bare-metal.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\dagak\STM32CubeIDE\workspace_1.8.0\Nucleo-F302R8\bare-metal\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bare-metal.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+bare-metal.elf: $(OBJS) $(USER_OBJS) C:\Users\dagak\GitHub\stm32\Nucleo-F302R8\bare-metal\STM32F302R8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "bare-metal.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\dagak\GitHub\stm32\Nucleo-F302R8\bare-metal\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bare-metal.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

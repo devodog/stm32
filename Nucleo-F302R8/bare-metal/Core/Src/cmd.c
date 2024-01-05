@@ -3,6 +3,9 @@
  *
  *  Created on: Jan 3, 2024
  *      Author: dagak
+ *
+ *  Minimalistic and only Proof of Concept (PoC) code for command-line interface.
+ *
  */
 #include <stdio.h>
 #include <string.h>
