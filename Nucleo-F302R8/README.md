@@ -20,3 +20,16 @@ b. Use the HAL functions: HAL_GPIO_Write(1) + HAL_Delay() + HAL_GPIO_Write(0) + 
 This is fairly simple when useing the hardware configurator in the STM32CubeIDE,
 
 It is observed that the sw dev tool generates a lot of code and, the first thing noticed is the assembly start-up code startup_stm32f302r8tx.s 
+
+## Pre-compile steps for time-stamping and numbering the latest build
+It is usually informative to include some build data in the executable (binary) code, at least for some. For this reason, an include file, appver.h, has been added to the project to contain the last build date and time in addition to the build number. In the project properties and settings, two pre-compile steps are registered. The first is to run a simple python script that will update the   appver.h file with the new date and time immediatly before bulding the executable, and next step tis to move/cpoy the update appver.h fil into the sourc-code path to be part of the build process.  
+
+![Pre-build actions](images\pre-build-actions.png "pre-build-actions")  
+
+It should be noted that the python script, __prebuild.py__, and the __appver.h__ file has to be located in the debug folder, that is: bare-metal\Core\Debug\*.*  
+
+## UART to RS232 communication
+TBD  
+
+## Command-line interface
+TBD  
