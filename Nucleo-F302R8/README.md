@@ -1,3 +1,4 @@
+! Be aware - this document is new and in the making... 
 # Development notes for STM32NUCLEO-F302R8 development board
 This repository is to contain small code fragments for the STM32NUCLEO-F302R8 development board to understand / get used to the STM32CubeIDE and to make use of some of the features in the STM32-F302R8 device.  
 The study/invetigation will start with making the LD2 blink. Thereafter make a bidirectional serial line communication that provides a simple command-line terminal user interface from a PC (like PUTTY or TeraTerm).  
