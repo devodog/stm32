@@ -7,7 +7,7 @@ This command-line interface should then be extended to provide more and more fun
 ## Connecting the STM32NUCLEO-F302R8 development board to the softare development environment.  
 Should be quite simple, but if you have got your hands on a used device, you must ensure that the power (PWR) strap selector is set to U5V (USB 5V supply) in order for the ST-LINK to "see" the STM32-F302R8 chip. 
 
-![NUCLEO-F302R8-PWR-Settings](images\NUCLEO-F302R8-PWR-Settings.png "Text to show on mouseover")  
+![NUCLEO-F302R8-PWR-Settings](images/NUCLEO-F302R8-PWR-Settings.png "Text to show on mouseover")  
 
 ## Blinking the LD2
 What to do...
