@@ -7,7 +7,7 @@ This command-line interface should then be extended to provide more and more fun
 ## Connecting the STM32NUCLEO-F302R8 development board to the softare development environment.  
 Should be quite simple, but if you have got your hands on a used device, you must ensure that the power (PWR) strap selector is set to U5V (USB 5V supply) in order for the ST-LINK to "see" the STM32-F302R8 chip. 
 
-![NUCLEO-F302R8-PWR-Settings](images\NUCLEO-F302R8-PWR-Settings.png "Text to show on mouseover")  
+![NUCLEO-F302R8-PWR-Settings](images/NUCLEO-F302R8-PWR-Settings.png "Text to show on mouseover")  
 
 ## Blinking the LD2
 What to do...
@@ -24,7 +24,7 @@ It is observed that the sw dev tool generates a lot of code and, the first thing
 ## Pre-compile steps for time-stamping and numbering the latest build
 It is usually informative to include some build data in the executable (binary) code, at least for some. For this reason, an include file, appver.h, has been added to the project to contain the last build date and time in addition to the build number. In the project properties and settings, two pre-compile steps are registered. The first is to run a simple python script that will update the   appver.h file with the new date and time immediatly before bulding the executable, and next step tis to move/cpoy the update appver.h fil into the sourc-code path to be part of the build process.  
 
-![Pre-build actions](images\pre-build-actions.png "pre-build-actions")  
+![Pre-build actions](images/pre-build-actions.png "pre-build-actions")  
 
 It should be noted that the python script, __prebuild.py__, and the __appver.h__ file has to be located in the debug folder, that is: bare-metal\Core\Debug\*.*  
 
