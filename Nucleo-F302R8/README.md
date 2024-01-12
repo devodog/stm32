@@ -33,7 +33,7 @@ It is usually informative to include some build data in the executable (binary) 
 
 <img src="images/pre-build-actions.png" height="350">  
 
-It should be noted that the python script, __prebuild.py__, and the __appver.h__ file has to be located in the debug folder, that is: bare-metal\Core\Debug\*.*  
+It should be noted that the python script, __prebuild.py__, and the __appver.h__ file has to be located in the debug folder, that is: bare-metal\Core\Debug\  
 
 ## USART to RS232 communication
 The STM32-F302R8 chip contains 3 USART blocks, USART1, USART2 and USART3.  
@@ -129,7 +129,7 @@ Is there a command-line implementation pattern? Not that many... We'll make a si
 
 Possible strategy is as follows:  
  - Make a command-structure for each command(-word)  
- - The command struct is to contain the command-word (string) and all the necessary parameters (list of strings)  
+ - The command struct is to contain the command-word (string) and all the necessary parameters (list of strings) in addition to a command-support function pointer. 
 ```
 #define COMMAND_PARAMS 10
 #define COMMAND_PARAM_LENGTH 10
