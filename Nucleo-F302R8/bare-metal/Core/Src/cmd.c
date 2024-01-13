@@ -20,45 +20,62 @@
 #define COMMAND_NAME_LENGTH 20
 #define NUMBERS_OF_MCU_COMMANDS 2
 
+extern uint8_t led2;
+int msValue = 0; // milliseconds value
+int lastError = 0;
+
 struct command {
   char name[COMMAND_NAME_LENGTH];  // the command name
   int params;     // room for params numbers of command-parameters
   int maxParamLength; // max param word length.
   char paramWords[COMMAND_PARAMS][COMMAND_PARAM_LENGTH];
   int paramValues[COMMAND_PARAMS];
-  void (*cmdFunction)(char*); // the command support function...
+  void (*cmdFunction)(char*, int*); // the command support function...
 };
 
-void LED(char* paramStr){
-	printf("%s", paramStr);
+
+void LED(char* paramStr, int* paramValues) {
+	if (strncmp(paramStr, "ON", 2) == 0) {
+		printf("\r\nLED ON");
+		paramValues[0] = 1;
+		paramValues[1] = 0;
+		paramValues[2] = 0;
+      led2 = ON;
+	}
+	else if (strncmp(paramStr, "OFF", 3) == 0) {
+		printf("\r\nLED OFF");
+		paramValues[0] = 0;
+		paramValues[1] = 1;
+		paramValues[2] = 0;
+      led2 = OFF;
+	}
+	else if (strncmp(paramStr, "BLINK", 5) == 0) {
+
+		if (strncmp(&paramStr[6], "0", 3) != 0) {
+		   paramValues[2] = atoi(&paramStr[6]);
+		   msValue = atoi(&paramStr[6]);
+           paramValues[0] = 0;
+           paramValues[1] = 0;
+           led2 = BLINKING;
+		}
+		else {
+			paramValues[2] = 0;
+		}
+		printf("\r\nLED BLINK %d", msValue);
+   }
+	else {
+		printf("\r\nUNKNOWN LED COMMAND");
+	}
 }
 
-void dummy(char* paramStr){
+void dummy(char* paramStr, int* paramValues){
 	printf("DUMMY\r\n");
 }
-
 
 struct command mcuCmds [NUMBERS_OF_MCU_COMMANDS] = {
   {"LED", 3, 6, {"ON", "OFF", "BLINK"}, {0, 1, 500 }, &LED},
   {"DUMMY", 2, 6, {"TRUE", "FALSE"}, {0, 0}, &dummy}
 };
-
-///////////////////////////////////////////////////////////////////
-
-int lastError = 0;
-int ms = 0;
-char *cmdList[] = {"ld2", "dummy"};
-uint8_t numberOfCommands = 2;
-extern uint8_t led2;
-int msValue = 0;
-enum commands {
-   LD2,
-   DUMMY
-} COMMANDS;
-
-char *argList[] = {"on", "off", "blink"};
-//
-
 
 void promt() {
    printf("\r\nNUCLEO> ");
@@ -67,86 +84,24 @@ void promt() {
 
 uint8_t executeCmd(char *termInput, int cmdLength) {
    int i = 0;
+   size_t numberOfCommands = sizeof(mcuCmds) / sizeof(mcuCmds[0]);
 
    // Check if the entered command is part of the command-list for this application.
    for (; i < numberOfCommands; i++) {
-
-	  // TEST OF THE NEW COMMAND IMPLEMENTATION...
-	  ///////////////////////////////////////////////////////////////////
  	  if (strncmp(mcuCmds[i].name, termInput, strlen(mcuCmds[i].name)) == 0) {
- 		 // The command entered is implemented partly or in full...
- 		 // Has the command 1 or more parameters?
- 		 // Should the command-structure have an extra element that holds the pointer
- 		 // to a subroutine that handles the complete user command?
- 		 // ...what about the following?
- 		 mcuCmds[i].cmdFunction((char*)&termInput[strlen(mcuCmds[i].name)+1]);
-
- 		 printf("\r\n");
- 		 for(int p=0; p<mcuCmds[i].params; p++){
-     		 printf("%s = %d\r\n", mcuCmds[i].paramWords[p], mcuCmds[i].paramValues[p]);
-     	 }
+ 		 mcuCmds[i].cmdFunction((char*)&termInput[strlen(mcuCmds[i].name)+1], (int*) &mcuCmds[i].paramValues);
  		 promt();
      	 return 0;
-      }
- 	  ///////////////////////////////////////////////////////////////////
-      if (strncmp(cmdList[i], termInput, strlen(cmdList[i])) == 0) {
-    	 // The command entered is found in the command-list
-         break;
       }
    }
 
    // Execute the command if part of the command-list.
-   if (i >= sizeof(cmdList)) {
-      printf("\r\n%s is not recognized\r\n", termInput);
+   if (i >= numberOfCommands) {
+      printf("\r\nThe command: %s, is not recognized", termInput);
       promt();
       return -1;
    }
    else {
-      switch (i) {
-         case LD2: { // Parsing parameters
-		   char param1[5] = {0};
-		   char param2[5] = {0};
-		   int j = 0;
-		   // The first parameter
-		   for (; j<5; j++){
-			  if (termInput[4+j] != ' ') {
-				  param1[j] = termInput[4+j];
-			  }
-			  else
-			  break;
-		   }
-
-		   if ((j > 0)&&(param1[1]=='l')) {
-			   int k = 0;
-			   // read the next argument/parameter
-			   for (; k<5; k++){
-				  if (termInput[5+j+k] != ' ') {
-					 param2[k] = termInput[5+j+k];
-				  }
-				  else
-					 break;
-			   }
-			   msValue = atoi(&param2[0]);
-			   printf("\r\nBlinking LD2 every %d ms\r\n", msValue);
-			   led2 = BLINKING;
-		   }
-		   else if ((j > 0)&&(param1[1]=='n')){
-			   printf("\r\nSetting LD2 ON\r\n");
-			   led2 = ON;
-		   }
-		   else{
-			   printf("\r\nSetting LD2 OFF\r\n");
-			   led2 = OFF;
-		   }
-		}
-		break;
-
-	 case DUMMY:
-		printf("\r\ndummy command....\r\n");
-	 default:
-		printf("\nNOP[i=%d]", i);
-      }
+	  return -2;
    }
-   promt();
-   return 0;
 }
