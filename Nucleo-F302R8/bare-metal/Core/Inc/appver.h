@@ -12,10 +12,10 @@
 #ifndef APPVER_H_
 #define APPVER_H_
 // The BUILD number will be updated for each build by a precompile session
-#define BUILD 40
+#define BUILD 74
 #define MAJOR_VERSION 0
 #define MINOR_VERSION 0
 // The BUILD_DATE_AND_TIME will be updated for each build by a precompile session
-#define BUILD_DATE_AND_TIME "2024-01-13 18:54:03.620872"
+#define BUILD_DATE_AND_TIME "2024-01-14 20:21:21.374314"
 
 #endif /* APPVER_H_ */

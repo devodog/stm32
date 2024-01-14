@@ -158,5 +158,36 @@ struct command mcuCmds [NUMBERS_OF_MCU_COMMANDS] = {
   {"LED", 3, 6, {"ON", "OFF", "BLINK"}, {0, 1, 500 }, &LED},
   {"DUMMY", 2, 6, {"TRUE", "FALSE"}, {0, 0}, &dummy}
 };
+
+// ...and using this structure in the command execute function...
+uint8_t executeCmd(char *termInput, int cmdLength) {
+   int i = 0;
+   size_t numberOfCommands = sizeof(mcuCmds) / sizeof(mcuCmds[0]);
+
+   // Check if the entered command is part of the command-list for this application.
+   for (; i < numberOfCommands; i++) {
+ 	    if (strncmp(mcuCmds[i].name, termInput, strlen(mcuCmds[i].name)) == 0) {
+ 		     mcuCmds[i].cmdFunction((char*)&termInput[strlen(mcuCmds[i].name)+1], (int*) &mcuCmds[i].paramValues);
+ 		     promt();
+     	   return 0;
+      }
+   }
+
+   if (i >= numberOfCommands) {
+      printf("\r\nThe command: %s, is not recognized", termInput);
+      promt();
+      return -1;
+   }
+   else {
+	    return -2; // ...make the compiler happy;-)
+   }
+}
+
 ```
-is this the best way of handling commands entered in a command-line user interface ??
+Now that we have a relative simple way of making console user interface commands, we can investigate more functions in the NUCLEO STM32-F302R8 board.
+What about checking the on-chip ADC?  
+### Measuring a AA battery's voltage
+At the time of writing this, a need for checking some AA batteries that has been laying around for some time, and it would be nice to have a device that can check if the rest charge or voltage is useful for something.  
+__Finding a pin for Analogue to Digital value conversion__  
+WE'll use the STM32CubeIDE configurator to allocate and enable a GPIO pin for this function/operation.  
+   
