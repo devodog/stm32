@@ -44,6 +44,8 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
+TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
@@ -55,6 +57,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 int _write(int fd, char *ptr, int len) {
@@ -68,6 +71,9 @@ int _write(int fd, char *ptr, int len) {
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 extern int msValue;
+extern int timRepeat;
+extern int timRepeatCount;
+
 uint8_t txBuffer[14] =
 		{ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 10, 13, 10, 13 };
 uint8_t counter = 0;
@@ -76,6 +82,8 @@ uint8_t cmdComplete;
 char termInputBuffer[80];
 int bytesReceived = 0;
 uint8_t led2 = OFF;
+uint8_t timMode = ONE_SHOT;
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	//uint8_t UARTnewLine = 10;
 	if (UART1_rxBuffer == 13) {
@@ -100,6 +108,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 }
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+   if (timMode == ONE_SHOT) {
+      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+      HAL_TIM_Base_Stop_IT(&htim2);
+   }
+   else {
+      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+      if (timRepeatCount++ > timRepeat) {
+         HAL_TIM_Base_Stop_IT(&htim2);
+      }
+   }
+   //printf("\r\nHAL_TIM_PeriodElapsedCallback");
+   //promt();
+}
 /* USER CODE END 0 */
 
 /**
@@ -132,12 +154,16 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_ADC1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-	HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
-	uint8_t ledState = OFF;
-	printf("\r\n\r\nBare-Metal SW on STM32-NUCLEO-F302R8 development board");
-	printf("\r\nBuild No. %d", BUILD);
-	promt();
+  HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
+
+  //HAL_TIM_Base_Start_IT(&htim2);
+
+  uint8_t ledState = OFF;
+  printf("\r\n\r\nBare-Metal SW on STM32-NUCLEO-F302R8 development board");
+  printf("\r\nBuild No. %d", BUILD);
+  promt();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -277,6 +303,51 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 1024;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 8000;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
 
 }
 

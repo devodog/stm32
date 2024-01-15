@@ -19,7 +19,12 @@
 #define NUMBERS_OF_MCU_COMMANDS 2
 
 extern ADC_HandleTypeDef hadc1;
+extern TIM_HandleTypeDef htim2;
 extern uint8_t led2;
+extern uint8_t timMode;
+
+int timRepeat = 1;
+int timRepeatCount = 0;
 
 int msValue = 0; // milliseconds value
 int lastError = 0;
@@ -87,14 +92,46 @@ void ADC(char* paramStr, int* paramValues){
    }
 }
 
+void TIM(char* paramStr, int* paramValues) {
+   if (strncmp(paramStr, "OS", 2) == 0) {
+      printf("\r\nOne Shot timer");
+
+      htim2.Init.Period = atoi(&paramStr[3]);
+      // The above line has no effect since its part of the initialization process of the timer.
+      // - need to update the register direct
+      //
+      HAL_TIM_Base_Start_IT(&htim2);
+      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+   }
+   else if (strncmp(paramStr, "PERIOD", 6) == 0) {
+      htim2.Init.Period = atoi(&paramStr[7]);
+      printf("\r\nAuto-reload period: %d", (int)htim2.Init.Period);
+   }
+   else if (strncmp(paramStr, "REPEAT", 6) == 0) {
+      timRepeat = atoi(&paramStr[7]);
+      timRepeatCount = 0;
+      HAL_TIM_Base_Start_IT(&htim2);
+      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+      timMode = REPEAT;
+      printf("\r\nAuto-reload repeat % times", timRepeat);
+   }
+   else if (strncmp(paramStr, "HELP", 2) == 0){
+      printf("\r\nSome help text for the TIM command-set here...");
+   }
+   else {
+      printf("\r\nUNKNOWN TIM COMMAND");
+   }
+}
+
 void dummy(char* paramStr, int* paramValues){
 	printf("DUMMY\r\n");
 }
 
 // Command array initialization
 struct command mcuCmds [] = {
-  {"LED", 3, 6, {"ON", "OFF", "BLINK"}, {0, 1, 500 }, &LED},
-  {"ADC", 4, 6, {"RO", "AVRAGE", "POLL", "HELP"}, {0, 10, 500, 0}, &ADC},
+  {"LED", 3, 6, {"ON", "OFF", "BLINK", "HELP"}, {0, 1, 500, 0}, &LED},
+  {"ADC", 4, 7, {"RO", "AVRAGE", "POLL", "HELP"}, {0, 10, 500, 0}, &ADC},
+  {"TCD", 4, 7, {"OS", "PERIOD", "REPEAT", "HELP"}, {0, 10, 500, 0}, &TIM},
   {"DUMMY", 2, 6, {"TRUE", "FALSE"}, {0, 0}, &dummy}
 };
 

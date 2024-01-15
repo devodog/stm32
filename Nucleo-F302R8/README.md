@@ -190,4 +190,18 @@ What about checking the on-chip ADC?
 At the time of writing this, a need for checking some AA batteries that has been laying around for some time, and it would be nice to have a device that can check if the rest charge or voltage is useful for something.  
 __Finding a pin for Analogue to Digital value conversion__  
 WE'll use the STM32CubeIDE configurator to allocate and enable a GPIO pin for this function/operation.  
-   
+<include a picture of the ADC config...>   
+more TBD  
+
+### Timer interrupts
+Using the STM32 Advanced-controller timer (TIM1) in __Upcounting mode__  
+Through the STM32CubeIDE configurator we assign TIM1 with prescaler equal 1024 (dividing the system clock by 1024) and setting the Auto-Reset Register to 32000.  
+The configurator then includes initialization code for the actual timer in addition to the Interrupt service routine block for the this this feature.
+
+keywords:  
+TIM1 counter (TIM1_CNT), TIM1 prescaler (TIM1_PSC), TIM1 auto-reload register (TIM1_ARR)  
+more TBD  
+
+# Be aware - the STM32CubeIDE have generated some more files for us, for now five extra c-files for code cluttering...
+
+### DMA & DAC ???
