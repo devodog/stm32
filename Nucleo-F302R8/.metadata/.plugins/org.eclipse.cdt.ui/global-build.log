@@ -1,4 +1,24 @@
-10:29:41 **** Incremental Build of configuration Debug for project bare-metal ****
+23:14:52 **** Incremental Build of configuration Debug for project bare-metal ****
+make -j8 all 
+python prebuild.py; cp appver.h ..\\Core\\Inc\\appver.h
+ 
+arm-none-eabi-gcc "../Core/Src/cmd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/cmd.d" -MT"Core/Src/cmd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/cmd.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "bare-metal.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\dagak\GitHub\stm32\Nucleo-F302R8\bare-metal\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bare-metal.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: bare-metal.elf
+ 
+arm-none-eabi-size   bare-metal.elf 
+arm-none-eabi-objdump -h -S  bare-metal.elf  > "bare-metal.list"
+arm-none-eabi-objcopy  -O binary  bare-metal.elf  "bare-metal.bin"
+   text	   data	    bss	    dec	    hex	filename
+  27880	    812	   1996	  30688	   77e0	bare-metal.elf
+Finished building: default.size.stdout
+ 
+Finished building: bare-metal.bin
+ 
+Finished building: bare-metal.list
+ 
+23:15:01 **** Incremental Build of configuration Debug for project bare-metal ****
 make -j8 all 
 python prebuild.py; cp appver.h ..\\Core\\Inc\\appver.h
  
@@ -10,7 +30,46 @@ arm-none-eabi-size   bare-metal.elf
 arm-none-eabi-objdump -h -S  bare-metal.elf  > "bare-metal.list"
 arm-none-eabi-objcopy  -O binary  bare-metal.elf  "bare-metal.bin"
    text	   data	    bss	    dec	    hex	filename
-  20864	    132	   1836	  22832	   5930	bare-metal.elf
+  27880	    812	   1996	  30688	   77e0	bare-metal.elf
+Finished building: default.size.stdout
+ 
+Finished building: bare-metal.bin
+ 
+Finished building: bare-metal.list
+ 
+23:19:49 **** Incremental Build of configuration Debug for project bare-metal ****
+make -j8 all 
+python prebuild.py; cp appver.h ..\\Core\\Inc\\appver.h
+ 
+arm-none-eabi-gcc "../Core/Src/cmd.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/cmd.d" -MT"Core/Src/cmd.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/cmd.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "bare-metal.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\dagak\GitHub\stm32\Nucleo-F302R8\bare-metal\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bare-metal.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: bare-metal.elf
+ 
+arm-none-eabi-size   bare-metal.elf 
+arm-none-eabi-objdump -h -S  bare-metal.elf  > "bare-metal.list"
+arm-none-eabi-objcopy  -O binary  bare-metal.elf  "bare-metal.bin"
+   text	   data	    bss	    dec	    hex	filename
+  27888	    812	   1996	  30696	   77e8	bare-metal.elf
+Finished building: default.size.stdout
+ 
+Finished building: bare-metal.bin
+ 
+Finished building: bare-metal.list
+ 
+23:24:30 **** Incremental Build of configuration Debug for project bare-metal ****
+make -j8 all 
+python prebuild.py; cp appver.h ..\\Core\\Inc\\appver.h
+ 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "bare-metal.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\dagak\GitHub\stm32\Nucleo-F302R8\bare-metal\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="bare-metal.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: bare-metal.elf
+ 
+arm-none-eabi-size   bare-metal.elf 
+arm-none-eabi-objdump -h -S  bare-metal.elf  > "bare-metal.list"
+arm-none-eabi-objcopy  -O binary  bare-metal.elf  "bare-metal.bin"
+   text	   data	    bss	    dec	    hex	filename
+  27888	    812	   1996	  30696	   77e8	bare-metal.elf
 Finished building: default.size.stdout
  
 Finished building: bare-metal.bin

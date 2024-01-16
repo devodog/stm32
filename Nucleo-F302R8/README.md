@@ -195,11 +195,17 @@ more TBD
 
 ### Timer interrupts
 Using the STM32 Advanced-controller timer (TIM1) in __Upcounting mode__  
-Through the STM32CubeIDE configurator we assign TIM1 with prescaler equal 1024 (dividing the system clock by 1024) and setting the Auto-Reset Register to 32000.  
-The configurator then includes initialization code for the actual timer in addition to the Interrupt service routine block for the this this feature.
+Note! The TIM1 timer hardware does not "connect" to a global interrupt, which is of interest, but TIM2 timer hardware does.  
 
-keywords:  
-TIM1 counter (TIM1_CNT), TIM1 prescaler (TIM1_PSC), TIM1 auto-reload register (TIM1_ARR)  
+The plan is to implement a set of commands that provide user access to the timers Auto-Reset Register and setting the number of interrupts..   
+
+Through the STM32CubeIDE configurator we assign TIM1 with prescaler equal 1024 (dividing the system clock by 1024) and setting the Auto-Reset Register to 32000.  
+The configurator then includes initialization code for the actual timer in addition to the Interrupt service routine block for the this this feature.  
+This is all fine, but what if we want to change the timer interrupt interval on the fly?  
+
+
+__keywords:__  
+TIM1 counter (TIM2_CNT), TIM1 prescaler (TIM2_PSC), TIM1 auto-reload register (TIM2_ARR)  
 more TBD  
 
 # Be aware - the STM32CubeIDE have generated some more files for us, for now five extra c-files for code cluttering...

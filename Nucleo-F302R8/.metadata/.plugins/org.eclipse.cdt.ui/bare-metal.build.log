@@ -1,4 +1,4 @@
-10:29:41 **** Incremental Build of configuration Debug for project bare-metal ****
+23:24:30 **** Incremental Build of configuration Debug for project bare-metal ****
 make -j8 all 
 python prebuild.py; cp appver.h ..\\Core\\Inc\\appver.h
  
@@ -10,7 +10,7 @@ arm-none-eabi-size   bare-metal.elf
 arm-none-eabi-objdump -h -S  bare-metal.elf  > "bare-metal.list"
 arm-none-eabi-objcopy  -O binary  bare-metal.elf  "bare-metal.bin"
    text	   data	    bss	    dec	    hex	filename
-  20864	    132	   1836	  22832	   5930	bare-metal.elf
+  27888	    812	   1996	  30696	   77e8	bare-metal.elf
 Finished building: default.size.stdout
  
 Finished building: bare-metal.bin
@@ -18,5 +18,5 @@ Finished building: bare-metal.bin
 Finished building: bare-metal.list
  
 
-10:29:45 Build Finished. 0 errors, 0 warnings. (took 4s.363ms)
+23:24:32 Build Finished. 0 errors, 0 warnings. (took 1s.933ms)
 
