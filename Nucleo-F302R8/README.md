@@ -29,11 +29,11 @@ This is fairly simple when using the hardware configurator in the STM32CubeIDE,
 It is observed that the sw dev tool generates a lot of code and, the first thing noticed is the assembly start-up code startup_stm32f302r8tx.s 
 
 ## Pre-compile steps for time-stamping and numbering the latest build
-It is usually informative to include some build data in the executable (binary) code, at least for some. For this reason, an include file, appver.h, has been added to the project to contain the last build date and time in addition to the build number. In the project properties and settings, two pre-compile steps are registered. The first is to run a simple python script that will update the   appver.h file with the new date and time immediately before building the executable, and next step tis to move/copy the update appver.h fil into the sourc-code path to be part of the build process.  
+It is usually informative to include some build data in the executable (binary) code, at least for some. For this reason, an include file, appver.h, has been added to the project to contain the last build date and time in addition to the build number. In the project properties and settings, two pre-compile steps are registered. The first is to run a simple python script that will update the   appver.h file with the new date and time immediately before building the executable, and next step tis to move/copy the update appver.h fil into the source-code path to be part of the build process.  
 
 <img src="images/pre-build-actions.png" height="350">  
 
-It should be noted that the python script, __prebuild.py__, and the __appver.h__ file has to be located in the debug folder, that is: bare-metal\Core\Debug\  
+It should be noted that Python, 3.7 or later, script interpretor has to be installed and the python script, __prebuild.py__, and the __appver.h__ file has to be located in the debug folder, that is: bare-metal\Core\Debug\  
 
 ## USART to RS232 communication
 The STM32-F302R8 chip contains 3 USART blocks, USART1, USART2 and USART3.  
@@ -208,6 +208,7 @@ __keywords:__
 TIM1 counter (TIM2_CNT), TIM1 prescaler (TIM2_PSC), TIM1 auto-reload register (TIM2_ARR)  
 more TBD  
 
-# Be aware - the STM32CubeIDE have generated some more files for us, for now five extra c-files for code cluttering...
+### Be aware - the STM32CubeIDE have generated some more files for us, for now five extra c-files for code cluttering...
 
-### DMA & DAC ???
+## Other features to investigate
+DMA, DAC, CAN, I2C, SPI, USB  

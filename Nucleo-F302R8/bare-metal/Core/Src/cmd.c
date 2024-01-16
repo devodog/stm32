@@ -93,19 +93,23 @@ void ADC(char* paramStr, int* paramValues){
 }
 
 void TIM(char* paramStr, int* paramValues) {
-   if (strncmp(paramStr, "OS", 2) == 0) {
-      printf("\r\nOne Shot timer");
-
-      htim2.Init.Period = atoi(&paramStr[3]);
+   if (strncmp(paramStr, "OS", 2) == 0) {      
+      __HAL_TIM_SET_AUTORELOAD(&htim2, atoi(&paramStr[3]));
+      // To be tested...
+      
+      //htim2.Init.Period = atoi(&paramStr[3]);
       // The above line has no effect since its part of the initialization process of the timer.
       // - need to update the register direct
       //
+      printf("\r\nOne Shot timer with period: %d", (int)htim2.Init.Period);
+      // To be tested...
       HAL_TIM_Base_Start_IT(&htim2);
       HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
    }
    else if (strncmp(paramStr, "PERIOD", 6) == 0) {
-      htim2.Init.Period = atoi(&paramStr[7]);
+      __HAL_TIM_SET_AUTORELOAD(&htim2, atoi(&paramStr[7]));
       printf("\r\nAuto-reload period: %d", (int)htim2.Init.Period);
+      // To be tested...
    }
    else if (strncmp(paramStr, "REPEAT", 6) == 0) {
       timRepeat = atoi(&paramStr[7]);
