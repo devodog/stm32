@@ -12,6 +12,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include "cmd.h"
+#include "appver.h"
 
 #define COMMAND_PARAMS 10
 #define COMMAND_PARAM_LENGTH 10
@@ -78,6 +79,8 @@ void ADC(char* paramStr, int* paramValues){
       printf("\r\nADC READ ONCE");
       // Start ADC Conversion
       HAL_ADC_Start(&hadc1);
+      HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+
       // Poll ADC1 Peripheral & TimeOut = 1mSec
       HAL_ADC_PollForConversion(&hadc1, 1);
       // Read The ADC Conversion Result - using 3300 + 400 offset to
@@ -85,7 +88,9 @@ void ADC(char* paramStr, int* paramValues){
       printf("\r\nAA Battery voltage: %ld mV", 3700*HAL_ADC_GetValue(&hadc1)/4096);
    }
    else if (strncmp(paramStr, "HELP", 2) == 0){
-      printf("\r\nSome help text her...");
+      printf("\r\nThe ADC command takes the following parameters\r\n");
+      printf("RO = Read Once\r\n" \
+            "AVRAGE (not implemented)\r\nPOLL (not implemented)\r\nHELP = this printout.");
    }
    else {
       printf("\r\nUNKNOWN ADC COMMAND");
@@ -95,40 +100,41 @@ void ADC(char* paramStr, int* paramValues){
 void TIM(char* paramStr, int* paramValues) {
    if (strncmp(paramStr, "OS", 2) == 0) {      
       __HAL_TIM_SET_AUTORELOAD(&htim2, atoi(&paramStr[3]));
-      // To be tested...
-      
-      //htim2.Init.Period = atoi(&paramStr[3]);
-      // The above line has no effect since its part of the initialization process of the timer.
-      // - need to update the register direct
-      //
       printf("\r\nOne Shot timer with period: %d", (int)htim2.Init.Period);
-      // To be tested...
+      // The timer2 struct is updated accordingly to the __HAL_TIM_SET_AUTORELOAD() function.
+      
       HAL_TIM_Base_Start_IT(&htim2);
-      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
    }
    else if (strncmp(paramStr, "PERIOD", 6) == 0) {
       __HAL_TIM_SET_AUTORELOAD(&htim2, atoi(&paramStr[7]));
       printf("\r\nAuto-reload period: %d", (int)htim2.Init.Period);
-      // To be tested...
    }
    else if (strncmp(paramStr, "REPEAT", 6) == 0) {
       timRepeat = atoi(&paramStr[7]);
       timRepeatCount = 0;
       HAL_TIM_Base_Start_IT(&htim2);
-      HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
       timMode = REPEAT;
       printf("\r\nAuto-reload repeat % times", timRepeat);
    }
    else if (strncmp(paramStr, "HELP", 2) == 0){
-      printf("\r\nSome help text for the TIM command-set here...");
+      printf("\r\nSome help text for the Timer CountDown (TCD) command-set here...");
    }
    else {
-      printf("\r\nUNKNOWN TIM COMMAND");
+      printf("\r\nUNKNOWN TCD COMMAND");
    }
 }
 
-void dummy(char* paramStr, int* paramValues){
-	printf("DUMMY\r\n");
+void SYS(char* paramStr, int* paramValues){
+   if (strncmp(paramStr, "BN", 2) == 0) {
+      printf("\r\nBuild no.:%d", BUILD);
+   }
+   else if (strncmp(paramStr, "BD", 2) == 0) {
+      printf("\r\nBuild date: %s", BUILD_DATE_AND_TIME);
+   }
+   else if (strncmp(paramStr, "VER", 2) == 0) {
+      printf("\r\nVersion:%d.%d", MAJOR_VERSION, MINOR_VERSION);
+   }
+
 }
 
 // Command array initialization
@@ -136,7 +142,7 @@ struct command mcuCmds [] = {
   {"LED", 3, 6, {"ON", "OFF", "BLINK", "HELP"}, {0, 1, 500, 0}, &LED},
   {"ADC", 4, 7, {"RO", "AVRAGE", "POLL", "HELP"}, {0, 10, 500, 0}, &ADC},
   {"TCD", 4, 7, {"OS", "PERIOD", "REPEAT", "HELP"}, {0, 10, 500, 0}, &TIM},
-  {"DUMMY", 2, 6, {"TRUE", "FALSE"}, {0, 0}, &dummy}
+  {"SYS", 3, 4, {"BN", "BD", "VER"}, {0, 0, 0}, &SYS}
 };
 
 void promt() {

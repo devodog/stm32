@@ -7,4 +7,5 @@ Debug/
 
 # STM32 git ignore
 *.mxproject
-Nucleo-F302R8/.metadata/
+Nucleo-F302R8/.metadata/*
+Nucleo-F302R8/.metadata/.ide.log
