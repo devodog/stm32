@@ -224,4 +224,26 @@ ___more TBD...___
 ### Be aware - the STM32CubeIDE have generated some more files for us, for now five extra c-files for code cluttering...
 
 ## Other features to investigate
-PWM, DMA, DAC, CAN, I2C, SPI, USB  
+Static PWM ongoing  
+___more TBD...___  
+
+Next is I2C trough the CO2, humidity and temperature sensor from Sensirion.  
+___more TBD...___  
+
+## Ran into the following issue when included the I2C HAL Driver...  
+```
+Download verified successfully 
+
+
+Target is not responding, retrying...
+Target is not responding, retrying...
+Target is not responding, retrying...
+Target is not responding, retrying...
+```  
+### ... and the I2C com does not work...   
+
+
+
+
+__future study__  
+DMA, DAC, CAN, SPI, USB  

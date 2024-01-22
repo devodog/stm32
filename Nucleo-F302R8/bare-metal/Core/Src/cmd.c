@@ -14,6 +14,11 @@
 #include "cmd.h"
 #include "appver.h"
 
+#define SENSIRION_ADDRESS 0x61 << 1
+// Sensirion CO2 sensor device I2C register address
+#define GET_DATA_READY_STATUS 0x0202
+#define READ_MEASURMENT 0x0300
+
 #define COMMAND_PARAMS 10
 #define COMMAND_PARAM_LENGTH 10
 #define COMMAND_NAME_LENGTH 20
@@ -21,6 +26,8 @@
 
 extern ADC_HandleTypeDef hadc1;
 extern TIM_HandleTypeDef htim2;
+extern I2C_HandleTypeDef hi2c1;
+
 extern uint8_t led2;
 extern uint8_t timMode;
 
@@ -137,11 +144,39 @@ void SYS(char* paramStr, int* paramValues){
 
 }
 
+void CO2(char* paramStr, int* paramValues) {
+   if (strncmp(paramStr, "READ", 2) == 0) {
+      unsigned char data[20]={0};
+      HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, GET_DATA_READY_STATUS, I2C_MEMADD_SIZE_16BIT, data, 3, 3000);
+      if ((data[0]==0)&&(data[1]==1)) {
+         HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, READ_MEASURMENT, I2C_MEMADD_SIZE_16BIT, data, 18, 4000);
+         printf("\r\n");
+         for (int i = 0; i<18; i++) {
+            printf("0x%02x", data[i]);
+         }
+      }
+      else {
+         printf("\r\nSensor data not ready...(0x%02x 0x%02x 0x%02x)", data[0], data[1], data[2]);
+      }
+   }
+   else if (strncmp(paramStr, "PERIOD", 6) == 0){
+      printf("\r\nCO2 Measurement command PERIOD not implemented...");
+   }
+   else if (strncmp(paramStr, "HELP", 2) == 0){
+
+      printf("\r\nSome help text for the CO2 Measurement command-set here...");
+   }
+   else {
+      printf("\r\nUNKNOWN TCD COMMAND");
+   }
+}
+
 // Command array initialization
 struct command mcuCmds [] = {
   {"LED", 3, 6, {"ON", "OFF", "BLINK", "HELP"}, {0, 1, 500, 0}, &LED},
   {"ADC", 4, 7, {"RO", "AVRAGE", "POLL", "HELP"}, {0, 10, 500, 0}, &ADC},
-  {"TCD", 4, 7, {"OS", "PERIOD", "REPEAT", "HELP"}, {0, 10, 500, 0}, &TIM},
+  {"TCD", 4, 7, {"OS", "PERIOD", "REPEAT", "HELP"}, {0, 500, 10, 0}, &TIM},
+  {"CO2", 4, 7, {"READ", "INTERVAL", "COUNT", "HELP"}, {0, 1000, 60, 0}, &CO2},
   {"SYS", 3, 4, {"BN", "BD", "VER"}, {0, 0, 0}, &SYS}
 };
 
