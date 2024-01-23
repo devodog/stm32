@@ -61,6 +61,7 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LD2_Pin GPIO_PIN_13
 #define LD2_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
 #define ON 1
 #define OFF 0

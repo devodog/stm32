@@ -146,10 +146,10 @@ void SYS(char* paramStr, int* paramValues){
 
 void CO2(char* paramStr, int* paramValues) {
    if (strncmp(paramStr, "READ", 2) == 0) {
-      unsigned char data[20]={0};
-      HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, GET_DATA_READY_STATUS, I2C_MEMADD_SIZE_16BIT, data, 3, 3000);
+      uint8_t data[20]={0};
+      HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, GET_DATA_READY_STATUS, I2C_MEMADD_SIZE_16BIT, &data[0], 2, 1000);
       if ((data[0]==0)&&(data[1]==1)) {
-         HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, READ_MEASURMENT, I2C_MEMADD_SIZE_16BIT, data, 18, 4000);
+         HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, READ_MEASURMENT, I2C_MEMADD_SIZE_16BIT, &data[0], 18, 1000);
          printf("\r\n");
          for (int i = 0; i<18; i++) {
             printf("0x%02x", data[i]);
@@ -159,8 +159,21 @@ void CO2(char* paramStr, int* paramValues) {
          printf("\r\nSensor data not ready...(0x%02x 0x%02x 0x%02x)", data[0], data[1], data[2]);
       }
    }
-   else if (strncmp(paramStr, "PERIOD", 6) == 0){
-      printf("\r\nCO2 Measurement command PERIOD not implemented...");
+   else if (strncmp(paramStr, "VERSION", 6) == 0) {
+      uint8_t firmwareVersion[4] = {0xd1,0,0,0};
+      uint16_t firmware = 0xD100;
+
+      //HAL_I2C_Mem_Write(&hi2c1, SENSIRION_ADDRESS, firmware,I2C_MEMADD_SIZE_16BIT, &firmwareVersion[0], 2, 1000);
+      //HAL_I2C_Master_Transmit();
+      HAL_I2C_Master_Transmit(&hi2c1, SENSIRION_ADDRESS, firmwareVersion, 2, 1000);
+      //HAL_I2C_IsDeviceReady();
+
+      if (HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, firmware, I2C_MEMADD_SIZE_16BIT, &firmwareVersion[0], 3, 1000) != HAL_OK) {
+         printf("\r\nHAL_I2C_Mem_Read() FAILED!");
+      }
+      else {
+         printf("\r\nSensiron SCD30 Ver.:0x%02x.0x%02x crc=0x%02x", firmwareVersion[0],firmwareVersion[1], firmwareVersion[2]);
+      }
    }
    else if (strncmp(paramStr, "HELP", 2) == 0){
 
@@ -176,7 +189,7 @@ struct command mcuCmds [] = {
   {"LED", 3, 6, {"ON", "OFF", "BLINK", "HELP"}, {0, 1, 500, 0}, &LED},
   {"ADC", 4, 7, {"RO", "AVRAGE", "POLL", "HELP"}, {0, 10, 500, 0}, &ADC},
   {"TCD", 4, 7, {"OS", "PERIOD", "REPEAT", "HELP"}, {0, 500, 10, 0}, &TIM},
-  {"CO2", 4, 7, {"READ", "INTERVAL", "COUNT", "HELP"}, {0, 1000, 60, 0}, &CO2},
+  {"CO2", 4, 7, {"READ", "VERSION", "COUNT", "HELP"}, {0, 1000, 60, 0}, &CO2},
   {"SYS", 3, 4, {"BN", "BD", "VER"}, {0, 0, 0}, &SYS}
 };
 
