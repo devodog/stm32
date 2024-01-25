@@ -184,7 +184,11 @@ uint8_t executeCmd(char *termInput, int cmdLength) {
 }
 
 ```
-Now that we have a relative simple way of making console user interface commands, we can investigate more functions in the NUCLEO STM32-F302R8 board.
+Now that we have a relative simple way of making console user interface commands, we can investigate more functions in the NUCLEO STM32-F302R8 board.  
+After deploying and using the command structure, it seems that there are some fields in the struct that are redundant.  
+__NOTE!__ Need to reconsider the necessary number of fields in this struct.  
+
+ 
 What about checking the on-chip ADC?  
 
 ### Measuring a AA battery's voltage
@@ -212,7 +216,7 @@ Note! The TIM1 timer hardware does not "connect" to a global interrupt, which is
 
 The plan is to implement a set of commands that provide user access to the timers Auto-Reset Register and setting the number of interrupts..   
 
-Through the STM32CubeIDE configurator we assign TIM1 with prescaler equal 1024 (dividing the system clock by 1024) and setting the Auto-Reset Register to 32000.  
+Through the STM32CubeIDE configurator we assign TIM2 with prescaler equal 1024 (dividing the system clock by 1024) and setting the Auto-Reset Register to 32000.  
 The configurator then includes initialization code for the actual timer (TIM2) in addition to the Interrupt service routine block for the this feature.  
 This is all fine, but what if we want to change the timer interrupt interval on the fly?  
 The HAL macro ```__HAL_TIM_SET_AUTORELOAD()``` does it for us. It takes two arguments, the first the address to the timer handle and the second one the value for the AutoReset Register (ARR).  
@@ -221,13 +225,61 @@ The timer kan be started and stopped at any time and the relevant callback routi
 
 ___more TBD...___  
 
-### Be aware - the STM32CubeIDE have generated some more files for us, for now five extra c-files for code cluttering...
+### Be aware - the STM32CubeIDE have generated some more files for us, for now five extra c-files for code cluttering...    
+__ __  
+__ __
 
-## Other features to investigate
-Static PWM ongoing  
+
+## Using Timer for PWM operation  
 ___more TBD...___  
 
-Next is I2C trough the CO2, humidity and temperature sensor from Sensirion.  
+
+## I2C Connectivity
+Target: Connecting a CO2 sensor (__Sensirion SCD30__) to the STM32NUCLEO-F302R8 board using the sensor's I2C bus.
+The _Sensirion SCD30_ is a CO2, humidity and temperature sensor equipped with I2C and UART connectivity interfaces.  
+<img src="images/SensironSCD30.PNG" height="250">  
+
+In the STM32CubeIDE board/Chip configurator we select the hardware for I2C1 connectivity.
+Looking into the data sheet for the Sensirion SCD30 device we see that it is a standard speed bus (100kbs), which has to be applied to the configurator.
+Other I2C bus configurations needs to be aligned with the sensor's I2C bus requirements, found in the document "Sensirion_CO2_Sensors_SCD30_Interface_Description.pdf".  
+
+__I2C Master and slave set-up__  
+The STM32NUCLEO-F302R8 board is to be the I2C master, the Sensirion sensor the I2C slave.
+
+<image of the physical connections of the I2C bus between the STM32NUCLEO-F302R8 board and the Sensirion sensor>  
+
+__Experiences:__  
+The I2C bus was interconnected the sensor device and the development board WITHOUT PULL-UP resistors, under the assumption (false) that this was / cloud be provides already by the development board.  
+This was of course a silly assumption since all usage of a I2C bus is dependent of what kind of devices that are connected on the bus and what kind of speed it has to support.  
+
+So, to make it work properly, two resistors of 4.7k ohms was connected to 3.3v and each to the I2C bus (SDA & SCL) wires.  
+
+To check that the physical layer behaves as expected, a simple sensor read-out operation was sent from the STM32NUCLEO-F302R8 board, while the SDA and SCL wires was monitored by an oscilloscope.
+
+<img src="images/GET_DATA_READY_STATUS.png" height="450">  
+
+Master sending ```GET_DATA_READY_STATUS```, which according to the readout seemed to work as expected.   
+
+It was also learned that the single instructions from the Master to the slave sensor should be sent using single I2C write operation, by using the HAL function ```HAL_I2C_Master_Transmit()```.  
+So, to check if we could access the sensor, it seemed sensible to ask for the device's version number.  
+```
+void ReadFirmwareVersion() {
+   uint8_t firmwareVersion[4] = {0xd1,0,0,0};
+   uint16_t firmware = 0xD100;
+
+   // Send a specific command to the Sensirion I2C slave... the command is a two byte register address...
+   HAL_I2C_Master_Transmit(&hi2c1, SENSIRION_ADDRESS, firmwareVersion, 2, 1000);
+
+   if (HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, firmware, I2C_MEMADD_SIZE_16BIT, &firmwareVersion[0], 3, 1000) != HAL_OK) {
+      printf("\r\nHAL_I2C_Mem_Read() FAILED!");
+   }
+   else {
+      printf("\r\nSensirion SCD30 Ver.:0x%02x.0x%02x crc=0x%02x", firmwareVersion[0],firmwareVersion[1], firmwareVersion[2]);
+   }
+}
+```
+As seen above, the HAL function HAL_I2C_Mem_Read() is sent immediately after the read-register command was sent.
+
 ___more TBD...___  
 
 ## Ran into the following issue when included the I2C HAL Driver...  
@@ -240,7 +292,10 @@ Target is not responding, retrying...
 Target is not responding, retrying...
 Target is not responding, retrying...
 ```  
-### ... and the I2C com does not work...   
+### ... and the I2C com does not work...  without pull-up resistors on the SCL SDA wires.
+## Pull-up on the I2C bus
+Implemented pull-up 4.7k ohms resistor on the I2C bus. 
+
 
 
 
