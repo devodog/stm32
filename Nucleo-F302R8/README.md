@@ -297,6 +297,9 @@ Target is not responding, retrying...
 Implemented pull-up 4.7k ohms resistor on the I2C bus. 
 
 
+## ongoing work
+writing a driver for the Hitachi 44780U LCD display controller.
+
 
 
 

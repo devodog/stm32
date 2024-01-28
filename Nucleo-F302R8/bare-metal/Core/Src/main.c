@@ -26,6 +26,7 @@
 #include "appver.h"
 #include "cmd.h"
 #include "scd30.h"
+#include "lcd16x2.h"
 
 /* USER CODE END Includes */
 
@@ -179,7 +180,7 @@ int main(void)
   printf("\r\nBuild No. %d", BUILD);
   // Check if a I2C device is connected.
   ReadFirmwareVersion(); // NOT OBVIOUS THAT THIS IS A I2C SENSOR....
-
+  lcdInit();
   promt();
   HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
   /* USER CODE END 2 */

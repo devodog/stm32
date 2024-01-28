@@ -1,4 +1,5 @@
 "./Core/Src/cmd.o"
+"./Core/Src/lcd16x2.o"
 "./Core/Src/main.o"
 "./Core/Src/scd30.o"
 "./Core/Src/stm32f3xx_hal_msp.o"
