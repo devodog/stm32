@@ -287,7 +287,7 @@ ___more TBD...___
 Download verified successfully 
 
 
-Target is not responding, retrying...
+HAL_Delay(1);
 Target is not responding, retrying...
 Target is not responding, retrying...
 Target is not responding, retrying...
@@ -300,6 +300,25 @@ Implemented pull-up 4.7k ohms resistor on the I2C bus.
 ## ongoing work
 writing a driver for the Hitachi 44780U LCD display controller.
 
+__29Jan24__  
+First integration test failed - no response on the LCD display...
+Need to check the direct GPIO configuration...
+- this worked as expected  
+
+While testing this the CO2 sensor started to read data ok, but after a while it failed to read-out the data, which was done every second or so.
+conversion interval not registered!  
+
+__01Feb24__  
+The "Target is not responding, retrying..." was caused by the use of PA14 & PA15 for I2C, which conflicts with the debugger...  
+Changed to I2C2 in the configurator, but after updating the code, the I2C did not work - moved also the pull-ups on the bus, but no success.
+
+Verified control of the GPIO PB0 - PB3 & PB6 - PB8 (more or less)  
+Timer_Delay.c did NOT work out of the box.  
+Still no output on the Hitachi Display. Seems that we'll have to verify that is works on a Arduino board. The Documentation si scars.  
+
+__01Feb24__  
+Found LCD software (LiquidCrystal.cpp & LiquidCrystal.h) that is distributed with Arduino software and will attempt to port it to c and the stm32 platform in use.  
+At the first glance it seems that the initialization sequence i the Arduino code is different that what is described in the Hitachi documentation.  
 
 
 
