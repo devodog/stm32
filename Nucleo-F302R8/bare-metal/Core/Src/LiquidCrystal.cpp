@@ -1,3 +1,11 @@
+/*
+ * The code here is a port of the LiquidCrystal Arduino library for controlling LCD displays that are compatible with the Hitachi HD44780 driver.
+ * The original code was written by Limor Fried?. The original code can usually be found at C:\Program Files (x86)\Arduino\libraries\LiquidCrystal\src
+ * distributed with the Arduino IDE. The original code is licensed under the LGPL.
+ * 
+ * The port is for STM32F103C8T6 microcontroller and is written i c by DKV
+ * 
+ */
 #include "LiquidCrystal.h"
 
 #include <stdio.h>
@@ -24,36 +32,50 @@
 // can't assume that its in that state when a sketch starts (and the
 // LiquidCrystal constructor is called).
 
-LiquidCrystal::LiquidCrystal(uint8_t rs, uint8_t rw, uint8_t enable,
-			     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
-			     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
-{
-  init(0, rs, rw, enable, d0, d1, d2, d3, d4, d5, d6, d7);
-}
+// STM32F103C8T6 pins
+//  Wiring:
+//  LCD pin 1 (GND) to GND
+//  LCD pin 2 (VCC) to 5V
 
-LiquidCrystal::LiquidCrystal(uint8_t rs, uint8_t enable,
-			     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
-			     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
-{
-  init(0, rs, 255, enable, d0, d1, d2, d3, d4, d5, d6, d7);
-}
+//  LCD pin 3 (contrast voltage) to 5V w/ 10K potentiometer
 
-LiquidCrystal::LiquidCrystal(uint8_t rs, uint8_t rw, uint8_t enable,
-			     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3)
-{
-  init(1, rs, rw, enable, d0, d1, d2, d3, 0, 0, 0, 0);
-}
+//  LCD pin 4 (RS) to PB6
+//  LCD pin 5 (R/W) (grounded)
+//  LCD pin 6 (EN) to PB7
 
-LiquidCrystal::LiquidCrystal(uint8_t rs,  uint8_t enable,
-			     uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3)
-{
-  init(1, rs, 255, enable, d0, d1, d2, d3, 0, 0, 0, 0);
-}
+//  LCD pin 7 (D0) to not used
+//  LCD pin 8 (D1) to not used
+//  LCD pin 9 (D2) to not used
+//  LCD pin 10 (D3) to not used
 
-void LiquidCrystal::init(uint8_t fourbitmode, uint8_t rs, uint8_t rw, uint8_t enable,
-			 uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
-			 uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
-{
+//  LCD pin 11 (D4) to PB0
+//  LCD pin 12 (D5) to PB1
+//  LCD pin 13 (D6) to PB2
+//  LCD pin 14 (D7) to PB3
+
+//  LCD pin 15 (LED+) to 5V
+//  LCD pin 16 (LED-) to GND = RED Backlight
+//  LCD pin 17 (LED-) to GND = GREEN Backlight
+//  LCD pin 18 (LED-) to GND = BLUE Backlight
+
+  uint8_t _rs_pin; // LOW: command.  HIGH: character.
+  uint8_t _rw_pin; // LOW: write to LCD.  HIGH: read from LCD.
+  uint8_t _enable_pin; // activated by a HIGH pulse.
+  uint8_t _data_pins[8];
+
+  uint8_t _displayfunction;
+  uint8_t _displaycontrol;
+  uint8_t _displaymode;
+
+  uint8_t _initialized;
+
+  uint8_t _numlines;
+  uint8_t _row_offsets[4];
+
+
+
+
+void init4bitIf() {
   _rs_pin = rs;
   _rw_pin = rw;
   _enable_pin = enable;
@@ -69,15 +91,16 @@ void LiquidCrystal::init(uint8_t fourbitmode, uint8_t rs, uint8_t rw, uint8_t en
 
   if (fourbitmode)
     _displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
+    // _displayfunction = 0x00 | 0x00 | 0x00; (LCD_4BITMODE = 0x00, LCD_1LINE = 0x00, LCD_5x8DOTS = 0x00)
   else 
     _displayfunction = LCD_8BITMODE | LCD_1LINE | LCD_5x8DOTS;
-  
   begin(16, 1);  
 }
 
-void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
+void begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
   if (lines > 1) {
-    _displayfunction |= LCD_2LINE;
+    _displayfunction |= LCD_2LINE; // #define LCD_2LINE 0x08
+    // _displayfunction = 0x08
   }
   _numlines = lines;
 
@@ -85,8 +108,8 @@ void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 
   // for some 1 line displays you can select a 10 pixel high font
   if ((dotsize != LCD_5x8DOTS) && (lines == 1)) {
-    _displayfunction |= LCD_5x10DOTS;
-  }
+    _displayfunction |= LCD_5x10DOTS; // #define LCD_5x10DOTS 0x04
+    // _displayfunction = 0x0C (LCD_5x10DOTS = 0x04, LCD_2LINE = 0x08)
 
   pinMode(_rs_pin, OUTPUT);
   // we can save 1 pin by not using RW. Indicate by passing 255 instead of pin#
@@ -95,9 +118,10 @@ void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
   }
   pinMode(_enable_pin, OUTPUT);
   
-  // Do these once, instead of every time a character is drawn for speed reasons.
-  for (int i=0; i<((_displayfunction & LCD_8BITMODE) ? 8 : 4); ++i)
+  // Do these once, instead of every time a character is drawn for speed reasons. //LCD_8BITMODE = 0x10
+  for (int i=0; i<((_displayfunction & LCD_8BITMODE) ? 8 : 4); ++i) // at this point _displayfunction = 0x20
   {
+    // _displayfunction & LCD_8BITMODE = 0x0C & 0x10 = 0x00 => 4 times
     pinMode(_data_pins[i], OUTPUT);
    } 
 
@@ -148,6 +172,8 @@ void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
   }
 
   // finally, set # lines, font size, etc.
+  // #define LCD_FUNCTIONSET 0x20 | #define LCD_5x8DOTS 0x00 | #define LCD_2LINE 0x08 | #define LCD_4BITMODE 0x00
+  // 0x28
   command(LCD_FUNCTIONSET | _displayfunction);  
 
   // turn the display on with no cursor or blinking default
@@ -164,7 +190,7 @@ void LiquidCrystal::begin(uint8_t cols, uint8_t lines, uint8_t dotsize) {
 
 }
 
-void LiquidCrystal::setRowOffsets(int row0, int row1, int row2, int row3)
+void setRowOffsets(int row0, int row1, int row2, int row3)
 {
   _row_offsets[0] = row0;
   _row_offsets[1] = row1;
@@ -173,19 +199,19 @@ void LiquidCrystal::setRowOffsets(int row0, int row1, int row2, int row3)
 }
 
 /********** high level commands, for the user! */
-void LiquidCrystal::clear()
+void clear()
 {
   command(LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
   delayMicroseconds(2000);  // this command takes a long time!
 }
 
-void LiquidCrystal::home()
+void home()
 {
   command(LCD_RETURNHOME);  // set cursor position to zero
   delayMicroseconds(2000);  // this command takes a long time!
 }
 
-void LiquidCrystal::setCursor(uint8_t col, uint8_t row)
+void setCursor(uint8_t col, uint8_t row)
 {
   const size_t max_lines = sizeof(_row_offsets) / sizeof(*_row_offsets);
   if ( row >= max_lines ) {
@@ -199,70 +225,70 @@ void LiquidCrystal::setCursor(uint8_t col, uint8_t row)
 }
 
 // Turn the display on/off (quickly)
-void LiquidCrystal::noDisplay() {
+void noDisplay() {
   _displaycontrol &= ~LCD_DISPLAYON;
   command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
-void LiquidCrystal::display() {
+void display() {
   _displaycontrol |= LCD_DISPLAYON;
   command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // Turns the underline cursor on/off
-void LiquidCrystal::noCursor() {
+void noCursor() {
   _displaycontrol &= ~LCD_CURSORON;
   command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
-void LiquidCrystal::cursor() {
+void cursor() {
   _displaycontrol |= LCD_CURSORON;
   command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // Turn on and off the blinking cursor
-void LiquidCrystal::noBlink() {
+void noBlink() {
   _displaycontrol &= ~LCD_BLINKON;
   command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
-void LiquidCrystal::blink() {
+void blink() {
   _displaycontrol |= LCD_BLINKON;
   command(LCD_DISPLAYCONTROL | _displaycontrol);
 }
 
 // These commands scroll the display without changing the RAM
-void LiquidCrystal::scrollDisplayLeft(void) {
+void scrollDisplayLeft(void) {
   command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT);
 }
-void LiquidCrystal::scrollDisplayRight(void) {
+void scrollDisplayRight(void) {
   command(LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT);
 }
 
 // This is for text that flows Left to Right
-void LiquidCrystal::leftToRight(void) {
+void leftToRight(void) {
   _displaymode |= LCD_ENTRYLEFT;
   command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This is for text that flows Right to Left
-void LiquidCrystal::rightToLeft(void) {
+void rightToLeft(void) {
   _displaymode &= ~LCD_ENTRYLEFT;
   command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This will 'right justify' text from the cursor
-void LiquidCrystal::autoscroll(void) {
+void autoscroll(void) {
   _displaymode |= LCD_ENTRYSHIFTINCREMENT;
   command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // This will 'left justify' text from the cursor
-void LiquidCrystal::noAutoscroll(void) {
+void noAutoscroll(void) {
   _displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
   command(LCD_ENTRYMODESET | _displaymode);
 }
 
 // Allows us to fill the first 8 CGRAM locations
 // with custom characters
-void LiquidCrystal::createChar(uint8_t location, uint8_t charmap[]) {
+void createChar(uint8_t location, uint8_t charmap[]) {
   location &= 0x7; // we only have 8 locations 0-7
   command(LCD_SETCGRAMADDR | (location << 3));
   for (int i=0; i<8; i++) {
@@ -272,11 +298,11 @@ void LiquidCrystal::createChar(uint8_t location, uint8_t charmap[]) {
 
 /*********** mid level commands, for sending data/cmds */
 
-inline void LiquidCrystal::command(uint8_t value) {
+inline void command(uint8_t value) {
   send(value, LOW);
 }
 
-inline size_t LiquidCrystal::write(uint8_t value) {
+inline size_t write(uint8_t value) {
   send(value, HIGH);
   return 1; // assume sucess
 }
@@ -284,7 +310,7 @@ inline size_t LiquidCrystal::write(uint8_t value) {
 /************ low level data pushing commands **********/
 
 // write either command or data, with automatic 4/8-bit selection
-void LiquidCrystal::send(uint8_t value, uint8_t mode) {
+void send(uint8_t value, uint8_t mode) {
   digitalWrite(_rs_pin, mode);
 
   // if there is a RW pin indicated, set it low to Write
@@ -300,7 +326,7 @@ void LiquidCrystal::send(uint8_t value, uint8_t mode) {
   }
 }
 
-void LiquidCrystal::pulseEnable(void) {
+void pulseEnable(void) {
   digitalWrite(_enable_pin, LOW);
   delayMicroseconds(1);    
   digitalWrite(_enable_pin, HIGH);
@@ -309,7 +335,7 @@ void LiquidCrystal::pulseEnable(void) {
   delayMicroseconds(100);   // commands need > 37us to settle
 }
 
-void LiquidCrystal::write4bits(uint8_t value) {
+void write4bits(uint8_t value) {
   for (int i = 0; i < 4; i++) {
     digitalWrite(_data_pins[i], (value >> i) & 0x01);
   }
@@ -317,7 +343,7 @@ void LiquidCrystal::write4bits(uint8_t value) {
   pulseEnable();
 }
 
-void LiquidCrystal::write8bits(uint8_t value) {
+void write8bits(uint8_t value) {
   for (int i = 0; i < 8; i++) {
     digitalWrite(_data_pins[i], (value >> i) & 0x01);
   }

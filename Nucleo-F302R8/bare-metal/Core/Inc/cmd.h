@@ -16,6 +16,6 @@ enum TIM_MODE {
 void promt();
 uint8_t executeCmd(char *termInput, int cmdLength);
 void noOperation();
-
+void CO2(char* paramStr, int* paramValues);
 
 #endif /* INC_CMD_H_ */

@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "cmd.h"
 #include "scd30.h"
+//#include "lcd16x2.h"
 #include "appver.h"
 
 #define SENSIRION_ADDRESS 0x61 << 1
@@ -181,21 +182,21 @@ void CO2(char* paramStr, int* paramValues) {
          (((unsigned int)data[3]) << 8) |
          ((unsigned int)data[4]));
          // cast unsigned 32 bit integer to 32 bit float
-         co2Concentration = *(float*)&tempU32; // co2Concentration = 439.09f
+         co2Concentration = *(float*)&tempU32; // co2Concentration
 
          tempU32 = (unsigned int)((((unsigned int)data[6]) << 24) |
          (((unsigned int)data[7]) << 16) |
          (((unsigned int)data[9]) << 8) |
          ((unsigned int)data[10]));
          // cast unsigned 32 bit integer to 32 bit float
-         temperature = *(float*)&tempU32; // co2Concentration = 439.09f
+         temperature = *(float*)&tempU32;
 
-         //printf("\r\n");
-         //for (int i = 0; i<18; i++) {
-         //   printf("0x%02x", data[i]);
-         //}
          printf("\r\nco2Concentration = %f", co2Concentration);
          printf("\r\ntemperature = %f", temperature);
+
+         //
+         sprintf((char*) paramValues, "co2 Concentration = %f", co2Concentration);
+
       }
       else {
          printf("\r\nReading sensor-data failed!");

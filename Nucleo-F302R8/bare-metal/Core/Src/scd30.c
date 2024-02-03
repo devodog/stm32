@@ -16,16 +16,16 @@
 #define GET_DATA_READY_STATUS 0x0202
 #define READ_MEASURMENT 0x0300
 
-extern I2C_HandleTypeDef hi2c1;
+extern I2C_HandleTypeDef hi2c3;
 
 void ReadFirmwareVersion() {
    uint8_t firmwareVersion[4] = {0xd1,0,0,0};
    uint16_t firmware = 0xD100;
 
    // Send a specific command to the Sensiron I2C slave... the command is a two byte register address...
-   HAL_I2C_Master_Transmit(&hi2c1, SENSIRION_ADDRESS, firmwareVersion, 2, 1000);
+   HAL_I2C_Master_Transmit(&hi2c3, SENSIRION_ADDRESS, firmwareVersion, 2, 1000);
 
-   if (HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, firmware, I2C_MEMADD_SIZE_16BIT, &firmwareVersion[0], 3, 1000) != HAL_OK) {
+   if (HAL_I2C_Mem_Read(&hi2c3, SENSIRION_ADDRESS, firmware, I2C_MEMADD_SIZE_16BIT, &firmwareVersion[0], 3, 1000) != HAL_OK) {
       printf("\r\nHAL_I2C_Mem_Read() FAILED!");
    }
    else {
@@ -38,7 +38,7 @@ void ContinuousMeasurement(uint16_t AmbientPressureCompensation) {
    cm[2] = (AmbientPressureCompensation>>8) & 0xff;
    cm[3] = AmbientPressureCompensation & 0xff;
 
-   if (HAL_I2C_Master_Transmit(&hi2c1, SENSIRION_ADDRESS, cm, 5, 1000)!= HAL_OK) {
+   if (HAL_I2C_Master_Transmit(&hi2c3, SENSIRION_ADDRESS, cm, 5, 1000)!= HAL_OK) {
       printf("\r\nStarting Continuous Measurement FAILED!");
    }
    else {
@@ -48,7 +48,7 @@ void ContinuousMeasurement(uint16_t AmbientPressureCompensation) {
 
 void StopContinuousMeasurement() {
    uint8_t cm[2] = {0x01, 0x04};
-   if (HAL_I2C_Master_Transmit(&hi2c1, SENSIRION_ADDRESS, cm, 2, 1000)!= HAL_OK) {
+   if (HAL_I2C_Master_Transmit(&hi2c3, SENSIRION_ADDRESS, cm, 2, 1000)!= HAL_OK) {
       printf("\r\nStopping Continuous Measurement FAILED!");
    }
    else {
@@ -61,7 +61,7 @@ void SetMeasurementInterval(uint16_t interval) {
    cm[2] = (interval>>8) & 0xff;
    cm[3] = interval & 0xff;
 
-   if (HAL_I2C_Master_Transmit(&hi2c1, SENSIRION_ADDRESS, cm, 5, 1000)!= HAL_OK) {
+   if (HAL_I2C_Master_Transmit(&hi2c3, SENSIRION_ADDRESS, cm, 5, 1000)!= HAL_OK) {
       printf("\r\nSetting Measurement Interval FAILED!");
    }
    else {
@@ -72,13 +72,13 @@ void SetMeasurementInterval(uint16_t interval) {
 int GetDataReadyStatus() {
    uint8_t cm[3] = {0x02, 0x02, 0}; //Get data ready status
 
-   if (HAL_I2C_Master_Transmit(&hi2c1, SENSIRION_ADDRESS, cm, 2, 1000)!= HAL_OK) {
+   if (HAL_I2C_Master_Transmit(&hi2c3, SENSIRION_ADDRESS, cm, 2, 1000)!= HAL_OK) {
       printf("\r\nGet Data Ready Status FAILED!");
       return -1;
    }
    else {
       HAL_Delay(3);
-      HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, GET_DATA_READY_STATUS, I2C_MEMADD_SIZE_16BIT, cm, 3, 1000);
+      HAL_I2C_Mem_Read(&hi2c3, SENSIRION_ADDRESS, GET_DATA_READY_STATUS, I2C_MEMADD_SIZE_16BIT, cm, 3, 1000);
       printf("\r\nReady Status.:0x%02x|0x%02x|0x%02x", cm[0],cm[1], cm[2]);
       if ((cm[0]==0)&&(cm[1]==1))
          return 1;
@@ -90,13 +90,13 @@ int GetDataReadyStatus() {
 int ReadMeasurement(uint8_t* data, uint8_t len) {
    uint8_t cm[2] = {0x03, 0x00};
 
-   if (HAL_I2C_Master_Transmit(&hi2c1, SENSIRION_ADDRESS, cm, 2, 1000)!= HAL_OK) {
+   if (HAL_I2C_Master_Transmit(&hi2c3, SENSIRION_ADDRESS, cm, 2, 1000)!= HAL_OK) {
       printf("\r\nRead Measurement FAILED!");
       return -1;
    }
    else {
-      //HAL_Delay(3); // Should we use the GetDataReadyStatus() prior to this?
-      HAL_I2C_Mem_Read(&hi2c1, SENSIRION_ADDRESS, GET_DATA_READY_STATUS, I2C_MEMADD_SIZE_16BIT, data, len, 1000);
+      HAL_Delay(5); // Should we use the GetDataReadyStatus() prior to this?
+      HAL_I2C_Mem_Read(&hi2c3, SENSIRION_ADDRESS, GET_DATA_READY_STATUS, I2C_MEMADD_SIZE_16BIT, data, len, 1000);
       printf("\r\nMeasurement read.");
       return 1;
    }

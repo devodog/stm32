@@ -23,6 +23,7 @@
 
 // display controller setup commands from page 46 of Hitachi datasheet
 #define FUNCTION_SET 0x20 //
+#define FUNCTION_4BIT_BUS 0x00 //
 #define FUNCTION_8BIT_BUS 0x10 //
 #define FUNCTION_2LINE_DISPLAY 0x08 // 5x8 font
 #define FUNCTION_CHAR_FONT 0x0x4 // 4 bit interface, 2 lines, 5x8 font
@@ -38,12 +39,15 @@
 #define DISPLAY_SETUP_CURSOR 0x02 // cursor on
 #define DISPLAY_SETUP_BLINK 0x01 // blink on
 
+#define MAX_LEN 32
+
 int lcdInterfaceInit(void);
+void pulseEnable(void);
+void lcd4wireHwInit(void);
+void loadLcdRegister(uint8_t regValue, uint8_t regType);
 int lcdConfig(void);
 void lcdInit(void);
 
-void lcdRegLatch(uint8_t cmd);
-void InstuctionRegWrite(uint8_t cmd);
-void DataRegWrite(uint8_t data);
+int string2lcd(uint8_t* sbuf, uint8_t len);
 
 #endif /* INC_LCD16X2_H_ */

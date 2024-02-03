@@ -27,7 +27,6 @@
 #include "cmd.h"
 #include "scd30.h"
 #include "lcd16x2.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,9 +51,10 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
-I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c3;
 
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim17;
 
 UART_HandleTypeDef huart1;
@@ -70,7 +70,8 @@ static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM17_Init(void);
-static void MX_I2C1_Init(void);
+static void MX_I2C3_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 
 int _write(int fd, char *ptr, int len) {
@@ -135,6 +136,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
    //printf("\r\nHAL_TIM_PeriodElapsedCallback");
    //promt();
 }
+
+void delay_us(volatile uint16_t au16_us)
+{
+   htim6.Instance->CNT = 0;
+   while (htim6.Instance->CNT < au16_us);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -144,6 +152,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  //uint8_t values[32];
   setvbuf(stdout, NULL, _IONBF, 0);
   /* USER CODE END 1 */
 
@@ -169,7 +178,8 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM2_Init();
   MX_TIM17_Init();
-  MX_I2C1_Init();
+  MX_I2C3_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 
@@ -179,10 +189,11 @@ int main(void)
   printf("\r\n\r\nBare-Metal SW on STM32-NUCLEO-F302R8 development board");
   printf("\r\nBuild No. %d", BUILD);
   // Check if a I2C device is connected.
-  ReadFirmwareVersion(); // NOT OBVIOUS THAT THIS IS A I2C SENSOR....
+  //ReadFirmwareVersion(); // NOT OBVIOUS THAT THIS IS A I2C SENSOR....
   lcdInit();
   promt();
   HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
+  HAL_TIM_Base_Start_IT(&htim6);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -211,6 +222,19 @@ int main(void)
 			}
 		}
 
+		/*** TESTING THE delay_us() FUNCTION...
+		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+
+		for (int i = 0; i < 5000; i++)
+		   delay_us(1000);
+
+		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+
+		for (int i = 0; i < 5000; i++)
+         delay_us(1000);
+		***/
+
+		/*** TESTING THE PWM OPERATION OF TIM17
 		// PWM range from 0% to 100%
       for(int i=0; i<=100; i++){
          TIM17->CCR1 = i;
@@ -222,7 +246,13 @@ int main(void)
          TIM17->CCR1 = i;
          HAL_Delay(15);
       }
+      ***/
 
+/* - currently not working...
+      memset(values, 0, 32);
+      CO2("READ", (int*)&values[0]);
+      string2lcd(values, strlen((char *)values));
+*/
 	}
   /* USER CODE END 3 */
 }
@@ -262,10 +292,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_I2C1
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_I2C3
                               |RCC_PERIPHCLK_TIM17;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
-  PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_HSI;
+  PeriphClkInit.I2c3ClockSelection = RCC_I2C3CLKSOURCE_HSI;
   PeriphClkInit.Tim17ClockSelection = RCC_TIM17CLK_HCLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
@@ -347,50 +377,50 @@ static void MX_ADC1_Init(void)
 }
 
 /**
-  * @brief I2C1 Initialization Function
+  * @brief I2C3 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_I2C1_Init(void)
+static void MX_I2C3_Init(void)
 {
 
-  /* USER CODE BEGIN I2C1_Init 0 */
+  /* USER CODE BEGIN I2C3_Init 0 */
 
-  /* USER CODE END I2C1_Init 0 */
+  /* USER CODE END I2C3_Init 0 */
 
-  /* USER CODE BEGIN I2C1_Init 1 */
+  /* USER CODE BEGIN I2C3_Init 1 */
 
-  /* USER CODE END I2C1_Init 1 */
-  hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x2000090E;
-  hi2c1.Init.OwnAddress1 = 0;
-  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
-  hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
-  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
-  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  /* USER CODE END I2C3_Init 1 */
+  hi2c3.Instance = I2C3;
+  hi2c3.Init.Timing = 0x2000090E;
+  hi2c3.Init.OwnAddress1 = 0;
+  hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c3.Init.OwnAddress2 = 0;
+  hi2c3.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
   {
     Error_Handler();
   }
 
   /** Configure Analogue filter
   */
-  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c3, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
 
   /** Configure Digital filter
   */
-  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c3, 0) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN I2C1_Init 2 */
+  /* USER CODE BEGIN I2C3_Init 2 */
 
-  /* USER CODE END I2C1_Init 2 */
+  /* USER CODE END I2C3_Init 2 */
 
 }
 
@@ -436,6 +466,44 @@ static void MX_TIM2_Init(void)
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
+
+}
+
+/**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 8;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = 65535;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
 
 }
 
