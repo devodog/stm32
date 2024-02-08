@@ -298,7 +298,11 @@ Implemented pull-up 4.7k ohms resistor on the I2C bus.
 
 
 ## ongoing work
-writing a driver for the Hitachi 44780U LCD display controller.
+### Writing a driver for the Hitachi 44780U LCD display controller.
+The Hitachi 44780U LCD display controller's hardware interface is an 8-bit parallel instruction/data bus with 3 separate digital control lines, ref (https://cdn-shop.adafruit.com/datasheets/HD44780.pdf)  
+
+According to the display controller's specification the instruction/data bus can be used as a 4-bit bus to reduce the number of I/O connections and thereby enabling it to be used with MCUs with limited I/O pins.
+It is this 4-bit instruction/data bus configuration the LCD display driver support.
 
 __29Jan24__  
 First integration test failed - no response on the LCD display...
@@ -319,6 +323,24 @@ Still no output on the Hitachi Display. Seems that we'll have to verify that is 
 __01Feb24__  
 Found LCD software (LiquidCrystal.cpp & LiquidCrystal.h) that is distributed with Arduino software and will attempt to port it to c and the stm32 platform in use.  
 At the first glance it seems that the initialization sequence i the Arduino code is different that what is described in the Hitachi documentation.  
+
+__07Feb24__  
+Finally managed to output some text onto the LCD display.  
+<img src="images/NUCLEO_on_LCD.JPG" height="450">  
+TBD - insert picture text.  
+
+TBD - insert timing diagram for the controller initialization sequence HERE.   
+
+
+
+__Changes from the original setup:__  
+The Nibble-bus changed from PB0 - PB3 to PB4 - PB7 on the STM32F302R8 Development board.  
+The reason for this was that the PB3 pin is hardwired to the SWD line, and could thereby be effected by the debugger. As a result for this  
+the bus control line hardware interface was changed from PB6(RS) & PB7(E) to PB0 & PB1.  
+
+The GPIOs for the LCD controllers interface was configured through the STM32CubeIDE IOC utility.  
+<img src="images/gpioConfig7Feb24.png" height="450">  
+
 
 
 
