@@ -23,10 +23,10 @@
 
 // display controller setup commands from page 46 of Hitachi datasheet
 #define FUNCTION_SET 0x20 //
-#define FUNCTION_4BIT_BUS 0x00 //
+#define FUNCTION_4BIT_BUS 0x00 // 4 bit interface
 #define FUNCTION_8BIT_BUS 0x10 //
-#define FUNCTION_2LINE_DISPLAY 0x08 // 5x8 font
-#define FUNCTION_CHAR_FONT 0x0x4 // 4 bit interface, 2 lines, 5x8 font
+#define FUNCTION_2LINE_DISPLAY 0x08 // 2 lines
+#define FUNCTION_CHAR_FONT 0x4 // 5x8 font
 
 #define SET_DDRAM_ADDR 0x20
 
@@ -49,5 +49,5 @@ int lcdConfig(void);
 void lcdInit(void);
 
 int string2lcd(uint8_t* sbuf, uint8_t len);
-
+void lcdClock(uint8_t twentyFour, uint8_t hours, uint8_t minutes, uint8_t seconds, uint8_t hundreds);
 #endif /* INC_LCD16X2_H_ */

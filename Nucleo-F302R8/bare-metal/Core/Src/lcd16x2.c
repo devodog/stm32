@@ -41,7 +41,8 @@
    LCD pin 16 (LED-) to GND = RED Backlight
  *
  */
-#include "stdio.h"
+#include <stdio.h>
+//#include <stdint.h>
 #include "main.h"
 #include "lcd16x2.h"
 
@@ -56,6 +57,8 @@ int lcdInterfaceInit() {
    //                   D7D6D5D4    E SR
    //                 B8B7B6B5B4    B1B0
    // 0b00000000000000010101010100000101 = 0x15505
+   #include "stm32f3xx_hal_gpio.h"
+
    GPIOB->MODER |= 0x15505U;
 
    // GPIO port output type: 0 = Output push-pull (reset state)
@@ -163,7 +166,7 @@ void lcdInit() {
    lcdConfig();
 
    // Write a character to the display?
-   uint8_t txt[] = {'N', 'U', 'C', 'L', 'E', ' ', 'b', 'a', 'r', 'e', '-'};
+   uint8_t txt[] = {'N', 'U', 'C', 'L', 'E', 'O', ' ', 'b', 'a', 'r', 'e', '-'};
    uint8_t txt2[] = {'m', 'e', 't', 'a', 'l', ' ', '2', '0', '2', '4'};
    for (int i = 0; i < sizeof(txt); i++) {
       loadLcdRegister(txt[i], 1);
@@ -185,7 +188,47 @@ void lcdInit() {
    }
 }
 
+void lcdClear() {
+   loadLcdRegister(LCD_CLEAR, 0);
+   HAL_Delay(2);
+}  // lcdClear
+
+void lcdHome() {
+   loadLcdRegister(LCD_HOME, 0);
+   HAL_Delay(2);
+}  // lcdHome 
+
+void lcdCursorBack() {
+   loadLcdRegister(LCD_CURSOR_BACK, 0);
+   HAL_Delay(2);
+}  // lcdCursorBack
+
+void lcdClock(uint8_t twentyFour, uint8_t hours, uint8_t minutes, uint8_t seconds, uint8_t hundreds) {
+   // NOT USABLE FOR MEASURING TIME!
+   lcdClear();
+   lcdHome();
+   for (int i = 0; i < 4; i++) {
+      loadLcdRegister(0x20, 1);
+      //HAL_Delay(1);
+   }
+   char sbuf[16] = {0};
+   if (twentyFour == 1) {
+      sprintf(sbuf, "%02d:%02d:%02d    ", hours, minutes, seconds); // four spaces to center the LCD printout
+   }
+   else {
+      sprintf(sbuf, "%02d:%02d.%02d    ", minutes, seconds, hundreds); // four spaces to center the LCD printout
+   }
+
+   for (int i = 0; i < sizeof(sbuf); i++) {
+      loadLcdRegister(sbuf[i], 1);
+      //HAL_Delay(1);
+   }
+   return;
+}
+
 int string2lcd(uint8_t* sbuf, uint8_t len) {
+   lcdClear();
+   lcdHome();
    if (len > MAX_LEN)
       len = MAX_LEN;
    for (int i = 0; i < len; i++) {

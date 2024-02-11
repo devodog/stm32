@@ -95,6 +95,10 @@ char termInputBuffer[80];
 int bytesReceived = 0;
 uint8_t led2 = OFF;
 uint8_t timMode = ONE_SHOT;
+uint8_t relHours = 0;
+uint8_t relMinutes = 0;
+uint8_t relSeconds = 0;
+uint8_t relHundreds = 0;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	//uint8_t UARTnewLine = 10;
@@ -141,6 +145,35 @@ void delay_us(volatile uint16_t au16_us)
    while (htim6.Instance->CNT < au16_us);
 }
 
+void relClockUpdate() {
+/***
+   if (relHundreds <= 99) {
+      relHundreds++;
+   }
+   else {
+      relHundreds = 0;
+***/
+   if (relSeconds < 59) {
+      relSeconds++;
+   }
+   else {
+      relSeconds = 0;
+      if (relMinutes < 59) {
+         relMinutes++;
+      }
+      else {
+         relMinutes = 0;
+         if (relHours <= 23) {
+            relHours++;
+         }
+         else {
+            relHours = 0;
+         }
+      }
+   }
+   //}
+   return;
+}
 /* USER CODE END 0 */
 
 /**
@@ -190,6 +223,7 @@ int main(void)
 
   lcdInit();
   promt();
+  HAL_Delay(2000);
   //HAL_TIM_PWM_Start(&htim17, TIM_CHANNEL_1);
 
   /* USER CODE END 2 */
@@ -219,6 +253,12 @@ int main(void)
 			   ledState = OFF;
 			}
 		}
+
+    HAL_Delay(1000);
+    lcdClock(1, relHours, relMinutes, relSeconds, relHundreds);
+    relClockUpdate();
+    
+    //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
 		/*** TESTING THE delay_us() FUNCTION...
 		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
@@ -483,7 +523,9 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 8;
+  htim6.Init.Prescaler = 8; // Selected prescaler to be 8 to make an 
+                            // 8 MHz clock to a 1 MHz clock, but it seems 
+                            // that ticks are approximately 11% longer... 
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim6.Init.Period = 65535;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
