@@ -27,6 +27,8 @@
 #include "cmd.h"
 #include "scd30.h"
 #include "lcd16x2.h"
+#include "eightBitSinus.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +53,8 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
+DAC_HandleTypeDef hdac;
+
 I2C_HandleTypeDef hi2c3;
 
 TIM_HandleTypeDef htim2;
@@ -70,6 +74,7 @@ static void MX_ADC1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_TIM6_Init(void);
+static void MX_DAC_Init(void);
 /* USER CODE BEGIN PFP */
 
 int _write(int fd, char *ptr, int len) {
@@ -185,6 +190,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
   //uint8_t values[32];
   setvbuf(stdout, NULL, _IONBF, 0);
+  int i = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -210,11 +216,13 @@ int main(void)
   MX_TIM2_Init();
   MX_I2C3_Init();
   MX_TIM6_Init();
+  MX_DAC_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 
   //HAL_TIM_Base_Start_IT(&htim2);
   HAL_TIM_Base_Start_IT(&htim6);
+  HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
   uint8_t ledState = OFF;
   printf("\r\n\r\nBare-Metal SW on STM32-NUCLEO-F302R8 development board");
   printf("\r\nBuild No. %d", BUILD);
@@ -230,7 +238,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
+  uint32_t DAC_OUT[4] = {0, 64, 128, 250};
 	while (1) {
     /* USER CODE END WHILE */
 
@@ -253,11 +261,18 @@ int main(void)
 			   ledState = OFF;
 			}
 		}
-
+/****
     HAL_Delay(1000);
     lcdClock(1, relHours, relMinutes, relSeconds, relHundreds);
     relClockUpdate();
-    
+****/
+		if (i > 255)
+		   i = 0;
+		//DAC1->DHR12R1 = DAC_OUT[i];
+		DAC1->DHR8R1 = sinData[i];
+		i++;
+		delay_us(200);
+		//HAL_Delay(1);
     //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
 		/*** TESTING THE delay_us() FUNCTION...
@@ -413,6 +428,46 @@ static void MX_ADC1_Init(void)
 }
 
 /**
+  * @brief DAC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_DAC_Init(void)
+{
+
+  /* USER CODE BEGIN DAC_Init 0 */
+
+  /* USER CODE END DAC_Init 0 */
+
+  DAC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN DAC_Init 1 */
+
+  /* USER CODE END DAC_Init 1 */
+
+  /** DAC Initialization
+  */
+  hdac.Instance = DAC;
+  if (HAL_DAC_Init(&hdac) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** DAC channel OUT1 config
+  */
+  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
+  sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
+  if (HAL_DAC_ConfigChannel(&hdac, &sConfig, DAC_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN DAC_Init 2 */
+
+  /* USER CODE END DAC_Init 2 */
+
+}
+
+/**
   * @brief I2C3 Initialization Function
   * @param None
   * @retval None
@@ -523,9 +578,7 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 8; // Selected prescaler to be 8 to make an 
-                            // 8 MHz clock to a 1 MHz clock, but it seems 
-                            // that ticks are approximately 11% longer... 
+  htim6.Init.Prescaler = 8;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim6.Init.Period = 65535;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -609,11 +662,21 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PC10 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
   /**/
   HAL_I2CEx_EnableFastModePlus(SYSCFG_CFGR1_I2C_PB6_FMP);
 
   /**/
   HAL_I2CEx_EnableFastModePlus(SYSCFG_CFGR1_I2C_PB7_FMP);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

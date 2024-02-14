@@ -345,10 +345,28 @@ Made of ```void relClockUpdate() and void lcdClock(uint8_t twentyFour, uint8_t h
 The ```lcd16x2.c``` contain the minimalistic Hitachi Display Controller driver code, and is sufficient to demonstrate the use of the STM32F302R8's GPIOs for implementing a simple bus-interface for the LCD display device.  
 
 
-
+__14Feb24__  
+### DAC & extern input interrupt recently deployed.  
+more TBD asap.   
+```
+MX_DAC_Init();
+...
+...
+HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
+...
+...
+while (1) {
+  if (i > 255)
+      i = 0;
+  DAC1->DHR8R1 = sinData[i];
+  i++;
+  delay_us(200);
+}
+```  
+Produced sinusoidal signal with 16 Hz frequency...  
 
 
 __future study__  
-DMA, DAC, CAN, SPI, USB  
+DMA, CAN, SPI, USB  
 
 1. Sound generator - use of DMA & DAC...
