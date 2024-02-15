@@ -363,10 +363,22 @@ while (1) {
   delay_us(200);
 }
 ```  
-Produced sinusoidal signal with 16 Hz frequency...  
+Produced sinusoidal signal with 16 Hz frequency...  one full cycle with 256 values will naturally calculate to 256 * 0,2 ms = 51.2 ms => 19.5 Hz  
+approximately 35 µs is added per register write since the measured period is approximately 60 ms.   
+<img src="images/DAC-test.png" height="350">   
+
+
+To increase frequency we'll use DMA.  
+```DAC_CR = 0x1005``` => DAC channel1 enable + DAC channel1 trigger enable + DAC channel1 enable & Timer 6 TRGO event to DAC channel1 + DAC channel1 DMA enable  
+```DMA_CCRx = 0x0ab1``` => memory size=32, peripheral size=32, Bit 7 MINC=1, Bit 6 PINC=0, Bit 5 CIRC=1, Bit 4 DIR=1, Bit 3 TEIE=0, Bit 2 HTIE=0, Bit 1 TCIE=0, Bit 0 EN=1  
+... and some other config registers - maybe the ioc tool could complete the configuration.
+__Note!__  
+Currently using TIM6 for µs delay... Must use this timer for DMA handling.  
+
+
 
 
 __future study__  
-DMA, CAN, SPI, USB  
+CAN, SPI, USB  
 
 1. Sound generator - use of DMA & DAC...
