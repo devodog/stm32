@@ -54,6 +54,7 @@
 ADC_HandleTypeDef hadc1;
 
 DAC_HandleTypeDef hdac;
+DMA_HandleTypeDef hdma_dac_ch1;
 
 I2C_HandleTypeDef hi2c3;
 
@@ -69,12 +70,13 @@ UART_HandleTypeDef huart1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_I2C3_Init(void);
-static void MX_TIM6_Init(void);
 static void MX_DAC_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 
 int _write(int fd, char *ptr, int len) {
@@ -87,6 +89,7 @@ int _write(int fd, char *ptr, int len) {
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void XferCpltCallback(DMA_HandleTypeDef *hdma);
 extern int msValue;
 extern int timRepeat;
 extern int timRepeatCount;
@@ -146,8 +149,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void delay_us(volatile uint16_t au16_us)
 {
-   htim6.Instance->CNT = 0;
-   while (htim6.Instance->CNT < au16_us);
+   //htim6.Instance->CNT = 0;
+   //while (htim6.Instance->CNT < au16_us);
 }
 
 void relClockUpdate() {
@@ -190,7 +193,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
   //uint8_t values[32];
   setvbuf(stdout, NULL, _IONBF, 0);
-  int i = 0;
+  //int i = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -211,18 +214,27 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_ADC1_Init();
   MX_TIM2_Init();
   MX_I2C3_Init();
-  MX_TIM6_Init();
   MX_DAC_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 
   //HAL_TIM_Base_Start_IT(&htim2);
-  HAL_TIM_Base_Start_IT(&htim6);
-  HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
+  //HAL_TIM_Base_Start_IT(&htim6);
+  //HAL_DMA_Start_IT(&hdma_dac_ch1, (uint32_t)sinData, (uint32_t)&DAC1->DHR8R1, 256);
+  //htim6.Instance->ARR = 32000;
+  //HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
+
+
+  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)sinData, 256, DAC_ALIGN_8B_R);
+  HAL_TIM_Base_Start(&htim6);
+
+
   uint8_t ledState = OFF;
   printf("\r\n\r\nBare-Metal SW on STM32-NUCLEO-F302R8 development board");
   printf("\r\nBuild No. %d", BUILD);
@@ -238,7 +250,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint32_t DAC_OUT[4] = {0, 64, 128, 250};
+  //uint32_t DAC_OUT[4] = {0, 64, 128, 250};
 	while (1) {
     /* USER CODE END WHILE */
 
@@ -266,12 +278,14 @@ int main(void)
     lcdClock(1, relHours, relMinutes, relSeconds, relHundreds);
     relClockUpdate();
 ****/
+		/***
 		if (i > 255)
 		   i = 0;
 		//DAC1->DHR12R1 = DAC_OUT[i];
 		DAC1->DHR8R1 = sinData[i];
 		i++;
 		delay_us(200);
+		***/
 		//HAL_Delay(1);
     //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
@@ -455,7 +469,7 @@ static void MX_DAC_Init(void)
 
   /** DAC channel OUT1 config
   */
-  sConfig.DAC_Trigger = DAC_TRIGGER_NONE;
+  sConfig.DAC_Trigger = DAC_TRIGGER_T6_TRGO;
   sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
   if (HAL_DAC_ConfigChannel(&hdac, &sConfig, DAC_CHANNEL_1) != HAL_OK)
   {
@@ -578,15 +592,15 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 8;
+  htim6.Init.Prescaler = 0;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 65535;
-  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim6.Init.Period = 32;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
   {
@@ -630,6 +644,22 @@ static void MX_USART1_UART_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 
 }
 
@@ -683,7 +713,10 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void XferCpltCallback(DMA_HandleTypeDef *hdma)
+{
+  __NOP(); //Line reached only if transfer was successful. Toggle a breakpoint here
+}
 /* USER CODE END 4 */
 
 /**

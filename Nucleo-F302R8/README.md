@@ -375,10 +375,64 @@ To increase frequency we'll use DMA.
 __Note!__  
 Currently using TIM6 for µs delay... Must use this timer for DMA handling.  
 
+__16Feb24__  
+No success with DMA operation for DAC. The configuration through the ioc-tool is quite confusing.  
+Using https://deepbluembedded.com/stm32-dac-sine-wave-generation-stm32-dac-dma-timer-example/ as inspiration.  
+In short, the configuration for the use of DAC with DMA includes 3 MCU internal devices.  
+1. The DAC  
+2. The DMA  
+3. One of the MCU's timers - for this example Timer6 is used.  
+
+There are of course many different ways to configure these devices, since the MCU designers aim to please all and every strange set-up.  
+It cloud easily be suspected that the provision of the ioc-tool is to cover over the limited and missing documentation for the STM32 MCU family.  
+Because, the lack of sufficient and available documentation is making the use of these devices somewhat unnecessary complicated.  
+
+The two HAL functions to use is:
+```  
+HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)sinData, 256, DAC_ALIGN_8B_R);
+HAL_TIM_Base_Start(&htim6);
+```  
+
+and to be, of course, inserted after the device (DAC, DMA and TIM6) initialization.  
+
+```  
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 0;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = 32;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
+
+}
+```  
+which will produce a sinusoidal signal with magnitude of 1.65V on GPIO PA4 and with a frequency of approximately 1kHz (measured to 950 Hz). 
+
 
 
 
 __future study__  
-CAN, SPI, USB  
-
-1. Sound generator - use of DMA & DAC...
+USB, CAN, SPI  
