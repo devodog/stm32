@@ -347,7 +347,10 @@ The ```lcd16x2.c``` contain the minimalistic Hitachi Display Controller driver c
 
 __14Feb24__  
 ### DAC & extern input interrupt recently deployed.  
-more TBD asap.   
+## extern input interrupt NOT TESTED!  
+
+Simple DAC operation:  
+
 ```
 MX_DAC_Init();
 ...
@@ -379,9 +382,9 @@ __16Feb24__
 No success with DMA operation for DAC. The configuration through the ioc-tool is quite confusing.  
 Using https://deepbluembedded.com/stm32-dac-sine-wave-generation-stm32-dac-dma-timer-example/ as inspiration.  
 In short, the configuration for the use of DAC with DMA includes 3 MCU internal devices.  
-1. The DAC  
-2. The DMA  
-3. One of the MCU's timers - for this example Timer6 is used.  
+1. The DAC ```sConfig.DAC_Trigger = DAC_TRIGGER_T6_TRGO; sConfig.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;```  
+2. The DMA: DMA Request = DAC_CH1,  Channel = DMA1 Channel 3, Direction = Memory-to-peripheral, Priority = High, Mode = Circular, Memory increment, Size = Word.
+3. One of the MCU's timers - for this example Timer6 is used. See TIM6 init code below.  
 
 There are of course many different ways to configure these devices, since the MCU designers aim to please all and every strange set-up.  
 It cloud easily be suspected that the provision of the ioc-tool is to cover over the limited and missing documentation for the STM32 MCU family.  

@@ -60,6 +60,7 @@ I2C_HandleTypeDef hi2c3;
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim6;
+TIM_HandleTypeDef htim15;
 
 UART_HandleTypeDef huart1;
 
@@ -77,6 +78,7 @@ static void MX_TIM2_Init(void);
 static void MX_I2C3_Init(void);
 static void MX_DAC_Init(void);
 static void MX_TIM6_Init(void);
+static void MX_TIM15_Init(void);
 /* USER CODE BEGIN PFP */
 
 int _write(int fd, char *ptr, int len) {
@@ -149,8 +151,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
 void delay_us(volatile uint16_t au16_us)
 {
-   //htim6.Instance->CNT = 0;
-   //while (htim6.Instance->CNT < au16_us);
+   htim15.Instance->CNT = 0;
+   while (htim15.Instance->CNT < au16_us);
 }
 
 void relClockUpdate() {
@@ -221,8 +223,10 @@ int main(void)
   MX_I2C3_Init();
   MX_DAC_Init();
   MX_TIM6_Init();
+  MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
+  HAL_TIM_Base_Start(&htim15);
 
   //HAL_TIM_Base_Start_IT(&htim2);
   //HAL_TIM_Base_Start_IT(&htim6);
@@ -230,10 +234,8 @@ int main(void)
   //htim6.Instance->ARR = 32000;
   //HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
 
-
   HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)sinData, 256, DAC_ALIGN_8B_R);
   HAL_TIM_Base_Start(&htim6);
-
 
   uint8_t ledState = OFF;
   printf("\r\n\r\nBare-Metal SW on STM32-NUCLEO-F302R8 development board");
@@ -278,16 +280,7 @@ int main(void)
     lcdClock(1, relHours, relMinutes, relSeconds, relHundreds);
     relClockUpdate();
 ****/
-		/***
-		if (i > 255)
-		   i = 0;
-		//DAC1->DHR12R1 = DAC_OUT[i];
-		DAC1->DHR8R1 = sinData[i];
-		i++;
-		delay_us(200);
-		***/
-		//HAL_Delay(1);
-    //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+      //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
 		/*** TESTING THE delay_us() FUNCTION...
 		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
@@ -359,9 +352,11 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_I2C3;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_I2C3
+                              |RCC_PERIPHCLK_TIM15;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
   PeriphClkInit.I2c3ClockSelection = RCC_I2C3CLKSOURCE_HSI;
+  PeriphClkInit.Tim15ClockSelection = RCC_TIM15CLK_HCLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -594,7 +589,7 @@ static void MX_TIM6_Init(void)
   htim6.Instance = TIM6;
   htim6.Init.Prescaler = 0;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 32;
+  htim6.Init.Period = 624;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
@@ -609,6 +604,52 @@ static void MX_TIM6_Init(void)
   /* USER CODE BEGIN TIM6_Init 2 */
 
   /* USER CODE END TIM6_Init 2 */
+
+}
+
+/**
+  * @brief TIM15 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM15_Init(void)
+{
+
+  /* USER CODE BEGIN TIM15_Init 0 */
+
+  /* USER CODE END TIM15_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM15_Init 1 */
+
+  /* USER CODE END TIM15_Init 1 */
+  htim15.Instance = TIM15;
+  htim15.Init.Prescaler = 0;
+  htim15.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim15.Init.Period = 65535;
+  htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim15.Init.RepetitionCounter = 0;
+  htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim15) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim15, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim15, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM15_Init 2 */
+
+  /* USER CODE END TIM15_Init 2 */
 
 }
 
