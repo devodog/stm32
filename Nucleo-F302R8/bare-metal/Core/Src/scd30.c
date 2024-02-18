@@ -95,8 +95,8 @@ int ReadMeasurement(uint8_t* data, uint8_t len) {
       return -1;
    }
    else {
-      HAL_Delay(5); // Should we use the GetDataReadyStatus() prior to this?
-      HAL_I2C_Mem_Read(&hi2c3, SENSIRION_ADDRESS, GET_DATA_READY_STATUS, I2C_MEMADD_SIZE_16BIT, data, len, 1000);
+      //HAL_Delay(5); // Should we use the GetDataReadyStatus() prior to this?
+      HAL_I2C_Mem_Read(&hi2c3, SENSIRION_ADDRESS, READ_MEASURMENT, I2C_MEMADD_SIZE_16BIT, data, len, 1000);
       printf("\r\nMeasurement read.");
       return 1;
    }

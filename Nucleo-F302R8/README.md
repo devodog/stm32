@@ -434,7 +434,11 @@ static void MX_TIM6_Init(void)
 ```  
 which will produce a sinusoidal signal with magnitude of 1.65V on GPIO PA4 and with a frequency of approximately 1kHz (measured to 950 Hz). 
 
+__18Feb24__  
+I2C interface fixed after moving it from I2C1 to I2C3 as the first conflicts with the SWD debugger. PA8 and PC9 configured with pull-ups for the I2C bus.  
+<img src="images/CO2printout.png" height="400">  
 
+Microsecond (delay_us()) delay also needed to exchange the TIMER device from TIM6 to TIM15 - needed for LCD bus-drive.
 
 
 __future study__  
