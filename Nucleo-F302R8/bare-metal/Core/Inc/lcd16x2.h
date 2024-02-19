@@ -50,4 +50,6 @@ void lcdInit(void);
 
 int string2lcd(uint8_t* sbuf, uint8_t len);
 void lcdClock(uint8_t twentyFour, uint8_t hours, uint8_t minutes, uint8_t seconds, uint8_t hundreds);
+int strings4lcd(uint8_t* line1, uint8_t len1, uint8_t* line2, uint8_t len2);
+
 #endif /* INC_LCD16X2_H_ */

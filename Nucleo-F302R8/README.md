@@ -438,6 +438,16 @@ __18Feb24__
 I2C interface fixed after moving it from I2C1 to I2C3 as the first conflicts with the SWD debugger. PA8 and PC9 configured with pull-ups for the I2C bus.  
 <img src="images/CO2printout.png" height="400">  
 
+The I2C sensor reading works for only a few minutes, and when it "collapse" it is not possible to reestablish contact with the co2-sensor device. Only a power reset will bring the I2C communication back.  
+Re-reading the Sensirion specifications for the SCD30 co2 sensor and how the I2C interface should be used, it is certainly possible that the selected I2C bus speed, which is 100 KHz, is causing this behaviour.  
+We'll try reducing it to 50 kHz.  
+Using 50 kHz for the I2C bus kept the bus operational over the time of test, but still quite a lot of the data received was corrupted.  
+Reducing the I2C bus clock to 32 kHz and included CRC check on the received data in order to only do floating point handling of "good" data.
+The CRC check showed that approximately 50% of the data were corrupted from the sensor device to the mcu, which could be related to the I2C bus not properly matched - using only on-chip pull-ups on both ends of the bus, probably providing still a fairly high pull-up resistor value (47k in the Sensirion and something the same at the GPIO on the mcu used I2C communication).  
+Should try to use a 4.7k pull-up for the I2C bus.  
+
+
+__Microsecond delay__  
 Microsecond (delay_us()) delay also needed to exchange the TIMER device from TIM6 to TIM15 - needed for LCD bus-drive.
 
 

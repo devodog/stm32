@@ -14,10 +14,11 @@
 #define INC_SCD30_H_
 
 void ReadFirmwareVersion(void);
-void ContinuousMeasurement(uint16_t);
+int ContinuousMeasurement(uint16_t);
 void StopContinuousMeasurement(void);
 void SetMeasurementInterval(uint16_t);
 int GetDataReadyStatus(void);
 int ReadMeasurement(uint8_t*, uint8_t);
+void SoftReset();
 
 #endif /* INC_SCD30_H_ */

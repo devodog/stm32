@@ -96,6 +96,9 @@ extern int msValue;
 extern int timRepeat;
 extern int timRepeatCount;
 
+extern char co2[20];
+extern char temp[20];
+
 uint8_t txBuffer[14] =
 		{ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 10, 13, 10, 13 };
 uint8_t counter = 0;
@@ -193,7 +196,8 @@ void relClockUpdate() {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  //uint8_t values[32];
+  uint32_t values[3];
+
   setvbuf(stdout, NULL, _IONBF, 0);
   //int i = 0;
   /* USER CODE END 1 */
@@ -252,7 +256,9 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  //uint32_t DAC_OUT[4] = {0, 64, 128, 250};
+
+   SetMeasurementInterval(2);
+   ContinuousMeasurement(0);
 	while (1) {
     /* USER CODE END WHILE */
 
@@ -282,18 +288,6 @@ int main(void)
 ****/
       //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
-		/*** TESTING THE delay_us() FUNCTION...
-		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-
-		for (int i = 0; i < 5000; i++)
-		   delay_us(1000);
-
-		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-
-		for (int i = 0; i < 5000; i++)
-         delay_us(1000);
-		***/
-
 		/*** TESTING THE PWM OPERATION OF TIM17
 		// PWM range from 0% to 100%
       for(int i=0; i<=100; i++){
@@ -308,11 +302,9 @@ int main(void)
       }
       ***/
 
-/* - currently not working...
-      memset(values, 0, 32);
-      CO2("READ", (int*)&values[0]);
-      string2lcd(values, strlen((char *)values));
-*/
+		HAL_Delay(10000);
+		CO2("READ", (int*)&values[0]);
+      strings4lcd((uint8_t*)co2, strlen((char *)co2), (uint8_t*)temp, strlen((char *)temp));
 	}
   /* USER CODE END 3 */
 }
@@ -492,14 +484,14 @@ static void MX_I2C3_Init(void)
 
   /* USER CODE END I2C3_Init 1 */
   hi2c3.Instance = I2C3;
-  hi2c3.Init.Timing = 0x2000090E;
+  hi2c3.Init.Timing = 0x00101DD6;
   hi2c3.Init.OwnAddress1 = 0;
   hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
   hi2c3.Init.OwnAddress2 = 0;
   hi2c3.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
   hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
+  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
   if (HAL_I2C_Init(&hi2c3) != HAL_OK)
   {
     Error_Handler();

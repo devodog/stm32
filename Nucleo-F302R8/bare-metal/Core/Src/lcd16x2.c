@@ -238,3 +238,30 @@ int string2lcd(uint8_t* sbuf, uint8_t len) {
 
    return len;
 }
+
+int strings4lcd(uint8_t* line1, uint8_t len1, uint8_t* line2, uint8_t len2) {
+   lcdClear();
+   lcdHome();
+   int spaceLen = 0;
+
+   if (len1 > MAX_LEN)
+      len1 = MAX_LEN;
+   for (int i = 0; i < len1; i++) {
+      loadLcdRegister(line1[i], 1);
+      HAL_Delay(1);
+   }
+   spaceLen = 40 - len1;
+   for (int i = 0; i < spaceLen; i++) {
+         loadLcdRegister(0x20, 1);
+         //HAL_Delay(1);
+   }
+
+   if (len2 > MAX_LEN)
+      len2 = MAX_LEN;
+   for (int i = 0; i < len2; i++) {
+      loadLcdRegister(line2[i], 1);
+      HAL_Delay(1);
+   }
+
+   return len1+len2;
+}

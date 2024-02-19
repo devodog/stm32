@@ -33,11 +33,15 @@ extern I2C_HandleTypeDef hi2c1;
 extern uint8_t led2;
 extern uint8_t timMode;
 
+char co2[20] = {0};
+char temp[20] = {0};
+
 int timRepeat = 1;
 int timRepeatCount = 0;
 
 int msValue = 0; // milliseconds value
 int lastError = 0;
+int sensorReadings = 0;
 
 // The cmd-line Command structure
 struct command {
@@ -161,8 +165,24 @@ void CO2(char* paramStr, int* paramValues) {
    }
    else if (strncmp(paramStr, "READ", 4) == 0) {
       uint8_t data[20];
+      int readRes = 0;
+      int i = 0;
+      for (; i < 10; i++) {
+         if (GetDataReadyStatus() == 1) {
+            HAL_Delay(5);
+            break;
+         }
+         HAL_Delay(5);
+      }
 
-      if (1 == ReadMeasurement(data, sizeof(data))) {
+      if (i>=10) {
+         printf("\r\nSensor-data NOT READY!");
+         return;
+      }
+
+      readRes = ReadMeasurement(data, sizeof(data));
+
+      if (0 == readRes) {
          // CO2 concentration
          float co2Concentration;
          float temperature;
@@ -191,15 +211,29 @@ void CO2(char* paramStr, int* paramValues) {
          // cast unsigned 32 bit integer to 32 bit float
          temperature = *(float*)&tempU32;
 
-         printf("\r\nco2Concentration = %f", co2Concentration);
-         printf("\r\ntemperature = %f", temperature);
+         printf("\r\nCO2 Concentration = %8.2f", co2Concentration);
+         printf("\r\n    Temperature   = %8.2f", temperature);
 
          //
-         sprintf((char*) paramValues, "co2 Concentration = %f", co2Concentration);
-
+         if ( ((co2Concentration > 1.0) && (co2Concentration < 15000.0)) &&
+              ((temperature > -20.0) && (temperature < 40.0)))   {
+            sensorReadings++;
+            sprintf((char*) co2, "CO2[ppm] = %6.2f", co2Concentration);
+            sprintf((char*) temp, "Temp[C]  = %4.2f", temperature);
+         }
+         else {
+            printf("\r\nReadings outside sensor boundaries!");
+         }
+      }
+      else if (readRes >= 1) {
+         printf("\r\nCRC Error: %d", readRes);
       }
       else {
          printf("\r\nReading sensor-data failed!");
+         // Software reset.
+         //SoftReset();
+         sprintf((char*) co2, "Sensor reading");
+         sprintf((char*) temp, "ERROR. %d ok", sensorReadings);
       }
    }
    else if (strncmp(paramStr, "HELP", 4) == 0){
