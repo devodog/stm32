@@ -455,11 +455,19 @@ Serial line (UART from NUCLEO board) console print-out og the Sensirion sensor r
 <img src="images/CO2printout2.png" height="400">  
 Notice the CRC Error detected for some of the sensor reading over I2C, which is the reason for why we should try to add 4.7k pull-ups on the I2C bus.  
 
-
-
-
 __Microsecond delay__  
-Microsecond (delay_us()) delay also needed to exchange the TIMER device from TIM6 to TIM15 - needed for LCD 4-bit bus-drive.
+Microsecond (delay_us()) delay also needed to exchange the TIMER device from TIM6 to TIM15 - needed for LCD 4-bit bus-drive.  
+
+### Preparing for motor control application
+3 GPIOs for Hall sensors + 6 GPIOs for inverter switch control.  
+TBD  
+
+### Preparing for toy shooting target hit indication
+TBD  
+
+### Prepare for WiFi access and publishing measurement data on to a web server
+Using ESP8266 & USART  
+TBD  
 
 
 __future study__  
