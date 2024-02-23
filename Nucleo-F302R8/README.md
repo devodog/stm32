@@ -462,12 +462,21 @@ Microsecond (delay_us()) delay also needed to exchange the TIMER device from TIM
 3 GPIOs for Hall sensors + 6 GPIOs for inverter switch control.  
 TBD  
 
-### Preparing for toy shooting target hit indication
+## Flashing STM32 MCUs over USB (PDU device)
+This is a interesting feature that should be investigated.  
+Background  
 TBD  
 
+__Study__  
+AN2606 Application note  
+STM32 microcontroller system memory boot mode  
+
+
 ### Prepare for WiFi access and publishing measurement data on to a web server
-Using ESP8266 & USART  
-TBD  
+Using ESP8266 firmware with AT commands over USART connection. 
+This seems to be some what unwise, since the attempt to upload the WEMOS D1 mini from Lodlin, with the ESP8266 NONOS firmware for AT operation failed.  
+Will stick to the Arduino platform (NodeMCU) for making the D1 mini a IoT device.  
+Focus will be on Preparing for toy shooting target hit indication
 
 
 __future study__  
