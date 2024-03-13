@@ -1,0 +1,2053 @@
+co2Concentration = 1421.695801
+temperature = 26.036087
+Measurement read.
+co2Concentration = 1404.787720
+temperature = 26.006714
+Measurement read.
+co2Concentration = 1451.960327
+temperature = 26.020065
+Measurement read.
+co2Concentration = -2833095461663630426112.000000
+temperature = -33407997952.000000
+Ready Status.:0x00|0x81|0x85
+Measurement read.
+co2Concentration = 1771.887207
+temperature = 26.049438
+Measurement read.
+co2Concentration = -778264588699849195520.000000
+temperature = -33319874560.000000
+Ready Status.:0x00|0x81|0x9c
+Measurement read.
+co2Concentration = 1967.791016
+temperature = 26.020065
+Measurement read.
+co2Concentration = 1914.576660
+temperature = 26.006714
+Measurement read.
+co2Concentration = 1848.351074
+temperature = 25.993362
+Measurement read.
+co2Concentration = 1909.928101
+temperature = 26.020065
+Measurement read.
+co2Concentration = 2073.139648
+temperature = 26.076141
+Measurement read.
+co2Concentration = 1687.806152
+temperature = 26.062790
+Measurement read.
+co2Concentration = 1559.248413
+temperature = 26.092163
+Measurement read.
+co2Concentration = 1417.453491
+temperature = 26.092163
+Measurement read.
+co2Concentration = 1408.653320
+temperature = 26.108185
+Measurement read.
+co2Concentration = -0.000000
+temperature = -33361616896.000000
+Ready Status.:0x00|0x81|0xca
+Measurement read.
+co2Concentration = 1485.926270
+temperature = 26.164261
+Measurement read.
+co2Concentration = -0.000360
+temperature = -108129976320.000000
+Ready Status.:0x01|0xb0|0x01
+Measurement read.
+co2Concentration = 1488.960938
+temperature = 26.076141
+Measurement read.
+co2Concentration = 1469.826904
+temperature = 26.108185
+Measurement read.
+co2Concentration = 1433.184326
+temperature = 26.150909
+Measurement read.
+co2Concentration = 1401.477051
+temperature = 26.164261
+Measurement read.
+co2Concentration = -0.000000
+temperature = -107963400192.000000
+Ready Status.:0x00|0x81|0x60
+Measurement read.
+co2Concentration = 1362.960449
+temperature = 26.206985
+Measurement read.
+co2Concentration = -0.000000
+temperature = -108045754368.000000
+Ready Status.:0x00|0x81|0x71
+Measurement read.
+co2Concentration = 1683.487183
+temperature = 26.233688
+Measurement read.
+co2Concentration = 1577.825439
+temperature = 26.247040
+Measurement read.
+co2Concentration = 1519.182373
+temperature = 26.220337
+Measurement read.
+co2Concentration = 1484.557495
+temperature = 26.276421
+Measurement read.
+co2Concentration = 1578.741211
+temperature = 26.247040
+Measurement read.
+co2Concentration = -31.727268
+temperature = -108231196672.000000
+Ready Status.:0x00|0x81|0x2b
+Measurement read.
+co2Concentration = 1472.651611
+temperature = 26.263069
+Measurement read.
+co2Concentration = 10118284570609380753408.000000
+temperature = 0.000000
+Read Measurement FAILED!
+Reading sensor-data failed!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Read Measurement FAILED!
+Reading sensor-data failed!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 430
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 431
+NUCLEO>
+Setting Measurement Interval FAILED!
+Starting Continuous Measurement FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 431
+NUCLEO>
+Measurement Interval is set.
+Continuous Measurement started.
+Ready Status.:0x01|0xb0|0x00
+Ready Status.:0x01|0xb0|0x00
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = 2165.291504
+temperature = 26.626228
+Ready Status.:0x01|0xb0|0x54
+Ready Status.:0x01|0xb0|0x54
+Ready Status.:0x01|0xb0|0x54
+Measurement read.
+co2Concentration = 2142.818115
+temperature = 26.570152
+Ready Status.:0x01|0xb0|0xed
+Ready Status.:0x01|0xb0|0xed
+Ready Status.:0x01|0xb0|0xed
+Measurement read.
+co2Concentration = 0.000000
+temperature = -3240840921088.000000
+Ready Status.:0x00|0x81|0xda
+Ready Status.:0x01|0xb0|0xda
+Ready Status.:0x01|0xb0|0xda
+Ready Status.:0x01|0xb0|0xda
+Measurement read.
+co2Concentration = 1799.245972
+temperature = 26.514076
+Ready Status.:0x01|0xb0|0xe7
+Ready Status.:0x01|0xb0|0xe7
+Ready Status.:0x01|0xb0|0xe7
+Measurement read.
+co2Concentration = -268719904.000000
+temperature = -1477343182848.000000
+Ready Status.:0x00|0x81|0x20
+Ready Status.:0x01|0xb0|0x20
+Ready Status.:0x01|0xb0|0x20
+Ready Status.:0x01|0xb0|0x20
+Measurement read.
+co2Concentration = 1511.781494
+temperature = 26.444649
+Ready Status.:0x01|0xb0|0xf9
+Ready Status.:0x01|0xb0|0xf9
+Ready Status.:0x01|0xb0|0xf9
+Measurement read.
+co2Concentration = 1429.047363
+temperature = 26.431297
+Ready Status.:0x01|0xb0|0xa1
+Ready Status.:0x01|0xb0|0xa1
+Ready Status.:0x01|0xb0|0xa1
+Measurement read.
+co2Concentration = -0.000000
+temperature = -1471457132544.000000
+Ready Status.:0x00|0x81|0x00
+Ready Status.:0x01|0xb0|0x00
+Ready Status.:0x01|0xb0|0x00
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = 1407.094604
+temperature = 26.431297
+Ready Status.:0x01|0xb0|0xe3
+Ready Status.:0x01|0xb0|0xe3
+Ready Status.:0x01|0xb0|0xe3
+Measurement read.
+co2Concentration = 1407.105957
+temperature = 0.000000
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 431
+NUCLEO>
+Setting Measurement Interval FAILED!
+Starting Continuous Measurement FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 431
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 432
+NUCLEO>
+Setting Measurement Interval FAILED!
+Starting Continuous Measurement FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 432
+NUCLEO>
+Measurement Interval is set.
+Continuous Measurement started.
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = 1339.462280
+temperature = 26.714348
+Ready Status.:0x01|0xb0|0x6e
+Measurement read.
+co2Concentration = 1481.382324
+temperature = 26.671623
+Ready Status.:0x01|0xb0|0x2c
+Measurement read.
+co2Concentration = 1545.533081
+temperature = 26.626228
+Ready Status.:0x01|0xb0|0x31
+Measurement read.
+co2Concentration = 1510.929688
+temperature = 26.599525
+Ready Status.:0x01|0xb0|0xdd
+Measurement read.
+co2Concentration = 1411.299438
+temperature = 26.570152
+Ready Status.:0x01|0xb0|0x69
+Measurement read.
+co2Concentration = 1366.863647
+temperature = 26.543449
+Ready Status.:0x01|0xb0|0xdb
+Measurement read.
+co2Concentration = 1333.335205
+temperature = 26.543449
+Ready Status.:0x01|0xb0|0xaa
+Measurement read.
+co2Concentration = 1319.084106
+temperature = 26.474022
+Ready Status.:0x01|0xb0|0xe2
+Measurement read.
+co2Concentration = -0.000000
+temperature = -1475757342720.000000
+Ready Status.:0x00|0x81|0xa5
+Ready Status.:0x01|0xb0|0xa5
+Measurement read.
+co2Concentration = 1342.140259
+temperature = 26.431297
+Ready Status.:0x01|0xb0|0xc4
+Measurement read.
+co2Concentration = 1348.264771
+temperature = 26.431297
+Ready Status.:0x01|0xb0|0x88
+Measurement read.
+co2Concentration = 1793.256226
+temperature = 26.458000
+Ready Status.:0x01|0xb0|0x28
+Measurement read.
+co2Concentration = 2143.610107
+temperature = 26.431297
+Ready Status.:0x01|0xb0|0xf9
+Measurement read.
+co2Concentration = 1952.724976
+temperature = 26.431297
+Ready Status.:0x01|0xb0|0x17
+Measurement read.
+co2Concentration = -70835171399757360199920254976.000000
+temperature = -1477084708864.000000
+Ready Status.:0x01|0xb0|0x44
+Ready Status.:0x01|0xb0|0x44
+Measurement read.
+co2Concentration = 1724.408325
+temperature = 26.431297
+Ready Status.:0x01|0xb0|0x8d
+Measurement read.
+co2Concentration = 1673.042847
+temperature = 26.401924
+Ready Status.:0x01|0xb0|0x21
+Measurement read.
+co2Concentration = 1732.496094
+temperature = 26.401924
+Ready Status.:0x01|0xb0|0x8f
+Measurement read.
+co2Concentration = 1881.296387
+temperature = 26.388573
+Ready Status.:0x01|0xb0|0x29
+Measurement read.
+co2Concentration = 1822.375488
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0xcc
+Measurement read.
+co2Concentration = 1535.992554
+temperature = 26.388573
+Ready Status.:0x01|0xb0|0xff
+Measurement read.
+co2Concentration = -0.000000
+temperature = -1475751051264.000000
+Ready Status.:0x00|0x81|0x50
+Ready Status.:0x01|0xb0|0x50
+Measurement read.
+co2Concentration = 1368.428833
+temperature = 26.401924
+Ready Status.:0x01|0xb0|0x0d
+Measurement read.
+co2Concentration = -0.000000
+temperature = -1472795901952.000000
+Ready Status.:0x00|0x81|0x07
+Ready Status.:0x01|0xb0|0x07
+Measurement read.
+co2Concentration = 1464.930786
+temperature = 26.375221
+Ready Status.:0x01|0xb0|0x1d
+Measurement read.
+co2Concentration = 0.000000
+temperature = -331357618176.000000
+Ready Status.:0x01|0xb0|0xa4
+Ready Status.:0x01|0xb0|0xa4
+Measurement read.
+co2Concentration = 2589.370850
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0xd5
+Measurement read.
+co2Concentration = 2469.264160
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0x54
+Measurement read.
+co2Concentration = 1910.934814
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0xdd
+Measurement read.
+co2Concentration = 1737.374878
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0x2b
+Measurement read.
+co2Concentration = 1778.857788
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0x5b
+Measurement read.
+co2Concentration = 1700.224609
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0x87
+Measurement read.
+co2Concentration = 1478.089233
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0xc2
+Measurement read.
+co2Concentration = 1373.704102
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xb6
+Measurement read.
+co2Concentration = 1328.697144
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0x16
+Measurement read.
+co2Concentration = 1323.863770
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x7b
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332426706944.000000
+Ready Status.:0x00|0x81|0xfd
+Ready Status.:0x01|0xb0|0xfd
+Measurement read.
+co2Concentration = 1308.431152
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x8d
+Measurement read.
+co2Concentration = 1305.091309
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0x22
+Measurement read.
+co2Concentration = 1299.617676
+temperature = 26.233688
+Ready Status.:0x01|0xb0|0x73
+Measurement read.
+co2Concentration = 1295.560303
+temperature = 26.247040
+Ready Status.:0x01|0xb0|0xf1
+Measurement read.
+co2Concentration = 1293.607788
+temperature = 26.233688
+Ready Status.:0x01|0xb0|0xb3
+Measurement read.
+co2Concentration = 1293.111206
+temperature = 26.247040
+Ready Status.:0x01|0xb0|0xa3
+Measurement read.
+co2Concentration = -0.000000
+temperature = -108416139264.000000
+Ready Status.:0x00|0x81|0x4b
+Ready Status.:0x01|0xb0|0x4b
+Measurement read.
+co2Concentration = 1288.485229
+temperature = 26.247040
+Ready Status.:0x01|0xb0|0x0f
+Measurement read.
+co2Concentration = -0.000000
+temperature = -108416139264.000000
+Ready Status.:0x00|0x81|0xa4
+Ready Status.:0x01|0xb0|0xa4
+Measurement read.
+co2Concentration = 1283.523438
+temperature = 26.233688
+Ready Status.:0x01|0xb0|0x70
+Measurement read.
+co2Concentration = -0.000000
+temperature = -108231196672.000000
+Ready Status.:0x00|0x81|0x4e
+Ready Status.:0x01|0xb0|0x4e
+Measurement read.
+co2Concentration = 1279.267700
+temperature = 26.233688
+Ready Status.:0x01|0xb0|0xe8
+Measurement read.
+co2Concentration = 1277.099976
+temperature = 26.206985
+Ready Status.:0x01|0xb0|0xa3
+Measurement read.
+co2Concentration = 1272.773315
+temperature = 26.206985
+Ready Status.:0x01|0xb0|0x18
+Measurement read.
+co2Concentration = -0.000000
+temperature = -108045754368.000000
+Ready Status.:0x01|0xb0|0xd7
+Ready Status.:0x01|0xb0|0xd7
+Measurement read.
+co2Concentration = 1266.723145
+temperature = 26.177612
+Ready Status.:0x01|0xb0|0x57
+Measurement read.
+co2Concentration = 1263.716187
+temperature = 26.177612
+Ready Status.:0x01|0xb0|0xf6
+Measurement read.
+co2Concentration = -0.000000
+temperature = -107963400192.000000
+Ready Status.:0x00|0x81|0xaf
+Ready Status.:0x01|0xb0|0xaf
+Measurement read.
+co2Concentration = 1259.325806
+temperature = 26.177612
+Ready Status.:0x01|0xb0|0x6a
+Measurement read.
+co2Concentration = -0.000000
+temperature = -107963400192.000000
+Ready Status.:0x00|0x81|0x3d
+Ready Status.:0x01|0xb0|0x3d
+Measurement read.
+co2Concentration = 1256.658325
+temperature = 26.150909
+Ready Status.:0x01|0xb0|0x15
+Measurement read.
+co2Concentration = 1255.516968
+temperature = 26.164261
+Ready Status.:0x01|0xb0|0xf0
+Measurement read.
+co2Concentration = 1252.487915
+temperature = 26.177612
+Ready Status.:0x01|0xb0|0x8f
+Measurement read.
+co2Concentration = 1251.614990
+temperature = 26.190964
+Ready Status.:0x01|0xb0|0x73
+Measurement read.
+co2Concentration = 1249.784424
+temperature = 26.150909
+Ready Status.:0x01|0xb0|0x39
+Measurement read.
+co2Concentration = 1249.572388
+temperature = 26.177612
+Ready Status.:0x01|0xb0|0x32
+Measurement read.
+co2Concentration = 1248.134521
+temperature = 26.177612
+Ready Status.:0x01|0xb0|0x04
+Measurement read.
+co2Concentration = 1248.561035
+temperature = 26.164261
+Ready Status.:0x01|0xb0|0x11
+Measurement read.
+co2Concentration = 1249.040527
+temperature = 26.108185
+Ready Status.:0x01|0xb0|0x21
+Measurement read.
+co2Concentration = 1246.875000
+temperature = 26.108185
+Ready Status.:0x01|0xb0|0xdc
+Measurement read.
+co2Concentration = 1247.234619
+temperature = 26.134888
+Ready Status.:0x01|0xb0|0xe7
+Measurement read.
+co2Concentration = 1248.104248
+temperature = 26.121536
+Ready Status.:0x01|0xb0|0x03
+Measurement read.
+co2Concentration = 1247.960693
+temperature = 26.108185
+Ready Status.:0x01|0xb0|0xfe
+Measurement read.
+co2Concentration = 1247.973999
+temperature = 26.150909
+Ready Status.:0x01|0xb0|0xff
+Measurement read.
+co2Concentration = 1247.294678
+temperature = 26.108185
+Ready Status.:0x01|0xb0|0xe9
+Measurement read.
+co2Concentration = 1247.423096
+temperature = 26.108185
+Ready Status.:0x01|0xb0|0xed
+Measurement read.
+co2Concentration = 1245.877075
+temperature = 26.108185
+Ready Status.:0x01|0xb0|0xbc
+Measurement read.
+co2Concentration = 1295.607056
+temperature = 26.108185
+Ready Status.:0x01|0xb0|0xf3
+Measurement read.
+co2Concentration = -15020.393555
+temperature = -33411997696.000000
+Ready Status.:0x00|0x81|0x2d
+Ready Status.:0x01|0xb0|0x2d
+Measurement read.
+co2Concentration = 1440.018921
+temperature = 26.049438
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = -0.000000
+temperature = -33319874560.000000
+Ready Status.:0x00|0x81|0xce
+Ready Status.:0x01|0xb0|0xce
+Measurement read.
+co2Concentration = 1308.120728
+temperature = 26.062790
+Ready Status.:0x01|0xb0|0x83
+Measurement read.
+co2Concentration = 1294.255249
+temperature = 26.049438
+Ready Status.:0x01|0xb0|0xc8
+Measurement read.
+co2Concentration = 1274.728760
+temperature = 26.076141
+Ready Status.:0x01|0xb0|0x57
+Measurement read.
+co2Concentration = 1267.223877
+temperature = 26.049438
+Ready Status.:0x01|0xb0|0x67
+Measurement read.
+co2Concentration = 1258.889404
+temperature = 26.036087
+Ready Status.:0x01|0xb0|0x5c
+Measurement read.
+co2Concentration = 1256.283691
+temperature = 26.036087
+Ready Status.:0x01|0xb0|0x09
+Measurement read.
+co2Concentration = -0.000000
+temperature = -33365757952.000000
+Ready Status.:0x00|0x81|0xac
+Ready Status.:0x01|0xb0|0xac
+Measurement read.
+co2Concentration = 1250.408447
+temperature = 26.062790
+Ready Status.:0x01|0xb0|0x4d
+Measurement read.
+co2Concentration = 1249.866455
+temperature = 26.049438
+Ready Status.:0x01|0xb0|0x3b
+Measurement read.
+co2Concentration = 1247.328369
+temperature = 26.036087
+Ready Status.:0x01|0xb0|0xea
+Measurement read.
+co2Concentration = 1246.073120
+temperature = 26.020065
+Ready Status.:0x01|0xb0|0xc2
+Measurement read.
+co2Concentration = 1242.018921
+temperature = 26.006714
+Ready Status.:0x01|0xb0|0x40
+Measurement read.
+co2Concentration = 1238.310425
+temperature = 26.006714
+Ready Status.:0x01|0xb0|0xc9
+Measurement read.
+co2Concentration = 1234.907837
+temperature = 26.036087
+Ready Status.:0x01|0xb0|0x5d
+Measurement read.
+co2Concentration = 1235.161377
+temperature = 26.049438
+Ready Status.:0x01|0xb0|0x65
+Measurement read.
+co2Concentration = 1234.132568
+temperature = 26.020065
+Ready Status.:0x01|0xb0|0x44
+Measurement read.
+co2Concentration = 1232.677979
+temperature = 26.062790
+Ready Status.:0x01|0xb0|0x15
+Measurement read.
+co2Concentration = 1230.413574
+temperature = 26.020065
+Ready Status.:0x01|0xb0|0xcd
+Measurement read.
+co2Concentration = 1227.370361
+temperature = 26.049438
+Ready Status.:0x01|0xb0|0x6b
+Measurement read.
+co2Concentration = -0.000000
+temperature = -33365757952.000000
+Ready Status.:0x00|0x81|0x6c
+Ready Status.:0x01|0xb0|0x6c
+Measurement read.
+co2Concentration = 1226.201172
+temperature = 26.076141
+Ready Status.:0x01|0xb0|0x46
+Measurement read.
+co2Concentration = -0.000000
+temperature = -33319874560.000000
+Ready Status.:0x00|0x81|0x4e
+Ready Status.:0x01|0xb0|0x4e
+Measurement read.
+co2Concentration = 1226.762329
+temperature = 26.062790
+Ready Status.:0x01|0xb0|0x58
+Measurement read.
+co2Concentration = -0.000000
+temperature = -33365757952.000000
+Ready Status.:0x00|0x81|0x64
+Ready Status.:0x01|0xb0|0x64
+Measurement read.
+co2Concentration = 1227.401611
+temperature = 26.062790
+Ready Status.:0x01|0xb0|0x6c
+Measurement read.
+co2Concentration = 1227.387207
+temperature = 0.000000
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 432
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 433
+NUCLEO>
+Setting Measurement Interval FAILED!
+Starting Continuous Measurement FAILED!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 433
+NUCLEO>
+Measurement Interval is set.
+Continuous Measurement started.
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = 1824.359375
+temperature = 26.770432
+Ready Status.:0x01|0xb0|0x0b
+Measurement read.
+co2Concentration = 1695.220337
+temperature = 26.714348
+Ready Status.:0x01|0xb0|0xe7
+Measurement read.
+co2Concentration = 1546.014282
+temperature = 26.671623
+Ready Status.:0x01|0xb0|0x40
+Measurement read.
+co2Concentration = 1538.453613
+temperature = 26.671623
+Ready Status.:0x01|0xb0|0x4e
+Measurement read.
+co2Concentration = -318.355011
+temperature = -9735850950656.000000
+Ready Status.:0x00|0x81|0x95
+Ready Status.:0x01|0xb0|0x95
+Measurement read.
+co2Concentration = 1583.739868
+temperature = 26.612877
+Ready Status.:0x01|0xb0|0xf7
+Measurement read.
+co2Concentration = 1612.499146
+temperature = 26.599525
+Ready Status.:0x01|0xb0|0x8f
+Measurement read.
+co2Concentration = 1582.875122
+temperature = 26.586174
+Ready Status.:0x01|0xb0|0xdc
+Measurement read.
+co2Concentration = 1456.988159
+temperature = 26.530098
+Ready Status.:0x01|0xb0|0x1f
+Measurement read.
+co2Concentration = 1348.724731
+temperature = 26.530098
+Ready Status.:0x01|0xb0|0x97
+Measurement read.
+co2Concentration = 1350.198608
+temperature = 26.500725
+Ready Status.:0x01|0xb0|0xc6
+Measurement read.
+co2Concentration = 1389.411377
+temperature = 26.474022
+Ready Status.:0x01|0xb0|0xad
+Measurement read.
+co2Concentration = 1391.240356
+temperature = 26.458000
+Ready Status.:0x01|0xb0|0xe7
+Measurement read.
+co2Concentration = 1373.401611
+temperature = 26.458000
+Ready Status.:0x01|0xb0|0xac
+Measurement read.
+co2Concentration = 1328.690918
+temperature = 26.458000
+Ready Status.:0x01|0xb0|0x16
+Measurement read.
+co2Concentration = 1298.454712
+temperature = 26.417946
+Ready Status.:0x01|0xb0|0x4e
+Measurement read.
+co2Concentration = -0.000000
+temperature = -1471457132544.000000
+Ready Status.:0x01|0xb0|0x8f
+Ready Status.:0x01|0xb0|0x8f
+Measurement read.
+co2Concentration = 1289.470459
+temperature = 26.388573
+Ready Status.:0x01|0xb0|0x2f
+Measurement read.
+co2Concentration = 1288.556519
+temperature = 26.401924
+Ready Status.:0x01|0xb0|0x11
+Measurement read.
+co2Concentration = 1290.259155
+temperature = 26.417946
+Ready Status.:0x01|0xb0|0x48
+Measurement read.
+co2Concentration = 1305.539429
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0x31
+Measurement read.
+co2Concentration = 1445.234375
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0xa7
+Measurement read.
+co2Concentration = 1406.340820
+temperature = 26.359200
+Ready Status.:0x01|0xb0|0xca
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332095684608.000000
+Ready Status.:0x00|0x81|0x49
+Ready Status.:0x01|0xb0|0x49
+Measurement read.
+co2Concentration = 1344.058716
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0x01
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332759793664.000000
+Ready Status.:0x00|0x81|0x89
+Ready Status.:0x01|0xb0|0x89
+Measurement read.
+co2Concentration = 1318.452393
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xce
+Measurement read.
+co2Concentration = 1310.567139
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xd2
+Measurement read.
+co2Concentration = 1309.729858
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0xb7
+Measurement read.
+co2Concentration = 1306.721191
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x57
+Measurement read.
+co2Concentration = 1305.166138
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0x25
+Measurement read.
+co2Concentration = 1301.726440
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xb7
+Measurement read.
+co2Concentration = 1300.456543
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0x8e
+Measurement read.
+co2Concentration = 1303.865479
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0xfb
+Measurement read.
+co2Concentration = 1305.225708
+temperature = 26.359200
+Ready Status.:0x01|0xb0|0x27
+Measurement read.
+co2Concentration = 1304.120972
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0x03
+Measurement read.
+co2Concentration = 1304.388062
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0x0c
+Measurement read.
+co2Concentration = 1299.641968
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0x74
+Measurement read.
+co2Concentration = 1300.357300
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0x8b
+Measurement read.
+co2Concentration = 1299.212402
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0x66
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332426706944.000000
+Ready Status.:0x00|0x81|0x50
+Ready Status.:0x01|0xb0|0x50
+Measurement read.
+co2Concentration = 1296.914673
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0x1d
+Measurement read.
+co2Concentration = 1296.180054
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0x05
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332759793664.000000
+Ready Status.:0x00|0x81|0xd0
+Ready Status.:0x01|0xb0|0xd0
+Measurement read.
+co2Concentration = 1292.905762
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0x9c
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332026544128.000000
+Ready Status.:0x00|0x81|0xac
+Ready Status.:0x01|0xb0|0xac
+Measurement read.
+co2Concentration = 1292.857300
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0x9b
+Measurement read.
+co2Concentration = 1294.935669
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0xdd
+Measurement read.
+co2Concentration = 1292.735352
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0x97
+Measurement read.
+co2Concentration = 1292.631958
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x94
+Measurement read.
+co2Concentration = 1290.910156
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x5d
+Measurement read.
+co2Concentration = 1290.621582
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0x53
+Measurement read.
+co2Concentration = 1291.552246
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0x71
+Measurement read.
+co2Concentration = 1292.769531
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x98
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332026544128.000000
+Ready Status.:0x00|0x81|0xb5
+Ready Status.:0x01|0xb0|0xb5
+Measurement read.
+co2Concentration = 1294.696045
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xd6
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332026544128.000000
+Ready Status.:0x00|0x81|0xce
+Ready Status.:0x01|0xb0|0xce
+Measurement read.
+co2Concentration = 1292.946533
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0x9e
+Measurement read.
+co2Concentration = 1293.488159
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0xaf
+Measurement read.
+co2Concentration = 1294.611694
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0xd3
+Measurement read.
+co2Concentration = -0.000000
+temperature = -331691261952.000000
+Ready Status.:0x00|0x81|0xd6
+Ready Status.:0x01|0xb0|0xd6
+Measurement read.
+co2Concentration = 1297.821289
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x3a
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332426706944.000000
+Ready Status.:0x01|0xb0|0x2b
+Ready Status.:0x01|0xb0|0x2b
+Measurement read.
+co2Concentration = 1300.773926
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0x98
+Measurement read.
+co2Concentration = 1306.061157
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x41
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332426706944.000000
+Ready Status.:0x00|0x81|0x9e
+Ready Status.:0x01|0xb0|0x9e
+Measurement read.
+co2Concentration = 1365.107422
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0xa3
+Measurement read.
+co2Concentration = 1368.896362
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x1c
+Measurement read.
+co2Concentration = 1376.323486
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0x0a
+Measurement read.
+co2Concentration = 1382.155396
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xc4
+Measurement read.
+co2Concentration = 1382.006348
+temperature = 26.303123
+Ready Status.:0x01|0xb0|0xc0
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332759793664.000000
+Ready Status.:0x00|0x81|0x28
+Ready Status.:0x01|0xb0|0x28
+Measurement read.
+co2Concentration = 1384.485840
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0x0f
+Measurement read.
+co2Concentration = 1389.005005
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xa0
+Measurement read.
+co2Concentration = 1390.743774
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xd7
+Measurement read.
+co2Concentration = 1387.262207
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0x68
+Measurement read.
+co2Concentration = 1384.017456
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = 1380.558350
+temperature = 26.332497
+Ready Status.:0x01|0xb0|0x91
+Measurement read.
+co2Concentration = -0.000000
+temperature = -331357618176.000000
+Ready Status.:0x00|0x81|0x0c
+Ready Status.:0x01|0xb0|0x0c
+Measurement read.
+co2Concentration = 1370.119629
+temperature = 26.345848
+Ready Status.:0x01|0xb0|0x43
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332026544128.000000
+Ready Status.:0x00|0x81|0x83
+Ready Status.:0x01|0xb0|0x83
+Measurement read.
+co2Concentration = 1359.768555
+temperature = 26.319145
+Ready Status.:0x01|0xb0|0xf8
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332759793664.000000
+Ready Status.:0x00|0x81|0x38
+Ready Status.:0x01|0xb0|0x38
+Measurement read.
+co2Concentration = 1348.017090
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x80
+Measurement read.
+co2Concentration = 1341.208252
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0xa6
+Measurement read.
+co2Concentration = 1339.128784
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x64
+Measurement read.
+co2Concentration = 1334.655762
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0xd4
+Measurement read.
+co2Concentration = 1334.225464
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0xc7
+Measurement read.
+co2Concentration = 1331.625244
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x74
+Measurement read.
+co2Concentration = 1331.647339
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x74
+Measurement read.
+co2Concentration = 1331.778564
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x78
+Measurement read.
+co2Concentration = -0.000000
+temperature = -330950213632.000000
+Ready Status.:0x00|0x81|0x86
+Ready Status.:0x01|0xb0|0x86
+Measurement read.
+co2Concentration = 1331.612549
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x73
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332426706944.000000
+Ready Status.:0x00|0x81|0x4b
+Ready Status.:0x01|0xb0|0x4b
+Measurement read.
+co2Concentration = 1330.190796
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x46
+Measurement read.
+co2Concentration = -0.000000
+temperature = -330950213632.000000
+Ready Status.:0x01|0xb0|0x36
+Ready Status.:0x01|0xb0|0x36
+Measurement read.
+co2Concentration = 1328.974487
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0x1f
+Measurement read.
+co2Concentration = 1327.802856
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0xf9
+Measurement read.
+co2Concentration = 1326.814209
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0xda
+Measurement read.
+co2Concentration = 1324.413086
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x8d
+Measurement read.
+co2Concentration = 1323.460449
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x6e
+Measurement read.
+co2Concentration = 1322.893311
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0x5c
+Measurement read.
+co2Concentration = -0.000000
+temperature = -332360908800.000000
+Ready Status.:0x00|0x81|0x22
+Ready Status.:0x01|0xb0|0x22
+Measurement read.
+co2Concentration = 1318.675781
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0xd5
+Measurement read.
+co2Concentration = 1317.184570
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0xa5
+Measurement read.
+co2Concentration = 1316.163452
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0x85
+Measurement read.
+co2Concentration = 1313.230591
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0x27
+Measurement read.
+co2Concentration = 1311.982544
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0xff
+Measurement read.
+co2Concentration = 1310.636841
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0xd4
+Measurement read.
+co2Concentration = 1308.428711
+temperature = 26.247040
+Ready Status.:0x01|0xb0|0x8d
+Measurement read.
+co2Concentration = 1306.688721
+temperature = 26.247040
+Ready Status.:0x01|0xb0|0x56
+Measurement read.
+co2Concentration = -0.000000
+temperature = -108416139264.000000
+Ready Status.:0x00|0x81|0x11
+Ready Status.:0x01|0xb0|0x11
+Measurement read.
+co2Concentration = 1303.231201
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0xe7
+Measurement read.
+co2Concentration = -0.000000
+temperature = -108231196672.000000
+Ready Status.:0x00|0x81|0xce
+Ready Status.:0x01|0xb0|0xce
+Measurement read.
+co2Concentration = 1301.412598
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0xad
+Measurement read.
+co2Concentration = 1300.569336
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0x92
+Measurement read.
+co2Concentration = 1298.866699
+temperature = 26.276421
+Ready Status.:0x01|0xb0|0x5b
+Measurement read.
+co2Concentration = 1297.868164
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0x3b
+Measurement read.
+co2Concentration = 1297.170166
+temperature = 26.263069
+Ready Status.:0x01|0xb0|0x25
+Measurement read.
+co2Concentration = 1295.151611
+temperature = 26.289772
+Ready Status.:0x01|0xb0|0xe4
+Measurement read.
+co2Concentration = 1293.862427
+temperature = 26.247040

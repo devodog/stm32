@@ -1,0 +1,232 @@
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 450
+NUCLEO>
+Measurement Interval is set to 0x0002 sec.
+Continuous Measurement started.
+CO2 Concentration =  1223.14
+    Temperature   =    26.50
+CO2 Concentration =  1220.90
+    Temperature   =    26.49
+CO2 Concentration =  1219.28
+    Temperature   =    26.47
+CRC Error: 1
+CO2 Concentration =  1202.62
+    Temperature   =    26.50
+CRC Error: 1
+CO2 Concentration =  1199.24
+    Temperature   =    26.47
+CRC Error: 1
+CO2 Concentration =  1195.44
+    Temperature   =    26.50
+CRC Error: 1
+CO2 Concentration =  1190.72
+    Temperature   =    26.47
+CRC Error: 1
+CO2 Concentration =  1190.44
+    Temperature   =    26.49
+CRC Error: 1
+CO2 Concentration =  1187.30
+    Temperature   =    26.46
+CRC Error: 1
+CO2 Concentration =  1188.66
+    Temperature   =    26.47
+CRC Error: 1
+CO2 Concentration =  1188.78
+    Temperature   =    26.46
+CRC Error: 1
+CO2 Concentration =  1186.69
+    Temperature   =    26.44
+CRC Error: 1
+CO2 Concentration =  1248.42
+    Temperature   =    26.42
+CRC Error: 1
+CO2 Concentration =  1461.67
+    Temperature   =    26.42
+CRC Error: 1
+CO2 Concentration =  1288.95
+    Temperature   =    26.44
+CRC Error: 1
+CO2 Concentration =  1238.62
+    Temperature   =    26.42
+CRC Error: 1
+CO2 Concentration =  1213.68
+    Temperature   =    26.40
+CRC Error: 1
+CO2 Concentration =  1204.45
+    Temperature   =    26.40
+CRC Error: 1
+CO2 Concentration =  1200.22
+    Temperature   =    26.42
+CRC Error: 1
+CO2 Concentration =  1194.70
+    Temperature   =    26.43
+CRC Error: 1
+CO2 Concentration =  1191.02
+    Temperature   =    26.40
+CRC Error: 1
+CO2 Concentration =  1189.93
+    Temperature   =    26.43
+CRC Error: 1
+CO2 Concentration =  1189.30
+    Temperature   =    26.42
+CRC Error: 1
+CO2 Concentration =  1190.31
+    Temperature   =    26.42
+CRC Error: 1
+CO2 Concentration =  1192.40
+    Temperature   =    26.40
+CRC Error: 1
+CO2 Concentration =  1194.89
+    Temperature   =    26.42
+CRC Error: 1
+CO2 Concentration =  1194.28
+    Temperature   =    26.38
+CRC Error: 1
+CO2 Concentration =  1192.25
+    Temperature   =    26.38
+CRC Error: 1
+CO2 Concentration =  1192.27
+    Temperature   =    26.40
+CRC Error: 1
+CO2 Concentration =  1192.84
+    Temperature   =    26.38
+CRC Error: 1
+CO2 Concentration =  1191.66
+    Temperature   =    26.40
+CO2 Concentration =  1191.09
+    Temperature   =    26.39
+CO2 Concentration =  1191.17
+    Temperature   =    26.39
+CO2 Concentration =  1191.06
+    Temperature   =    26.38
+CRC Error: 1
+CO2 Concentration =  1190.69
+    Temperature   =    26.39
+CRC Error: 1
+CO2 Concentration =  1192.09
+    Temperature   =    26.39
+CRC Error: 1
+CO2 Concentration =  1191.70
+    Temperature   =    26.38
+CRC Error: 1
+CO2 Concentration =  1191.08
+    Temperature   =    26.38
+CRC Error: 1
+CO2 Concentration =  1190.77
+    Temperature   =    26.33
+CRC Error: 1
+CO2 Concentration =  1189.62
+    Temperature   =    26.35
+CRC Error: 1
+CO2 Concentration =  1189.71
+    Temperature   =    26.35
+CRC Error: 1
+CO2 Concentration =  1189.36
+    Temperature   =    26.33
+CRC Error: 1
+CO2 Concentration =  1187.62
+    Temperature   =    26.33
+CO2 Concentration =  1186.88
+    Temperature   =    26.33
+CO2 Concentration =  1186.17
+    Temperature   =    26.35
+CRC Error: 1
+CO2 Concentration =  1183.01
+    Temperature   =    26.35
+CRC Error: 1
+CO2 Concentration =  1181.89
+    Temperature   =    26.32
+CRC Error: 1
+CO2 Concentration =  1179.46
+    Temperature   =    26.32
+CRC Error: 1
+CO2 Concentration =  1179.36
+    Temperature   =    26.29
+CRC Error: 1
+CO2 Concentration =  1178.30
+    Temperature   =    26.30
+CRC Error: 1
+CO2 Concentration =  1176.39
+    Temperature   =    26.29
+CRC Error: 1
+CO2 Concentration =  1176.05
+    Temperature   =    26.30
+CRC Error: 1
+CO2 Concentration =  1178.03
+    Temperature   =    26.29
+CRC Error: 1
+CO2 Concentration =  1178.83
+    Temperature   =    26.29
+CRC Error: 1
+CO2 Concentration =  1178.26
+    Temperature   =    26.30
+CRC Error: 1
+CO2 Concentration =  1177.19
+    Temperature   =    26.28
+CRC Error: 1
+CO2 Concentration =  1179.59
+    Temperature   =    26.28
+CRC Error: 1
+CO2 Concentration =  1179.85
+    Temperature   =    26.29
+CRC Error: 1
+CO2 Concentration =  1179.32
+    Temperature   =    26.26
+CRC Error: 1
+CO2 Concentration =  1179.70
+    Temperature   =    26.23
+CRC Error: 1
+CO2 Concentration =  1182.06
+    Temperature   =    26.25
+CRC Error: 1
+CO2 Concentration =  1182.24
+    Temperature   =    26.25
+CRC Error: 1
+CO2 Concentration =  1182.28
+    Temperature   =    26.25
+CRC Error: 1
+CO2 Concentration =  1183.39
+    Temperature   =    26.26
+CRC Error: 1
+CO2 Concentration =  1185.06
+    Temperature   =    26.23
+CRC Error: 1
+CO2 Concentration =  1186.85
+    Temperature   =    26.26
+CO2 Concentration =  1186.19
+    Temperature   =    26.25
+CO2 Concentration =  1186.89
+    Temperature   =    26.22
+CO2 Concentration =  1187.48
+    Temperature   =    26.25
+CRC Error: 1
+CO2 Concentration =  1187.50
+    Temperature   =    26.19
+CRC Error: 1
+CO2 Concentration =  1383.65
+    Temperature   =    26.25
+CRC Error: 1
+CO2 Concentration =  1253.61
+    Temperature   =    26.28
+CRC Error: 1
+CO2 Concentration =  1213.95
+    Temperature   =    26.26
+CRC Error: 1
+CO2 Concentration =  1209.78
+    Temperature   =    26.28
+CRC Error: 1
+CO2 Concentration =  1209.03
+    Temperature   =    26.23
+CRC Error: 1
+CO2 Concentration =  1208.28
+    Temperature   =    26.23
+CRC Error: 1
+CO2 Concentration =  1222.07
+    Temperature   =    26.25
+CRC Error: 1
+CO2 Concentration =  1518.89
+    Temperature   =    26.28
+CRC Error: 1
+CO2 Concentration =  1349.22
+    Temperature   =    26.26
+CRC Error: 1

@@ -1,0 +1,16 @@
+# eclipse specific git ignore
+.metadata/
+RemoteSystemsTempFiles/
+.settings/
+Debug/
+*.launch
+
+# STM32 git ignore
+*.mxproject
+
+Nucleo-F302R8/.metadata/
+Nucleo-F302R8/.metadata/.ide.log
+Nucleo-F302R8/.metadata/.log
+Nucleo-F302R8/.metadata/version.ini
+Nucleo-F302R8/.metadata/.plugins/org.eclipse.cdt.core/.log
+Nucleo-F302R8/.metadata/.plugins/org.eclipse.cdt.core/bare-metal.1704442826818.pdom

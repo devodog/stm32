@@ -1,0 +1,1218 @@
+
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 433
+NUCLEO>
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 434
+NUCLEO>
+Setting Measurement Interval FAILED!
+Starting Continuous Measurement FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+
+Bare-Metal SW on STM32-NUCLEO-F302R8 development board
+Build No. 434
+NUCLEO>
+Measurement Interval is set.
+Continuous Measurement started.
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = 1126.245239
+temperature = 25.699623
+Ready Status.:0x01|0xb0|0xc7
+Measurement read.
+co2Concentration = 1082.112671
+temperature = 25.656898
+Ready Status.:0x01|0xb0|0x43
+Measurement read.
+co2Concentration = 1065.712769
+temperature = 25.643547
+Ready Status.:0x01|0xb0|0x36
+Measurement read.
+co2Concentration = 1066.432495
+temperature = 25.600822
+Ready Status.:0x01|0xb0|0x4d
+Measurement read.
+co2Concentration = -0.000000
+temperature = -103883768.000000
+Ready Status.:0x00|0x81|0x86
+Ready Status.:0x01|0xb0|0x86
+Measurement read.
+co2Concentration = 1079.302856
+temperature = 25.571449
+Ready Status.:0x01|0xb0|0xe9
+Measurement read.
+co2Concentration = -0.000000
+temperature = -104081280.000000
+Ready Status.:0x00|0x81|0x75
+Ready Status.:0x01|0xb0|0x75
+Measurement read.
+co2Concentration = 1109.299194
+temperature = 25.542076
+Ready Status.:0x01|0xb0|0xa9
+Measurement read.
+co2Concentration = 1113.371094
+temperature = 25.528725
+Ready Status.:0x01|0xb0|0x2b
+Measurement read.
+co2Concentration = 1096.870850
+temperature = 25.486000
+Ready Status.:0x01|0xb0|0x1b
+Measurement read.
+co2Concentration = -0.000000
+temperature = -13741173.000000
+Ready Status.:0x00|0x81|0x50
+Ready Status.:0x01|0xb0|0x50
+Measurement read.
+co2Concentration = 1066.840576
+temperature = 25.456627
+Ready Status.:0x01|0xb0|0x5a
+Measurement read.
+co2Concentration = 1060.991699
+temperature = 25.499352
+Ready Status.:0x01|0xb0|0x9f
+Measurement read.
+co2Concentration = 1055.527466
+temperature = 25.429924
+Ready Status.:0x01|0xb0|0xf0
+Measurement read.
+co2Concentration = 1050.182007
+temperature = 25.443275
+Ready Status.:0x01|0xb0|0x45
+Measurement read.
+co2Concentration = -0.000000
+temperature = -13708331.000000
+Ready Status.:0x00|0x81|0x10
+Ready Status.:0x01|0xb0|0x10
+Measurement read.
+co2Concentration = 1045.336426
+temperature = 25.456627
+Ready Status.:0x01|0xb0|0xaa
+Measurement read.
+co2Concentration = -0.000000
+temperature = -13728831.000000
+Ready Status.:0x00|0x81|0x78
+Ready Status.:0x01|0xb0|0x78
+Measurement read.
+co2Concentration = 1040.116943
+temperature = 25.429924
+Ready Status.:0x01|0xb0|0x03
+Measurement read.
+co2Concentration = -0.000000
+temperature = -13706323.000000
+Ready Status.:0x00|0x81|0x8d
+Ready Status.:0x01|0xb0|0x8d
+Measurement read.
+co2Concentration = 1031.609009
+temperature = 25.429924
+Ready Status.:0x01|0xb0|0xf3
+Measurement read.
+co2Concentration = -0.000000
+temperature = -13751416.000000
+Ready Status.:0x00|0x81|0xce
+Ready Status.:0x01|0xb0|0xce
+Measurement read.
+co2Concentration = 1027.584717
+temperature = 25.429924
+Ready Status.:0x01|0xb0|0x72
+Measurement read.
+co2Concentration = -0.000000
+temperature = -13728831.000000
+Ready Status.:0x00|0x81|0x0a
+Ready Status.:0x01|0xb0|0x0a
+Measurement read.
+co2Concentration = 1021.061890
+temperature = 25.429924
+Ready Status.:0x01|0xb0|0x43
+Measurement read.
+co2Concentration = 1018.435120
+temperature = 25.429924
+Ready Status.:0x01|0xb0|0x9b
+Measurement read.
+co2Concentration = 1016.277771
+temperature = 25.416573
+Ready Status.:0x01|0xb0|0x11
+Measurement read.
+co2Concentration = 1014.108826
+temperature = 25.400551
+Ready Status.:0x01|0xb0|0x86
+Measurement read.
+co2Concentration = 15892748540362150349103619531937415168.000000
+temperature = -13728831.000000
+Ready Status.:0x01|0xb0|0x84
+Measurement read.
+co2Concentration = 1011.934937
+temperature = 25.400551
+Ready Status.:0x01|0xb0|0xfb
+Measurement read.
+co2Concentration = 2955724177187802282204145886506778624.000000
+temperature = -13706323.000000
+Ready Status.:0x01|0xb0|0x72
+Measurement read.
+co2Concentration = 1008.489990
+temperature = 25.400551
+Ready Status.:0x01|0xb0|0x1f
+Measurement read.
+co2Concentration = 1589903545351398225282034243148447744.000000
+temperature = -13706323.000000
+Ready Status.:0x01|0xb0|0xb7
+Measurement read.
+co2Concentration = 1006.372009
+temperature = 25.429924
+Ready Status.:0x01|0xb0|0x97
+Measurement read.
+co2Concentration = 1589045504351368742505896162166308864.000000
+temperature = -13718538.000000
+Ready Status.:0x01|0xb0|0x8f
+Measurement read.
+co2Concentration = 1004.769592
+temperature = 25.416573
+Ready Status.:0x01|0xb0|0x31
+Measurement read.
+co2Concentration = 1003.436401
+temperature = 25.416573
+Ready Status.:0x01|0xb0|0xdb
+Measurement read.
+co2Concentration = 437472758462169393264363743551160320.000000
+temperature = -13718538.000000
+Ready Status.:0x01|0xb0|0xb3
+Measurement read.
+co2Concentration = 1002.053955
+temperature = 25.429924
+Ready Status.:0x01|0xb0|0x83
+Measurement read.
+co2Concentration = 438079566958866143825992696666783744.000000
+temperature = -13728831.000000
+Ready Status.:0x01|0xb0|0x40
+Measurement read.
+co2Concentration = 1000.980225
+temperature = 25.456627
+Ready Status.:0x01|0xb0|0x3e
+Measurement read.
+co2Concentration = 437445305903858200671387580572368896.000000
+temperature = -13708331.000000
+Ready Status.:0x01|0xb0|0x47
+Measurement read.
+co2Concentration = 1001.402893
+temperature = 25.456627
+Ready Status.:0x01|0xb0|0x59
+Measurement read.
+co2Concentration = 438382139311508119331262441013116928.000000
+temperature = -13728831.000000
+Ready Status.:0x01|0xb0|0x48
+Measurement read.
+co2Concentration = 1001.676147
+temperature = 25.443275
+Ready Status.:0x01|0xb0|0x6b
+Measurement read.
+co2Concentration = 1002.094788
+temperature = 25.443275
+Ready Status.:0x01|0xb0|0x86
+Measurement read.
+co2Concentration = 437709452597680757972924456102789120.000000
+temperature = -13718624.000000
+Ready Status.:0x01|0xb0|0x75
+Measurement read.
+co2Concentration = 1000.789368
+temperature = 25.499352
+Ready Status.:0x01|0xb0|0x32
+Measurement read.
+co2Concentration = 1000.098389
+temperature = 25.472649
+Ready Status.:0x01|0xb0|0x06
+Measurement read.
+co2Concentration = 998.111328
+temperature = 25.486000
+Ready Status.:0x01|0xb0|0x87
+Measurement read.
+co2Concentration = 997.615051
+temperature = 25.456627
+Ready Status.:0x01|0xb0|0x67
+Measurement read.
+co2Concentration = 996.613403
+temperature = 25.486000
+Ready Status.:0x01|0xb0|0x27
+Measurement read.
+co2Concentration = 163300156621285139692797592321654784.000000
+temperature = -13718624.000000
+Ready Status.:0x01|0xb0|0x14
+Measurement read.
+co2Concentration = 995.861572
+temperature = 25.486000
+Ready Status.:0x01|0xb0|0xf7
+Measurement read.
+co2Concentration = 32793016785389252057514501904269312.000000
+temperature = -13741173.000000
+Ready Status.:0x01|0xb0|0xe3
+Measurement read.
+co2Concentration = 994.097412
+temperature = 25.486000
+Ready Status.:0x01|0xb0|0x86
+Measurement read.
+co2Concentration = 994.418884
+temperature = 25.486000
+Ready Status.:0x01|0xb0|0x9a
+Measurement read.
+co2Concentration = 32860927700064369448634918060949504.000000
+temperature = -103818792.000000
+Ready Status.:0x01|0xb0|0xc9
+Measurement read.
+co2Concentration = 994.171692
+temperature = 25.486000
+Ready Status.:0x01|0xb0|0x8a
+Measurement read.
+co2Concentration = 32780040697897462701473009284153344.000000
+temperature = -13761658.000000
+Ready Status.:0x01|0xb0|0x56
+Measurement read.
+co2Concentration = 993.472717
+temperature = 25.486000
+Ready Status.:0x01|0xb0|0x5e
+Measurement read.
+co2Concentration = 32860803906060440910607428148527104.000000
+temperature = -13741173.000000
+Ready Status.:0x01|0xb0|0x70
+Measurement read.
+co2Concentration = 994.101257
+temperature = 25.472649
+Ready Status.:0x01|0xb0|0x86
+Measurement read.
+co2Concentration = 32793227235195930572161234755387392.000000
+temperature = -104243432.000000
+Ready Status.:0x01|0xb0|0x99
+Measurement read.
+co2Concentration = 994.191345
+temperature = 25.528725
+Ready Status.:0x01|0xb0|0x8c
+Measurement read.
+co2Concentration = 993.268066
+temperature = 25.499352
+Ready Status.:0x01|0xb0|0x51
+Measurement read.
+co2Concentration = 32878449503380414721045840265216000.000000
+temperature = -104243432.000000
+Ready Status.:0x01|0xb0|0x0d
+Measurement read.
+co2Concentration = 991.717102
+temperature = 25.542076
+Ready Status.:0x01|0xb0|0xed
+Measurement read.
+co2Concentration = 9255937167542329424759550772248576.000000
+temperature = -104243432.000000
+Ready Status.:0x01|0xb0|0xaf
+Measurement read.
+co2Concentration = 990.855896
+temperature = 25.555428
+Ready Status.:0x01|0xb0|0xb6
+Measurement read.
+co2Concentration = 9259369356301248141571708594159616.000000
+temperature = -104081280.000000
+Ready Status.:0x01|0xb0|0xbf
+Measurement read.
+co2Concentration = 990.845825
+temperature = 25.555428
+Ready Status.:0x01|0xb0|0xb6
+Measurement read.
+co2Concentration = 9255562071710425954536256337608704.000000
+temperature = -104243432.000000
+Ready Status.:0x01|0xb0|0x51
+Measurement read.
+co2Concentration = 988.690369
+temperature = 25.528725
+Ready Status.:0x01|0xb0|0x2c
+Measurement read.
+co2Concentration = 987.972290
+temperature = 25.542076
+Ready Status.:0x01|0xb0|0xfe
+Measurement read.
+co2Concentration = 2162998316024121308271678557519872.000000
+temperature = -104081280.000000
+Ready Status.:0x01|0xb0|0xe4
+Measurement read.
+co2Concentration = 987.354370
+temperature = 25.555428
+Ready Status.:0x01|0xb0|0xd6
+Measurement read.
+co2Concentration = 2162564263297846871812792052088832.000000
+temperature = -103900728.000000
+Ready Status.:0x01|0xb0|0x8c
+Measurement read.
+co2Concentration = 985.611816
+temperature = 25.555428
+Ready Status.:0x01|0xb0|0x67
+Measurement read.
+co2Concentration = 2163800655912083145362347552407552.000000
+temperature = -103982456.000000
+Ready Status.:0x01|0xb0|0x72
+Measurement read.
+co2Concentration = 986.248169
+temperature = 25.571449
+Ready Status.:0x01|0xb0|0x8f
+Measurement read.
+co2Concentration = 985.843994
+temperature = 25.587471
+Ready Status.:0x01|0xb0|0x76
+Measurement read.
+co2Concentration = 986.095886
+temperature = 25.571449
+Ready Status.:0x01|0xb0|0x86
+Measurement read.
+co2Concentration = 986.223328
+temperature = 25.555428
+Ready Status.:0x01|0xb0|0x8e
+Measurement read.
+co2Concentration = 986.288330
+temperature = 25.571449
+Ready Status.:0x01|0xb0|0x92
+Measurement read.
+co2Concentration = 986.250916
+temperature = 25.587471
+Ready Status.:0x01|0xb0|0x90
+Measurement read.
+co2Concentration = 986.411316
+temperature = 25.587471
+Ready Status.:0x01|0xb0|0x9a
+Measurement read.
+co2Concentration = 986.872681
+temperature = 25.587471
+Ready Status.:0x01|0xb0|0xb7
+Measurement read.
+co2Concentration = 2163517631870601525296998740131840.000000
+temperature = -104064536.000000
+Ready Status.:0x01|0xb0|0xdd
+Measurement read.
+co2Concentration = 986.892700
+temperature = 25.587471
+Ready Status.:0x01|0xb0|0xb9
+Measurement read.
+co2Concentration = 986.571777
+temperature = 25.600822
+Ready Status.:0x01|0xb0|0xa4
+Measurement read.
+co2Concentration = 988.000000
+temperature = 25.600822
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = 988.614014
+temperature = 25.600822
+Ready Status.:0x01|0xb0|0x27
+Measurement read.
+co2Concentration = 988.648132
+temperature = 25.600822
+Ready Status.:0x01|0xb0|0x29
+Measurement read.
+co2Concentration = 988.148560
+temperature = 25.600822
+Ready Status.:0x01|0xb0|0x09
+Measurement read.
+co2Concentration = 9249266527640640153148256841367552.000000
+temperature = -104245152.000000
+Ready Status.:0x01|0xb0|0x2b
+Measurement read.
+co2Concentration = 989.396667
+temperature = 25.600822
+Ready Status.:0x01|0xb0|0x59
+Measurement read.
+co2Concentration = 989.176025
+temperature = 25.627525
+Ready Status.:0x01|0xb0|0x4b
+Measurement read.
+co2Concentration = 988.878845
+temperature = 25.614174
+Ready Status.:0x01|0xb0|0x38
+Measurement read.
+co2Concentration = 988.501648
+temperature = 25.614174
+Ready Status.:0x01|0xb0|0x20
+Measurement read.
+co2Concentration = 988.407410
+temperature = 25.614174
+Ready Status.:0x01|0xb0|0x1a
+Measurement read.
+co2Concentration = 9272011818952450087629115900297216.000000
+temperature = -520067744.000000
+Ready Status.:0x01|0xb0|0x2f
+Measurement read.
+co2Concentration = 989.123718
+temperature = 25.627525
+Ready Status.:0x01|0xb0|0x47
+Measurement read.
+co2Concentration = 9273016407294330173722196539604992.000000
+temperature = -518357408.000000
+Ready Status.:0x01|0xb0|0x1f
+Measurement read.
+co2Concentration = 986.147339
+temperature = 25.643547
+Ready Status.:0x01|0xb0|0x89
+Measurement read.
+co2Concentration = 985.790405
+temperature = 25.643547
+Ready Status.:0x01|0xb0|0x72
+Measurement read.
+co2Concentration = 2160192524925080993878619692466176.000000
+temperature = -520067744.000000
+Ready Status.:0x01|0xb0|0x83
+Measurement read.
+co2Concentration = 986.026306
+temperature = 25.627525
+Ready Status.:0x01|0xb0|0x81
+Measurement read.
+co2Concentration = 2166590199048107839139298366455808.000000
+temperature = -520067744.000000
+Ready Status.:0x01|0xb0|0x9f
+Measurement read.
+co2Concentration = 986.127258
+temperature = 25.656898
+Ready Status.:0x01|0xb0|0x88
+Measurement read.
+co2Concentration = 986.548279
+temperature = 25.656898
+Ready Status.:0x01|0xb0|0xa3
+Measurement read.
+co2Concentration = 986.907288
+temperature = 25.656898
+Ready Status.:0x01|0xb0|0xba
+Measurement read.
+co2Concentration = 987.494446
+temperature = 25.627525
+Ready Status.:0x01|0xb0|0xdf
+Measurement read.
+co2Concentration = 987.083862
+temperature = 25.670250
+Ready Status.:0x01|0xb0|0xc5
+Measurement read.
+co2Concentration = 987.719910
+temperature = 25.670250
+Ready Status.:0x01|0xb0|0xee
+Measurement read.
+co2Concentration = 988.941895
+temperature = 25.656898
+Ready Status.:0x01|0xb0|0x3c
+Measurement read.
+co2Concentration = 9259467772534371329303563074535424.000000
+temperature = -518686912.000000
+Ready Status.:0x01|0xb0|0x11
+Measurement read.
+co2Concentration = 9259467772534371329303563074535424.000000
+temperature = -519408224.000000
+Ready Status.:0x01|0xb0|0x11
+Measurement read.
+co2Concentration = 988.833557
+temperature = 25.683601
+Ready Status.:0x01|0xb0|0x35
+Measurement read.
+co2Concentration = 988.546692
+temperature = 25.656898
+Ready Status.:0x01|0xb0|0x22
+Measurement read.
+co2Concentration = 989.749023
+temperature = 25.683601
+Ready Status.:0x01|0xb0|0x6f
+Measurement read.
+co2Concentration = 9284121348416739677478179133456384.000000
+temperature = -518686912.000000
+Ready Status.:0x01|0xb0|0x84
+Measurement read.
+co2Concentration = 990.839233
+temperature = 25.670250
+Ready Status.:0x01|0xb0|0xb5
+Measurement read.
+co2Concentration = 9249202773728616956064099536470016.000000
+temperature = -518031648.000000
+Ready Status.:0x01|0xb0|0x8e
+Measurement read.
+co2Concentration = 989.602356
+temperature = 25.656898
+Ready Status.:0x01|0xb0|0x66
+Measurement read.
+co2Concentration = 9274016043876053118294177582415872.000000
+temperature = -519735136.000000
+Ready Status.:0x01|0xb0|0x46
+Measurement read.
+co2Concentration = 988.410278
+temperature = 25.683601
+Ready Status.:0x01|0xb0|0x1a
+Measurement read.
+co2Concentration = 989.615417
+temperature = 25.699623
+Ready Status.:0x01|0xb0|0x67
+Measurement read.
+co2Concentration = 9286128049220421278903790613823488.000000
+temperature = -518031648.000000
+Ready Status.:0x01|0xb0|0x29
+Measurement read.
+co2Concentration = 988.831604
+temperature = 25.683601
+Ready Status.:0x01|0xb0|0x35
+Measurement read.
+co2Concentration = 9259000450169541098249788655140864.000000
+temperature = -519408224.000000
+Ready Status.:0x01|0xb0|0x52
+Measurement read.
+co2Concentration = 990.287903
+temperature = 25.699623
+Ready Status.:0x01|0xb0|0x92
+Measurement read.
+co2Concentration = 9259949331209653342230498833858560.000000
+temperature = -519735136.000000
+Ready Status.:0x01|0xb0|0xb1
+Measurement read.
+co2Concentration = 991.174744
+temperature = 25.683601
+Ready Status.:0x01|0xb0|0xcb
+Measurement read.
+co2Concentration = 9271161354145461031380260201955328.000000
+temperature = -518360320.000000
+Ready Status.:0x01|0xb0|0xfa
+Measurement read.
+co2Concentration = 992.854919
+temperature = 25.699623
+Ready Status.:0x01|0xb0|0x36
+Measurement read.
+co2Concentration = 993.851624
+temperature = 25.699623
+Ready Status.:0x01|0xb0|0x76
+Measurement read.
+co2Concentration = 32824982873083679146972947089981440.000000
+temperature = -518360320.000000
+Ready Status.:0x01|0xb0|0xdc
+Measurement read.
+co2Concentration = 995.397583
+temperature = 25.699623
+Ready Status.:0x01|0xb0|0xd9
+Measurement read.
+co2Concentration = 32853297037662214364620439859232768.000000
+temperature = -518360320.000000
+Ready Status.:0x01|0xb0|0xfc
+Measurement read.
+co2Concentration = 996.266663
+temperature = 25.712975
+Ready Status.:0x01|0xb0|0x11
+Measurement read.
+co2Concentration = 996.001343
+temperature = 25.726326
+Ready Status.:0x01|0xb0|0x00
+Measurement read.
+co2Concentration = 996.144470
+temperature = 25.739677
+Ready Status.:0x01|0xb0|0x09
+Measurement read.
+co2Concentration = 163171103848069717369899908419551232.000000
+temperature = -519735136.000000
+Ready Status.:0x01|0xb0|0x44
+Measurement read.
+co2Concentration = 997.940918
+temperature = 25.739677
+Ready Status.:0x01|0xb0|0x7c
+Measurement read.
+co2Concentration = 998.420959
+temperature = 25.755707
+Ready Status.:0x01|0xb0|0x9a
+Measurement read.
+co2Concentration = 998.462097
+temperature = 25.739677
+Ready Status.:0x01|0xb0|0x9d
+Measurement read.
+co2Concentration = 999.155823
+temperature = 25.712975
+Ready Status.:0x01|0xb0|0xc9
+Measurement read.
+co2Concentration = 162995900670189736070353985166376960.000000
+temperature = -519078272.000000
+Ready Status.:0x01|0xb0|0xd3
+Measurement read.
+co2Concentration = 999.619019
+temperature = 25.726326
+Ready Status.:0x01|0xb0|0xe7
+Measurement read.
+co2Concentration = 437678553614300194881262973962158080.000000
+temperature = -519078272.000000
+Ready Status.:0x01|0xb0|0x10
+Measurement read.
+co2Concentration = 1000.820923
+temperature = 25.726326
+Ready Status.:0x01|0xb0|0x34
+Measurement read.
+co2Concentration = 1001.461914
+temperature = 25.739677
+Ready Status.:0x01|0xb0|0x5d
+Measurement read.
+co2Concentration = 1001.014099
+temperature = 25.755707
+Ready Status.:0x01|0xb0|0x40
+Measurement read.
+co2Concentration = 1001.689392
+temperature = 25.739677
+Ready Status.:0x01|0xb0|0x6c
+Measurement read.
+co2Concentration = 1002.537231
+temperature = 25.769058
+Ready Status.:0x01|0xb0|0xa2
+Measurement read.
+co2Concentration = 1003.028381
+temperature = 25.755707
+Ready Status.:0x01|0xb0|0xc1
+Measurement read.
+co2Concentration = 1003.177612
+temperature = 25.726326
+Ready Status.:0x01|0xb0|0xcb
+Measurement read.
+co2Concentration = 1002.094910
+temperature = 25.699623
+Ready Status.:0x01|0xb0|0x86
+Measurement read.
+co2Concentration = 438222890704854448012699417672941568.000000
+temperature = -1381503488.000000
+Ready Status.:0x01|0xb0|0xb8
+Measurement read.
+co2Concentration = 1002.358215
+temperature = 25.739677
+Ready Status.:0x01|0xb0|0x96
+Measurement read.
+co2Concentration = 437536378676668347527451359343280128.000000
+temperature = -1381503488.000000
+Ready Status.:0x01|0xb0|0xc4
+Measurement read.
+co2Concentration = 1002.994141
+temperature = 25.755707
+Ready Status.:0x01|0xb0|0xbf
+Measurement read.
+co2Concentration = 437963180788132689514067780603740160.000000
+temperature = -1381503488.000000
+Ready Status.:0x01|0xb0|0xc5
+Measurement read.
+co2Concentration = 1002.371582
+temperature = 25.755707
+Ready Status.:0x01|0xb0|0x97
+Measurement read.
+co2Concentration = 437844180088036264479002277590335488.000000
+temperature = -1381503488.000000
+Ready Status.:0x01|0xb0|0xcc
+Measurement read.
+co2Concentration = 436376953746434603211107437174063104.000000
+temperature = -1381503488.000000
+Ready Status.:0x01|0xb0|0xc2
+Measurement read.
+co2Concentration = 1003.365540
+temperature = 25.769058
+Ready Status.:0x01|0xb0|0xd7
+Measurement read.
+co2Concentration = 437959219380006976297188103406223360.000000
+temperature = -1378891008.000000
+Ready Status.:0x01|0xb0|0xe8
+Measurement read.
+co2Concentration = 1003.016907
+temperature = 25.769058
+Ready Status.:0x01|0xb0|0xc1
+Measurement read.
+co2Concentration = 438493494493921917857750167035314176.000000
+temperature = -1378891008.000000
+Ready Status.:0x01|0xb0|0xda
+Measurement read.
+co2Concentration = 1003.854187
+temperature = 25.795761
+Ready Status.:0x01|0xb0|0xf6
+Measurement read.
+co2Concentration = 437243630616178140800043214446788608.000000
+temperature = -1378891008.000000
+Ready Status.:0x01|0xb0|0xdf
+Measurement read.
+co2Concentration = 1002.585693
+temperature = 25.769058
+Ready Status.:0x01|0xb0|0xa5
+Measurement read.
+co2Concentration = 1002.030334
+temperature = 25.795761
+Ready Status.:0x01|0xb0|0x81
+Measurement read.
+co2Concentration = 437942224939147666596774288228876288.000000
+temperature = -1378891008.000000
+Ready Status.:0x01|0xb0|0x8e
+Measurement read.
+co2Concentration = 1002.751282
+temperature = 25.782410
+Ready Status.:0x01|0xb0|0xb0
+Measurement read.
+co2Concentration = 436187677666188025708596460676710400.000000
+temperature = -1381765120.000000
+Ready Status.:0x01|0xb0|0xad
+Measurement read.
+co2Concentration = 1002.584045
+temperature = 25.782410
+Ready Status.:0x01|0xb0|0xa5
+Measurement read.
+co2Concentration = 438228555518474217912837356065390592.000000
+temperature = -1380190720.000000
+Ready Status.:0x01|0xb0|0x96
+Measurement read.
+co2Concentration = 1003.048584
+temperature = 25.755707
+Ready Status.:0x01|0xb0|0xc3
+Measurement read.
+co2Concentration = 438479867249969464391684077475856384.000000
+temperature = -1378891008.000000
+Ready Status.:0x01|0xb0|0xf2
+Measurement read.
+co2Concentration = 1002.523254
+temperature = 25.769058
+Ready Status.:0x01|0xb0|0xa1
+Measurement read.
+co2Concentration = 1003.426758
+temperature = 25.795761
+Ready Status.:0x01|0xb0|0xdb
+Measurement read.
+co2Concentration = 437979699860016913628456034517385216.000000
+temperature = -1381765120.000000
+Ready Status.:0x01|0xb0|0xe7
+Measurement read.
+co2Concentration = 1003.089783
+temperature = 25.782410
+Ready Status.:0x01|0xb0|0xc5
+Measurement read.
+co2Concentration = 437944245257291780337382923599609856.000000
+temperature = -1376003328.000000
+Ready Status.:0x01|0xb0|0xc8
+Measurement read.
+co2Concentration = 1002.258728
+temperature = 25.755707
+Ready Status.:0x01|0xb0|0x90
+Measurement read.
+co2Concentration = 437499339510692928949626377546498048.000000
+temperature = -1381765120.000000
+Ready Status.:0x01|0xb0|0x67
+Measurement read.
+co2Concentration = 1001.669373
+temperature = 25.782410
+Ready Status.:0x01|0xb0|0x6a
+Measurement read.
+co2Concentration = 438734070809396481518852963240509440.000000
+temperature = -1381765120.000000
+Ready Status.:0x01|0xb0|0x0f
+Measurement read.
+co2Concentration = 999.554626
+temperature = 25.811783
+Ready Status.:0x01|0xb0|0xe3
+Measurement read.
+co2Concentration = 998.335083
+temperature = 25.782410
+Ready Status.:0x01|0xb0|0x95
+Measurement read.
+co2Concentration = 997.352539
+temperature = 25.811783
+Ready Status.:0x01|0xb0|0x56
+Measurement read.
+co2Concentration = 994.904663
+temperature = 25.825134
+Ready Status.:0x01|0xb0|0xb9
+Measurement read.
+co2Concentration = 32927620481740830025564833479393280.000000
+temperature = -1383098112.000000
+Ready Status.:0x01|0xb0|0xa0
+Measurement read.
+co2Concentration = 994.432800
+temperature = 25.795761
+Ready Status.:0x01|0xb0|0x9b
+Measurement read.
+co2Concentration = 32902581906506243924124723792838656.000000
+temperature = -1380190720.000000
+Ready Status.:0x01|0xb0|0x8e
+Measurement read.
+co2Concentration = 994.128540
+temperature = 25.838486
+Ready Status.:0x01|0xb0|0x88
+Measurement read.
+co2Concentration = 32814277167623939178355619463692288.000000
+temperature = -1383098112.000000
+Ready Status.:0x01|0xb0|0x8d
+Measurement read.
+co2Concentration = 994.558655
+temperature = 25.825134
+Ready Status.:0x01|0xb0|0xa3
+Measurement read.
+co2Concentration = 995.037354
+temperature = 25.825134
+Ready Status.:0x01|0xb0|0xc2
+Measurement read.
+co2Concentration = 995.358948
+temperature = 25.811783
+Ready Status.:0x01|0xb0|0xd6
+Measurement read.
+co2Concentration = 995.986694
+temperature = 25.825134
+Ready Status.:0x01|0xb0|0xff
+Measurement read.
+co2Concentration = 162980936450994854393591004552757248.000000
+temperature = -1380190720.000000
+Ready Status.:0x01|0xb0|0x0b
+Measurement read.
+co2Concentration = 996.787842
+temperature = 25.795761
+Ready Status.:0x01|0xb0|0x32
+Measurement read.
+co2Concentration = 163411640549463023898833907852771328.000000
+temperature = -1380190720.000000
+Ready Status.:0x01|0xb0|0x50
+Measurement read.
+co2Concentration = 997.457397
+temperature = 25.825134
+Ready Status.:0x01|0xb0|0x5d
+Measurement read.
+co2Concentration = 163110098162933733829952879577792512.000000
+temperature = -1377570176.000000
+Ready Status.:0x01|0xb0|0x22
+Measurement read.
+co2Concentration = 997.752991
+temperature = 25.811783
+Ready Status.:0x01|0xb0|0x70
+Measurement read.
+co2Concentration = 163099986668692850843867503531130880.000000
+temperature = -1380190720.000000
+Ready Status.:0x01|0xb0|0x6f
+Measurement read.
+co2Concentration = 999.581055
+temperature = 25.825134
+Ready Status.:0x01|0xb0|0xe5
+Measurement read.
+co2Concentration = 1001.786377
+temperature = 25.825134
+Ready Status.:0x01|0xb0|0x72
+Measurement read.
+co2Concentration = 436385153861254829570048368972922880.000000
+temperature = -1380190720.000000
+Ready Status.:0x01|0xb0|0xe1
+Measurement read.
+co2Concentration = 1004.991394
+temperature = 25.838486
+Ready Status.:0x01|0xb0|0x3f
+Measurement read.
+co2Concentration = 1590325989913924282730083019491639296.000000
+temperature = -1380466176.000000
+Ready Status.:0x01|0xb0|0x5c
+Measurement read.
+co2Concentration = 1005.691284
+temperature = 25.867859
+Ready Status.:0x01|0xb0|0x6c
+Measurement read.
+co2Concentration = 1598459869990288716684786615608934400.000000
+temperature = -1383098112.000000
+Ready Status.:0x01|0xb0|0xf0
+Measurement read.
+co2Concentration = 1009.073547
+temperature = 25.851837
+Ready Status.:0x01|0xb0|0x44
+Measurement read.
+co2Concentration = 2953465223818195577410678761394798592.000000
+temperature = -1380466176.000000
+Ready Status.:0x01|0xb0|0x35
+Measurement read.
+co2Concentration = 1009.562744
+temperature = 25.825134
+Ready Status.:0x01|0xb0|0x64
+Measurement read.
+co2Concentration = 1009.329895
+temperature = 25.851837
+Ready Status.:0x01|0xb0|0x55
+Measurement read.
+co2Concentration = 2960367898249088343559178684523872256.000000
+temperature = -5023753728.000000
+Ready Status.:0x01|0xb0|0xc4
+Measurement read.
+co2Concentration = 1011.899719
+temperature = 25.894562
+Ready Status.:0x01|0xb0|0xf9
+Measurement read.
+co2Concentration = 15942802991962762215251118354704891904.000000
+temperature = -1378904832.000000
+Ready Status.:0x01|0xb0|0x18
+Measurement read.
+co2Concentration = 1013.650940
+temperature = 25.881210
+Ready Status.:0x01|0xb0|0x69
+Measurement read.
+co2Concentration = 15871715681603163566873986232353816576.000000
+temperature = -1377570176.000000
+Ready Status.:0x01|0xb0|0xa4
+Measurement read.
+co2Concentration = 1015.384949
+temperature = 25.851837
+Ready Status.:0x01|0xb0|0xd8
+Measurement read.
+co2Concentration = 78490181970233070652251023611145486336.000000
+temperature = -5023753728.000000
+Ready Status.:0x01|0xb0|0x38
+Measurement read.
+co2Concentration = 78718156254178115427816190715600306176.000000
+temperature = -1377570176.000000
+Ready Status.:0x01|0xb0|0x76
+Measurement read.
+co2Concentration = 1018.393494
+temperature = 25.881210
+Ready Status.:0x01|0xb0|0x99
+Measurement read.
+co2Concentration = 1019.515869
+temperature = 25.867859
+Ready Status.:0x01|0xb0|0xe1
+Measurement read.
+co2Concentration = 1020.468262
+temperature = 25.881210
+Ready Status.:0x01|0xb0|0x1d
+Measurement read.
+co2Concentration = 1021.989075
+temperature = 25.838486
+Ready Status.:0x01|0xb0|0x7f
+Measurement read.
+co2Concentration = 1022.566528
+temperature = 25.881210
+Ready Status.:0x01|0xb0|0xa4
+Measurement read.
+co2Concentration = 293814879741141998882021280001474691072.000000
+temperature = -1378904832.000000
+Ready Status.:0x01|0xb0|0xcd
+Measurement read.
+co2Concentration = 1024.494385
+temperature = 25.851837
+Ready Status.:0x01|0xb0|0x0f
+Measurement read.
+co2Concentration = -0.000000
+temperature = -1378904832.000000
+Ready Status.:0x01|0xb0|0x28
+Ready Status.:0x01|0xb0|0x28
+Measurement read.
+co2Concentration = 1026.217163
+temperature = 25.907913
+Ready Status.:0x01|0xb0|0x46
+Measurement read.
+co2Concentration = 1026.755127
+temperature = 25.867859
+Ready Status.:0x01|0xb0|0x58
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5001728512.000000
+Ready Status.:0x00|0x81|0x78
+Ready Status.:0x01|0xb0|0x78
+Measurement read.
+co2Concentration = 1028.930176
+temperature = 25.894562
+Ready Status.:0x01|0xb0|0x9d
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5001728512.000000
+Ready Status.:0x00|0x81|0xb6
+Ready Status.:0x01|0xb0|0xb6
+Measurement read.
+co2Concentration = 1031.270630
+temperature = 25.894562
+Ready Status.:0x01|0xb0|0xe8
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5013261824.000000
+Ready Status.:0x00|0x81|0xf9
+Ready Status.:0x01|0xb0|0xf9
+Measurement read.
+co2Concentration = 1033.280762
+temperature = 25.907913
+Ready Status.:0x01|0xb0|0x28
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5001728512.000000
+Ready Status.:0x00|0x81|0x4f
+Ready Status.:0x01|0xb0|0x4f
+Measurement read.
+co2Concentration = 1036.108276
+temperature = 25.894562
+Ready Status.:0x01|0xb0|0x83
+Measurement read.
+co2Concentration = 1037.454712
+temperature = 25.881210
+Ready Status.:0x01|0xb0|0xae
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5013261824.000000
+Ready Status.:0x00|0x81|0xb3
+Ready Status.:0x01|0xb0|0xb3
+Measurement read.
+co2Concentration = 1038.056152
+temperature = 25.894562
+Ready Status.:0x01|0xb0|0xc1
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5001728512.000000
+Ready Status.:0x00|0x81|0xec
+Ready Status.:0x01|0xb0|0xec
+Measurement read.
+co2Concentration = 1040.206909
+temperature = 25.937286
+Ready Status.:0x01|0xb0|0x06
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5006972416.000000
+Ready Status.:0x00|0x81|0xf9
+Ready Status.:0x01|0xb0|0xf9
+Measurement read.
+co2Concentration = 1040.410889
+temperature = 25.923935
+Ready Status.:0x01|0xb0|0x0d
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5013261824.000000
+Ready Status.:0x00|0x81|0x12
+Ready Status.:0x01|0xb0|0x12
+Measurement read.
+co2Concentration = 1040.839844
+temperature = 25.894562
+Ready Status.:0x01|0xb0|0x1a
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5001728512.000000
+Ready Status.:0x01|0xb0|0x2c
+Ready Status.:0x01|0xb0|0x2c
+Measurement read.
+co2Concentration = -0.000000
+temperature = -5013261824.000000
+Ready Status.:0x00|0x81|0x57
+Ready Status.:0x01|0xb0|0x57
+Measurement read.
+co2Concentration = 1190.614624
+temperature = 25.907913
+Ready Status.:0x01|0xb0|0xd3
+Measurement read.
+co2Concentration = 1178.758545
+temperature = 25.937286
+Ready Status.:0x01|0xb0|0x58
+Measurement read.
+co2Concentration = 1165.958740
+temperature = 25.923935
+Ready Status.:0x01|0xb0|0xbe
+Measurement read.
+co2Concentration = 1165.949707
+temperature = 0.000000
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Get Data Ready Status FAILED!
+Read Measurement FAILED!
+Reading sensor-data failed!

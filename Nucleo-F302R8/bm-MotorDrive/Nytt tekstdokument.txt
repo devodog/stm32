@@ -1,0 +1,1 @@
+https://hackaday.com/2021/03/26/bare-metal-stm32-please-mind-the-interrupt-event/

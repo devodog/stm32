@@ -1,0 +1,47 @@
+In our project we have used 4-bit mode. In 4-bit mode, the high nibble is sent 
+before the low nibble and the E pin is toggled each time four bits is sent to 
+the LCD.
+
+To initialize in 4-bit mode following commands are used: 
+delayms(15);
+
+lcd cmd(0x03);
+delayms(5); 
+
+lcd cmd(0x03); 
+delay ms(1);
+
+lcd_cmd(0x03); 
+delay ms(1); 
+
+lcd cmd(0x02); 
+delay ms(1);
+
+lcd cmd(0x2C);  // Set interface length 
+delay ms(1);
+
+lcd cmd(0x08);  // Turn off display 
+delay ms(1);
+
+lcd cmd(0x01);  // Clear display 
+delay ms(1);
+
+lcd_cmd(0x06);  // Set cursor move direction 
+delay ms(1);
+
+lcd cmd(0x0F);  // Enable display cursor 
+delay ms(1);
+
+For sending commands following sequence is used: RS low for command, RW low for write  Set enable
+Send 0x0F;
+
+Send upper nibble 
+Enable low
+Delay ms(1); 
+Set enable 
+Send 0x0F;
+
+Send lower nibble 
+Enable low 
+delayms(1);
+
