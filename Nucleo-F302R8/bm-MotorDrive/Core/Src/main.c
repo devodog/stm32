@@ -18,7 +18,7 @@
 /**
  * Version 0.1 08MAR24 /Dkv
  * Motor Driver for BLDC motor.
- *
+ * Hall sensors for Six-step Commutation.
  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
@@ -39,8 +39,21 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-// Calculated from 72MHz/1250Hz...
+// Using the clock settings PLL Multiplicator = x8 and setting the auto reload
+// register equal to 8000 will produce a timer interrupt of 1 ms.
+// This means that every tick = 0.125 µs -> 6400 ticks is 800µs.
+//
+// Note! The ioc-tool notifies the user/developer if the PLL Multiplicator is
+// less than mentioned above. This is because the ADC resource shares the clock
+// resource with the TIM2 timer resource and the timer needs to have a higher
+// clock frequency that the ADC...
+//
+// Since we want the switching frequency to be 1250 Hz we can calculate the ref.
+// value for the timer compare register from the simple relationship of
+// 8MHz/1250Hz = 6400.
 #define SWITCHING_PERIOD_CLK_TICKS 6400
+#define SLOW_TEST
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -78,41 +91,50 @@ static void MX_ADC1_Init(void);
 /* USER CODE BEGIN 0 */
 uint8_t hallState = 0;
 uint8_t pwmUpdate = 0;
-uint8_t switchON = 0;
+uint8_t switchON = 1;
 uint16_t gadcValue = 0;
-int switchOFF_compReg = 3200;
+int switchON_compReg = 3200;
+enum direction {
+   CW, // Clockwise
+   CCW // Counterclockwise
+} dir;
 
+/******************************************************************************
+ * The GPIO callback is triggered by the change in any of the HALL sensors.
+ * The Hall sensor state will determine the gating signals for the switching
+ * elements that make the 3-phase inverter unit, which will constitute the six-
+ * step commutation process.
+ */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
    uint32_t portRegister = GPIOC->IDR;
    hallState = (unsigned int)((portRegister&0x0380)>>7);
    printf("hall state = 0x%02x\r\n", hallState);
 }
 
-
-/**
+/******************************************************************************
  * adcValue between 0 and 4096
  * 0 -> 2048 reverse, 2049 -> 4096 forward
- * 0 max speed in reverse
- * 4096 max speed forward
  *
  * => adcValue/21 => DutyCycle between 0 and 100%
  * ReverseDutyCycle = (2048 - adcValue)/21
  * ForwardDutyCycle = (adcValue - 2048)/21
  *
- * Switching frequency is 1/800µs ~ 1250 Hz
+ * The higher the difference between the adc value and the center reference
+ * value is the higher the duty cycle percentage is, which is also what the
+ * user would expect when turning the "speed knob" to its clockwise or counter-
+ * clockwise end points.
  *
- * sONcompReg16Value = 6400 = 800µs
- * 3200 = 400µs
- * 1600 = 200µs
- * 800 = 100µs
- * 40 = 50µs
- * 8 = 10µs
- *
+ * By definition:
  * DC = ONtime/period
  *
  * ex. on 400µs => 400/800 => DC = 50%
  *
+ * For the concept of using the potentiometer for both forward and reverse
+ * motoring we'll calculate the ONtime for use with timer TIM2 in the following
+ * way:
+ *
  * ONtime = (ForwardDutyCycle*6400)/100
+ * for 50% DC:
  * ONtime = 50*6400/100 = 3200
  *
  * DC = 10% => 10*6400/100 = 640 * 0.125µs = 80µs = 10% of 800 µs
@@ -120,64 +142,61 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
  */
 void adcValue2pwmDutyCycle(uint16_t adcValue) {
    uint16_t DutyCycle;
-   int switchON_compRegTEST;
-   //
+
    if ((adcValue < (gadcValue-5)) || (adcValue > (gadcValue+5))) {
       gadcValue = adcValue;
-      if (adcValue >= 2048) {
-         DutyCycle = (adcValue - 2048)/21;
+      if (adcValue > 2048) { // forward motoring
+         DutyCycle = (adcValue - 2048)/21; // max = 2048/21 = 97.5%
+         dir = CW; // Clockwise
       }
-      else if (adcValue < 2048) {
-         DutyCycle = (2048 - adcValue)/21;
+      else if (adcValue < 2048) { // reverse motoring
+         DutyCycle = (2048 - adcValue)/21; // max = 2048/21 = 97.5%
+         dir = CCW; // Counterclockwise
+      }
+      else {
+         return;
+      }
+      // THE DUTY CYCLE HAS TO BE GREATER THAN 0!!!
+      if (DutyCycle <= 0) {
+         DutyCycle = 1; // 1%...
       }
       // Determine the value to use in the timer compare register for the
       // actual duty cycle that is selected through the potentiometers
       // position.
-      //switchON_compRegTEST = (DutyCycle*SWITCHING_PERIOD_CLK_TICKS)/100;
-      switchOFF_compReg = (DutyCycle*SWITCHING_PERIOD_CLK_TICKS)/100;
-      // included some margin to avoid 100%
-      // Should probably avoid setting the compare register to 0. Not handled yet.
-      //printf("New comReg value: %d\r\n", switchON_compReg);
+      switchON_compReg = (DutyCycle*SWITCHING_PERIOD_CLK_TICKS)/100;
    }
    return;
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
    // PWM Signal
-   /***
-   if (pwmUpdate) { // update from the pot.meter registered in the main loop...
-      switchON_compReg = newCompRegON_Value;
-      switchOFF_compReg = newCompRegOFF_Value;
-      pwmUpdate = false;
-   }
-   ***/
-   if (!switchON) {
-      switchON = 1;
-      // Change switch-gate-port.
-      //GPIOA->ODR = invSwitchState[hallState];
-      GPIOA->ODR |= 0x1;
-      //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-
-
-      /* Set new value for timer compare.
-      htim->Instance->ARR = switchON_compReg; */
-      // Using the clock settings PLL Multiplicator = x8 and setting the auto
-      // reload register equal to 8000 will produce a timer interrupt of 1 ms.
-      // This means that every tick = 0.125 µs.
-      // 6400 = 800µs
-      __HAL_TIM_SET_AUTORELOAD(&htim2, 6400-switchOFF_compReg);
+   uint8_t index;
+   // Determine the switching state index:
+   if (dir == CW) {
+      index = hallState - 1;
    }
    else {
+      index = 6 - hallState;
+   }
+   if (switchON == 1) { // switch transition from ON to OFF
       switchON = 0;
       // Change switch-gate-port.
-      //GPIOA->ODR &= pwmPinOff[hallState];
-      GPIOA->ODR &= ~0x11010101; // Setting all high side gates low.
-      //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+      //GPIOA->ODR |= invSwitchState[index];
+      GPIOA->ODR |= 0x1;
 
+      /* Set new value for timer compare. */
+      //htim->Instance->ARR = switchON_compReg;
+      __HAL_TIM_SET_AUTORELOAD(&htim2, switchON_compReg);
+   }
+   else { // switch transition from ON to OFF
+      switchON = 1;
+      // Change switch-gate-port.
+      //GPIOA->ODR &= pwmPinOff[index];
+      GPIOA->ODR &= ~0x0015; // Setting all high side gates low.
 
-      /* Set new value for timer compare.
-      htim->Instance->ARR = SWITCHING_PERIOD_CLK_TICKS - switchON_compReg; */
-      __HAL_TIM_SET_AUTORELOAD(&htim2, switchOFF_compReg);
+      /* Set new value for timer compare.*/
+      //htim->Instance->ARR = SWITCHING_PERIOD_CLK_TICKS - switchON_compReg;
+      __HAL_TIM_SET_AUTORELOAD(&htim2, SWITCHING_PERIOD_CLK_TICKS - switchON_compReg);
    }
 }
 
@@ -221,12 +240,20 @@ int main(void)
   MX_TIM15_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim2);
+
   printf("\r\n\r\nbm-MotorDrive SW on STM32-NUCLEO-F302R8 development board\r\n");
   printf("Build No. %d\r\n", BUILD);
   //
   HAL_ADC_Start(&hadc1);
   HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+  //
+  HAL_ADC_PollForConversion(&hadc1, 1);
+  adc_value = HAL_ADC_GetValue(&hadc1);
+  printf("adc_value = %d\r\n", (int)adc_value);
+  adcValue2pwmDutyCycle((uint16_t)adc_value);
+  HAL_Delay(1000);
+
+  HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -378,7 +405,7 @@ static void MX_TIM2_Init(void)
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 57599;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -498,8 +525,11 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4
+                          |GPIO_PIN_5, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);

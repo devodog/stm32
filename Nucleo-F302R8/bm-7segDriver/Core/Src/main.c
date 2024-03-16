@@ -53,7 +53,7 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
 
-UART_HandleTypeDef huart2;
+UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
@@ -62,8 +62,8 @@ UART_HandleTypeDef huart2;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -78,15 +78,36 @@ static void MX_TIM2_Init(void);
 // Common cathode
 //uint8_t ssCode[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0xf7,0x4f}; // from the Internet
 uint8_t ssCode[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x67};
-int delay = 10;
+int delay = 1;
+enum stop_watch_state {
+   RUNNING,
+   STOPPED,
+   RESET_
+} stopWatchState = RESET_;
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+   if (stopWatchState == RUNNING) {
+      stopWatchState = STOPPED;
+   }
+   else if (stopWatchState == STOPPED) {
+      stopWatchState = RESET_;
+   }
+   else {
+      // START
+      stopWatchState = RUNNING;
+   }
+}
+/*
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
    HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
    HAL_TIM_Base_Start_IT(&htim2);
 }
+*/
 
-void countDown() {
-
+int _write(int fd, char *ptr, int len) {
+   //HAL_UART_Transmit(&huart1, (uint8_t *) ptr, len, HAL_MAX_DELAY);
+   HAL_UART_Transmit(&huart1, (uint8_t*) ptr, len, 1000);
+   return len;
 }
 
 void updateDisplay(uint8_t twoDigitNumber) {
@@ -125,6 +146,76 @@ void updateDisplay(uint8_t twoDigitNumber) {
    HAL_Delay(delay);
    HAL_GPIO_WritePin(GPIOC, strobe_Pin, GPIO_PIN_RESET);
 }
+
+void update4Displays(uint16_t fourDigitNumber) {
+   uint8_t sLine = 0;
+   uint8_t element = 0;
+   uint16_t modulo = 10;
+   uint16_t digitPos = 1;
+   uint8_t digits[4];
+   // Extract digits to send
+   for (int i = 0; i < 3; i++) {
+      digits[i] = (fourDigitNumber%modulo)/digitPos;
+      digitPos *= 10;
+      modulo *= 10;
+   }
+   digits[3] = fourDigitNumber/digitPos;
+   printf("Digit string to send: %d %d %d %d\r\n", digits[3],digits[2],digits[1],digits[0]);
+   //uint8_t digit = fourDigitNumber%modulo;
+   HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+
+   // Start sending
+   while (element < 4) {
+      for (int i = 0; i < 8; i++) {
+         // msb (most significant bit) on the line first => big endian (lowest value at the highest address at the receiving side)
+         sLine = (ssCode[digits[element]] >> (7-i)) & 0x1;
+         // Data on sData_Pin
+         HAL_GPIO_WritePin(GPIOC, sData_Pin, sLine); //PC1 <=> D-SUB#4 = Orange&White = DATA
+         HAL_Delay(delay);
+
+         // Clock goes HIGH latching the data Neg. Logic
+         HAL_GPIO_WritePin(GPIOC, sClk_Pin, GPIO_PIN_SET); //PC0 <=> D-SUB#5 = Green = CLK
+         HAL_Delay(delay);
+         //
+         HAL_GPIO_WritePin(GPIOC, sClk_Pin, GPIO_PIN_RESET);
+         HAL_Delay(delay);
+      }
+
+      // Next digit
+      // 1. digit sent, element == 0
+      // digit fourDigitNumber%100)/10, element == 1
+      // 2. digit sent
+      // digit = fourDigitNumber%1000)/100, element == 2
+      // 3. digit sent
+      // if (element == 2)
+      //    digit = fourDigitNumber/1000, element == 3
+      // 4. digit sent
+      // if(element >= 3)
+      //    break;
+      /***************
+      digitPos *= 10;   // ...the denominator for the result from the modulo operation...
+      if(element < 2) { // 0 for tens, 1 for hundreds and 2 for thousens
+         modulo *= 10;
+         digit = (fourDigitNumber%modulo)/digitPos;
+      }
+      else if (element == 2) {
+         digit = fourDigitNumber/digitPos;
+      }
+      else {
+         break;
+      }
+      if ((digit < 0) || (digit > 9)) {
+         digit = 0;
+      }
+      ***/
+      element++;
+   }
+   // Transmission done - strobe / latch new data onto the output on the shift registers.
+   HAL_GPIO_WritePin(GPIOC, strobe_Pin, GPIO_PIN_SET); //PC2 <=> D-SUB#3 = Orange = STROBE
+   HAL_Delay(delay);
+   HAL_GPIO_WritePin(GPIOC, strobe_Pin, GPIO_PIN_RESET);
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -134,7 +225,10 @@ void updateDisplay(uint8_t twoDigitNumber) {
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  uint16_t stopWachTime = 0;
+  uint16_t hundreds = 0;
   uint8_t seconds = 0;
+  uint8_t resetSent = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -155,13 +249,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USART2_UART_Init();
   MX_TIM2_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
   //HAL_Delay(2000);
+  //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
   //HAL_TIM_Base_Start_IT(&htim2);
-
+  update4Displays(1234);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -170,12 +265,28 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-     /* USER CODE BEGIN 3 */
-     updateDisplay(seconds);
-     //if (seconds++ > 59) // compares then increments
-     if (++seconds > 59) // increments then compare
-        seconds = 0;
-     HAL_Delay(1000);
+    /* USER CODE BEGIN 3 */
+     if (stopWatchState == RUNNING) {
+        update4Displays(stopWachTime);
+        //updateDisplay(seconds);
+        //if (seconds++ > 59) // compares then increments
+        //if (++seconds > 59) { // increments then compare
+        if (++hundreds > 100) { // increments then compare
+           stopWachTime += 100;
+           hundreds = 0;
+           //seconds = 0;
+        }
+        else {
+           stopWachTime += hundreds;
+        }
+        HAL_Delay(10);
+     }
+     else if (stopWatchState == RESET_) {
+        if (resetSent == 0) {
+           update4Displays(0);
+           resetSent = 1;
+        }
+     }
   }
   /* USER CODE END 3 */
 }
@@ -188,6 +299,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -213,6 +325,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+  PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
@@ -264,37 +382,37 @@ static void MX_TIM2_Init(void)
 }
 
 /**
-  * @brief USART2 Initialization Function
+  * @brief USART1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_USART2_UART_Init(void)
+static void MX_USART1_UART_Init(void)
 {
 
-  /* USER CODE BEGIN USART2_Init 0 */
+  /* USER CODE BEGIN USART1_Init 0 */
 
-  /* USER CODE END USART2_Init 0 */
+  /* USER CODE END USART1_Init 0 */
 
-  /* USER CODE BEGIN USART2_Init 1 */
+  /* USER CODE BEGIN USART1_Init 1 */
 
-  /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 38400;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 9600;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN USART2_Init 2 */
+  /* USER CODE BEGIN USART1_Init 2 */
 
-  /* USER CODE END USART2_Init 2 */
+  /* USER CODE END USART1_Init 2 */
 
 }
 
@@ -323,7 +441,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
@@ -334,12 +452,24 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : USART_TX_Pin USART_RX_Pin */
+  GPIO_InitStruct.Pin = USART_TX_Pin|USART_RX_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   /*Configure GPIO pin : LD2_Pin */
   GPIO_InitStruct.Pin = LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */

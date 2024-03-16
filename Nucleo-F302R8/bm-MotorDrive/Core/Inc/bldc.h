@@ -40,9 +40,9 @@
  *
  * LOW SIDE INVERTED IN DRV8300DIPWR & ALIGNED WITH THE INVERTER SCHEMATICS
  *
- *                  Q#1  Q#2  Q#3  Q#4  Q#5  Q#5
+ *                  Q#1  Q#2  Q#3  Q#4  Q#5  Q#6
  *                  PA0  PA1  PA2  PA3  PA4  PA5
- *   H3  H2  H1  |  Q1H  Q1L  Q2H  Q2L  Q3H  Q3L
+ *   H3  H2  H1  |  Q1H  Q1L  Q2H  Q2L  Q3H  Q3L      index
  *    1   0   1  |   1    1    0    0    0    1 = 0x23 [5]
  *    0   0   1  |   1    1    0    1    0    0 = 0x0b [1]
  *    0   1   1  |   0    1    1    1    0    0 = 0x0e [3]
@@ -58,6 +58,12 @@
  *
  */
 uint8_t invSwitchState[6] = {0x0b, 0x2c, 0x0e, 0x32, 0x23, 0x38};
+// index = (hallState - 1) => Clockwise rotation
+// index = (6 - hallState) => CounterClockwise rotation
+
+uint8_t invSwitchStateRev[6] = {0x38, 0x23, 0x32, 0x0e, 0x2c, 0x0b};
+
+
 uint8_t pwmPinOff[6] = {~0x01, ~0x04, ~0x04, ~0x10, ~0x01, ~0x10};
 
 // On:
