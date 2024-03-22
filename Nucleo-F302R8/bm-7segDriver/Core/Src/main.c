@@ -52,6 +52,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim15;
 
 UART_HandleTypeDef huart1;
 
@@ -64,6 +65,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM15_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -88,13 +90,16 @@ enum stop_watch_state {
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
    if (stopWatchState == RUNNING) {
       stopWatchState = STOPPED;
+      printf("Stop-watch STOPPED\r\n");
    }
    else if (stopWatchState == STOPPED) {
       stopWatchState = RESET_;
+      printf("Stop-watch RESET\r\n");
    }
    else {
       // START
       stopWatchState = RUNNING;
+      printf("Stop-watch RUNNING\r\n");
    }
 }
 /*
@@ -127,7 +132,7 @@ void updateDisplay(uint8_t twoDigitNumber) {
          // msb (most significant bit) on the line first => big endian (lowest value at the highest address at the receiving side)
          sLine = (ssCode[digit] >> (7-i)) & 0x1;
          // Data on sData_Pin
-         HAL_GPIO_WritePin(GPIOC, sData_Pin, sLine); //PC1 <=> D-SUB#4 = Orange&White = DATA
+         HAL_GPIO_WritePin(GPIOC, sData1_Pin, sLine); //PC1 <=> D-SUB#4 = Orange&White = DATA
          HAL_Delay(delay);
 
          // Clock goes HIGH latching the data Neg. Logic
@@ -148,11 +153,13 @@ void updateDisplay(uint8_t twoDigitNumber) {
 }
 
 void update4Displays(uint16_t fourDigitNumber) {
-   uint8_t sLine = 0;
+   uint8_t sLine1 = 0;
+   uint8_t sLine2 = 0;
    uint8_t element = 0;
    uint16_t modulo = 10;
    uint16_t digitPos = 1;
    uint8_t digits[4];
+
    // Extract digits to send
    for (int i = 0; i < 3; i++) {
       digits[i] = (fourDigitNumber%modulo)/digitPos;
@@ -160,54 +167,31 @@ void update4Displays(uint16_t fourDigitNumber) {
       modulo *= 10;
    }
    digits[3] = fourDigitNumber/digitPos;
-   printf("Digit string to send: %d %d %d %d\r\n", digits[3],digits[2],digits[1],digits[0]);
+   //printf("Digit string to send: %d %d %d %d\r\n", digits[3],digits[2],digits[1],digits[0]);
    //uint8_t digit = fourDigitNumber%modulo;
    HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
    // Start sending
-   while (element < 4) {
+   while (element < 2) {
       for (int i = 0; i < 8; i++) {
          // msb (most significant bit) on the line first => big endian (lowest value at the highest address at the receiving side)
-         sLine = (ssCode[digits[element]] >> (7-i)) & 0x1;
+         sLine1 = (ssCode[digits[element]] >> (7-i)) & 0x1;
+         sLine2 = (ssCode[digits[element+2]] >> (7-i)) & 0x1;
          // Data on sData_Pin
-         HAL_GPIO_WritePin(GPIOC, sData_Pin, sLine); //PC1 <=> D-SUB#4 = Orange&White = DATA
-         HAL_Delay(delay);
+         HAL_GPIO_WritePin(GPIOC, sData1_Pin, sLine1); //PC1 <=> D-SUB#4 = Orange&White = DATA for display element 1
+         HAL_GPIO_WritePin(GPIOC, sData2_Pin, sLine2); //PC3 <=> D-SUB#4 = Green&White = DATA for display element 2
+         //HAL_Delay(delay);
+         delay_us(250);
 
          // Clock goes HIGH latching the data Neg. Logic
          HAL_GPIO_WritePin(GPIOC, sClk_Pin, GPIO_PIN_SET); //PC0 <=> D-SUB#5 = Green = CLK
-         HAL_Delay(delay);
+         //HAL_Delay(delay);
+         delay_us(250);
          //
          HAL_GPIO_WritePin(GPIOC, sClk_Pin, GPIO_PIN_RESET);
-         HAL_Delay(delay);
+         //HAL_Delay(delay);
+         delay_us(250);
       }
-
-      // Next digit
-      // 1. digit sent, element == 0
-      // digit fourDigitNumber%100)/10, element == 1
-      // 2. digit sent
-      // digit = fourDigitNumber%1000)/100, element == 2
-      // 3. digit sent
-      // if (element == 2)
-      //    digit = fourDigitNumber/1000, element == 3
-      // 4. digit sent
-      // if(element >= 3)
-      //    break;
-      /***************
-      digitPos *= 10;   // ...the denominator for the result from the modulo operation...
-      if(element < 2) { // 0 for tens, 1 for hundreds and 2 for thousens
-         modulo *= 10;
-         digit = (fourDigitNumber%modulo)/digitPos;
-      }
-      else if (element == 2) {
-         digit = fourDigitNumber/digitPos;
-      }
-      else {
-         break;
-      }
-      if ((digit < 0) || (digit > 9)) {
-         digit = 0;
-      }
-      ***/
       element++;
    }
    // Transmission done - strobe / latch new data onto the output on the shift registers.
@@ -216,6 +200,11 @@ void update4Displays(uint16_t fourDigitNumber) {
    HAL_GPIO_WritePin(GPIOC, strobe_Pin, GPIO_PIN_RESET);
 }
 
+void delay_us(volatile uint16_t au16_us)
+{
+   htim15.Instance->CNT = 0;
+   while (htim15.Instance->CNT < au16_us);
+}
 /* USER CODE END 0 */
 
 /**
@@ -226,8 +215,8 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   uint16_t stopWachTime = 0;
-  uint16_t hundreds = 0;
-  uint8_t seconds = 0;
+  //uint16_t hundreds = 0;
+  //uint8_t seconds = 0;
   uint8_t resetSent = 0;
   /* USER CODE END 1 */
 
@@ -251,8 +240,10 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   MX_USART1_UART_Init();
+  MX_TIM15_Init();
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+  HAL_TIM_Base_Start(&htim15);
   //HAL_Delay(2000);
   //HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
   //HAL_TIM_Base_Start_IT(&htim2);
@@ -267,26 +258,20 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
      if (stopWatchState == RUNNING) {
+        resetSent = 0;
+        if (++stopWachTime > 5999) {
+           stopWachTime = 0;
+        }
         update4Displays(stopWachTime);
-        //updateDisplay(seconds);
-        //if (seconds++ > 59) // compares then increments
-        //if (++seconds > 59) { // increments then compare
-        if (++hundreds > 100) { // increments then compare
-           stopWachTime += 100;
-           hundreds = 0;
-           //seconds = 0;
-        }
-        else {
-           stopWachTime += hundreds;
-        }
-        HAL_Delay(10);
      }
-     else if (stopWatchState == RESET_) {
+     if (stopWatchState == RESET_) {
         if (resetSent == 0) {
+           //printf("Stop-watch RESET*\r\n");
            update4Displays(0);
            resetSent = 1;
         }
      }
+     HAL_Delay(7);
   }
   /* USER CODE END 3 */
 }
@@ -328,8 +313,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_TIM15;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
+  PeriphClkInit.Tim15ClockSelection = RCC_TIM15CLK_HCLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
@@ -378,6 +364,52 @@ static void MX_TIM2_Init(void)
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
+
+}
+
+/**
+  * @brief TIM15 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM15_Init(void)
+{
+
+  /* USER CODE BEGIN TIM15_Init 0 */
+
+  /* USER CODE END TIM15_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM15_Init 1 */
+
+  /* USER CODE END TIM15_Init 1 */
+  htim15.Instance = TIM15;
+  htim15.Init.Prescaler = 0;
+  htim15.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim15.Init.Period = 65535;
+  htim15.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim15.Init.RepetitionCounter = 0;
+  htim15.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim15) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim15, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim15, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM15_Init 2 */
+
+  /* USER CODE END TIM15_Init 2 */
 
 }
 
@@ -434,7 +466,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, sClk_Pin|sData_Pin|strobe_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, sClk_Pin|sData1_Pin|strobe_Pin|sData2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
@@ -445,12 +477,19 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : sClk_Pin sData_Pin strobe_Pin */
-  GPIO_InitStruct.Pin = sClk_Pin|sData_Pin|strobe_Pin;
+  /*Configure GPIO pins : sClk_Pin sData1_Pin strobe_Pin */
+  GPIO_InitStruct.Pin = sClk_Pin|sData1_Pin|strobe_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : sData2_Pin */
+  GPIO_InitStruct.Pin = sData2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(sData2_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : USART_TX_Pin USART_RX_Pin */
   GPIO_InitStruct.Pin = USART_TX_Pin|USART_RX_Pin;

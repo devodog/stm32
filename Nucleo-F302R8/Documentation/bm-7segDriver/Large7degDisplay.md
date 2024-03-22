@@ -2,7 +2,7 @@
 ## Legacy 7-Segment display with CMOS (15V) hardware driver
 Reverse engineering of an Two digit 7-Segment display element without any documentation.  
 The hardware will need 12V to illuminate the display segments. See the relevant data sheet for LA4141R-82.  
-<img src="Images/DSC_0088.JPG" height="400">  
+<img src="Images/Dual7segDispHwDrv.JPG" height="400">  
 Figure 1: Circuit board for the two 4" 7-Segment displays.  
 
 Each 7-Segment display element is controlled by 8-bit serial to parallel shift register. The 7 bits of the 8-bit parallel output from this register is connected to a High-Current Darlington Transistor Array (ULN2003) that powers the display segments through a 220 ohm resistor array from 4100 Bourns.  
