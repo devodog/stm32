@@ -115,6 +115,12 @@ int _write(int fd, char *ptr, int len) {
    return len;
 }
 
+void delay_us(volatile uint16_t au16_us)
+{
+   htim15.Instance->CNT = 0;
+   while (htim15.Instance->CNT < au16_us);
+}
+
 void updateDisplay(uint8_t twoDigitNumber) {
    uint8_t sLine = 0;
    uint8_t element = 0;
@@ -199,12 +205,6 @@ void update4Displays(uint16_t fourDigitNumber) {
    HAL_Delay(delay);
    HAL_GPIO_WritePin(GPIOC, strobe_Pin, GPIO_PIN_RESET);
 }
-
-void delay_us(volatile uint16_t au16_us)
-{
-   htim15.Instance->CNT = 0;
-   while (htim15.Instance->CNT < au16_us);
-}
 /* USER CODE END 0 */
 
 /**
@@ -267,7 +267,8 @@ int main(void)
      if (stopWatchState == RESET_) {
         if (resetSent == 0) {
            //printf("Stop-watch RESET*\r\n");
-           update4Displays(0);
+           stopWachTime = 0;
+           update4Displays(stopWachTime);
            resetSent = 1;
         }
      }
