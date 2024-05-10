@@ -133,4 +133,37 @@ Currently implemented one single isr for all of the stopwatch events.
 
 ### Running display during time measurement
 Update every 0.1 sec?
- 
+
+
+# Summery of the March 2024 challenge as of mid May  2024
+Cascading the dual 7-segments display element was abandoned, due to the additional rework of the display elements hardware.  
+Instead, a TTL(3.3v)-to-CMOS(12v) converter for 4 dual 7-segments display elements, was made.  
+## Hardware design
+The hardware design is made as simple and inexpensive as possible and easy to connect and use.
+
+<img src="Images/TTL2CMOS_SerialCom.PNG" height="480">  
+
+Figure 4: The schematic of the TTL(3.3v)-to-CMOS(12v) converter for 4 dual 7-segments display elements  
+
+Since the display elements are equipped with D-Sub 9 pin connectors, it seemed sensible to provide the same connection port so that a standard RS232 cable could be used to connect the converter to individual display elements.  
+
+As seen in the schematics the first four screw wire connections are assigned for digital TTL input. The input signal ...   
+
+
+
+<img src="Images/TTL2CMOS_SerialCom_PCB.PNG" height="500">  
+
+Figure 5: The top-view of the PCB layout.  
+
+
+
+### The final solution
+
+<img src="Images/4TTL2CMOS_Front.JPG" height="500">
+<img src="Images/4TTL2CMOS_Back.JPG" height="500">  
+
+Figure 6: TBD  
+
+#### Software
+The software is found as github  
+TBD
