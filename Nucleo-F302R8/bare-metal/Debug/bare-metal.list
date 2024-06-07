@@ -29,9 +29,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  12 .comment      00000043  00000000  00000000  00020964  2**0
                   CONTENTS, READONLY
- 13 .debug_info   000188c6  00000000  00000000  000209a7  2**0
+ 13 .debug_info   000188c7  00000000  00000000  000209a7  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 0000367a  00000000  00000000  0003926d  2**0
+ 14 .debug_abbrev 0000367a  00000000  00000000  0003926e  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  15 .debug_aranges 000014a8  00000000  00000000  0003c8e8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
@@ -1363,7 +1363,7 @@ void SYS(char* paramStr, int* paramValues){
  8000eca:	2b00      	cmp	r3, #0
  8000ecc:	d105      	bne.n	8000eda <SYS+0x26>
       printf("\r\nBuild no.:%d", BUILD);
- 8000ece:	f44f 71e2 	mov.w	r1, #452	; 0x1c4
+ 8000ece:	f44f 71eb 	mov.w	r1, #470	; 0x1d6
  8000ed2:	4812      	ldr	r0, [pc, #72]	; (8000f1c <SYS+0x68>)
  8000ed4:	f008 f8ba 	bl	800904c <iprintf>
    }
@@ -2687,7 +2687,7 @@ int main(void)
  8001752:	4838      	ldr	r0, [pc, #224]	; (8001834 <main+0x150>)
  8001754:	f007 fc7a 	bl	800904c <iprintf>
   printf("\r\nBuild No. %d", BUILD);
- 8001758:	f44f 71e2 	mov.w	r1, #452	; 0x1c4
+ 8001758:	f44f 71eb 	mov.w	r1, #470	; 0x1d6
  800175c:	4836      	ldr	r0, [pc, #216]	; (8001838 <main+0x154>)
  800175e:	f007 fc75 	bl	800904c <iprintf>
   // Check if a I2C device is connected.
