@@ -21,6 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+#include <string.h>
+#include "appver.h"
 
 /* USER CODE END Includes */
 
@@ -40,6 +43,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+TIM_HandleTypeDef htim16;
+
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
@@ -50,12 +55,149 @@ UART_HandleTypeDef huart1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM16_Init(void);
 /* USER CODE BEGIN PFP */
+
+int _write(int fd, char *ptr, int len) {
+	//HAL_UART_Transmit(&huart1, (uint8_t *) ptr, len, HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart1, (uint8_t*) ptr, len, 1000);
+	return len;
+}
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+uint8_t UART1_rxBuffer = 0;
+uint8_t cmdComplete;
+char termInputBuffer[80];
+int bytesReceived = 0;
+
+// The HAL_UART_TxCpltCallback(), HAL_UART_RxCpltCallback() user callbacks
+// will be executed respectively at the end of the transmit or Receive process
+// ref. stm32g0xx_hal_uart.c line 1037.
+#ifdef UART_RX_READY
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	if (UART1_rxBuffer == 13) {
+		if (bytesReceived > 0) {
+			//executeCmd(&termInputBuffer[0], bytesReceived);
+			bytesReceived = 0;
+			memset(termInputBuffer, 0, 80);
+		} else {
+			promt();
+		}
+		HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
+		return;
+	}
+	HAL_UART_Transmit(&huart1, &UART1_rxBuffer, 1, 100);
+	termInputBuffer[bytesReceived] = UART1_rxBuffer;
+	bytesReceived++;
+	// re-trigger the interrupt...
+	HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
+}
+#endif
+
+void delay_us(volatile uint16_t au16_us)
+{
+   htim16.Instance->CNT = 0;
+   while (htim16.Instance->CNT < au16_us);
+}
+
+#ifdef GPIO_EXTI_READY
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+   // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
+   // the flowchart for the switch-statement is drawn...
+   switch (GPIO_Pin) {
+      case TargetInt1_Pin:
+         coveraction(Servo1_Pin, HIT);
+         break;
+      case TargetInt2_Pin):
+         coveraction(Servo2_Pin, HIT);
+         break;
+      case TargetInt3_Pin):
+         coveraction(Servo3_Pin, HIT);
+         break;
+      case TargetInt4_Pin):
+         coveraction(Servo4_Pin, HIT);
+         break;
+      case TargetInt5_Pin):
+         coveraction(Servo5_Pin, HIT);
+         break;
+      case StopwatchStart_Pin):
+         stopWatchState = RUNNING;
+         break;
+      case TargetsReset_Pin):
+         coveraction(ALL, RESET);
+         break;
+      break;
+      default:
+   }
+}
+#endif
+
+// Common cathode
+// 7-segment digit   0    1    2    3    4    5    6    7    8    9
+uint8_t ssCode[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x67};
+
+enum stop_watch_state {
+   RUNNING,
+   STOPPED,
+   RESET_
+} stopWatchState = RESET_;
+
+#ifdef STOPWATCH_DISPLAY_READY
+void displaySeconds(uint16_t fourDigitNumber) {
+   uint8_t sLine1 = 0;
+   uint8_t sLine2 = 0;
+   uint8_t element = 0;
+   uint16_t modulo = 10;
+   uint16_t digitPos = 1;
+   uint8_t digits[4];
+
+   // Extract digits to send
+   for (int i = 0; i < 3; i++) {
+      digits[i] = (fourDigitNumber%modulo)/digitPos;
+      digitPos *= 10;
+      modulo *= 10;
+   }
+   digits[3] = fourDigitNumber/digitPos;
+   //printf("Digit string to send: %d %d %d %d\r\n", digits[3],digits[2],digits[1],digits[0]);
+   //uint8_t digit = fourDigitNumber%modulo;
+
+   // Start sending
+   while (element < 2) {
+      for (int i = 0; i < 8; i++) {
+         // msb (most significant bit) on the line first => big endian (lowest value at the highest address at the receiving side)
+         sLine1 = (ssCode[digits[element]] >> (7-i)) & 0x1;
+         sLine2 = (ssCode[digits[element+2]] >> (7-i)) & 0x1;
+         // Data on sData_Pin
+         HAL_GPIO_WritePin(GPIOB, Hundreth7seg_Pin, sLine1); //PC1 <=> D-SUB#4 = Orange&White = DATA for display element 1
+         HAL_GPIO_WritePin(GPIOB, Seconds7seg_Pin, sLine2); //PC3 <=> D-SUB#4 = Green&White = DATA for display element 2
+         //HAL_Delay(delay);
+         delay_us(250);
+
+         // Clock goes HIGH latching the data Neg. Logic
+         HAL_GPIO_WritePin(GPIOA, serClk_Pin, GPIO_PIN_SET); //PC0 <=> D-SUB#5 = Green = CLK
+         //HAL_Delay(delay);
+         delay_us(250);
+         //
+         HAL_GPIO_WritePin(GPIOA, serClk_Pin, GPIO_PIN_RESET);
+         //HAL_Delay(delay);
+         delay_us(250);
+      }
+      element++;
+   }
+   // Transmission done - strobe / latch new data onto the output on the shift registers.
+   HAL_GPIO_WritePin(GPIOA, SerStrobe_Pin, GPIO_PIN_SET); //PC2 <=> D-SUB#3 = Orange = STROBE
+   HAL_Delay(delay);
+   HAL_GPIO_WritePin(GPIOA, SerStrobe_Pin, GPIO_PIN_RESET);
+}
+
+void displayMinutes(uint16_t fourDigitNumber) {
+   //
+}
+#endif
+
 
 /* USER CODE END 0 */
 
@@ -65,9 +207,9 @@ static void MX_USART1_UART_Init(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
+   /* USER CODE BEGIN 1 */
+   uint16_t stopWachTime = 0;
+   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -88,7 +230,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+  MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
+  printf("\r\nControl Hub initialized. Version: %d.%d - Build: %d\r\n", MAJOR_VERSION, MINOR_VERSION, BUILD);
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
   /* USER CODE END 2 */
 
@@ -102,6 +246,25 @@ int main(void)
 	  //HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 	  HAL_Delay(1000);
 	  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+#ifdef STOPWATCH_DISPLAY_READY
+     if (stopWatchState == RUNNING) {
+        resetSent = 0;
+        if (++stopWachTime > 5999) {
+           stopWachTime = 0;
+        }
+        displaySeconds(stopWachTime);
+     }
+     if (stopWatchState == RESET_) {
+        if (resetSent == 0) {
+           //printf("Stop-watch RESET*\r\n");
+           stopWachTime = 0;
+           displaySeconds(stopWachTime);
+           resetSent = 1;
+        }
+     }
+     HAL_Delay(7); // = approx. 0.01 sec.
+#endif
+
   }
   /* USER CODE END 3 */
 }
@@ -147,6 +310,38 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief TIM16 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM16_Init(void)
+{
+
+  /* USER CODE BEGIN TIM16_Init 0 */
+
+  /* USER CODE END TIM16_Init 0 */
+
+  /* USER CODE BEGIN TIM16_Init 1 */
+
+  /* USER CODE END TIM16_Init 1 */
+  htim16.Instance = TIM16;
+  htim16.Init.Prescaler = 0;
+  htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim16.Init.Period = 65535;
+  htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim16.Init.RepetitionCounter = 0;
+  htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM16_Init 2 */
+
+  /* USER CODE END TIM16_Init 2 */
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -162,7 +357,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -206,8 +401,8 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -221,11 +416,17 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, serClk_Pin|SerStrobe_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : targetInt1_Pin targetInt2_Pin targetInt3_Pin targetInt4_Pin
-                           targetInt5_Pin */
-  GPIO_InitStruct.Pin = targetInt1_Pin|targetInt2_Pin|targetInt3_Pin|targetInt4_Pin
-                          |targetInt5_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  /*Configure GPIO pin : StopwatchStart_Pin */
+  GPIO_InitStruct.Pin = StopwatchStart_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(StopwatchStart_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : TargetInt1_Pin TargetInt2_Pin TargetInt3_Pin TargetInt4_Pin
+                           TargetInt5_Pin TargetsReset_Pin */
+  GPIO_InitStruct.Pin = TargetInt1_Pin|TargetInt2_Pin|TargetInt3_Pin|TargetInt4_Pin
+                          |TargetInt5_Pin|TargetsReset_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -253,6 +454,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
