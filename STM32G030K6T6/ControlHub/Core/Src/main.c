@@ -34,7 +34,12 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define TARGET_HIT 1
+#define COVER_RESET 0
+#define ALL_HIT 0x001f
 
+#define GPIO_EXTI_READY
+#define STOPWATCH_DISPLAY_READY
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -72,6 +77,14 @@ uint8_t UART1_rxBuffer = 0;
 uint8_t cmdComplete;
 char termInputBuffer[80];
 int bytesReceived = 0;
+uint16_t targetState;
+uint16_t targetHitIndication = 0;
+
+enum stop_watch_state {
+   RUNNING,
+   STOPPED,
+   RESET_
+} stopWatchState = RESET_;
 
 // The HAL_UART_TxCpltCallback(), HAL_UART_RxCpltCallback() user callbacks
 // will be executed respectively at the end of the transmit or Receive process
@@ -103,31 +116,50 @@ void delay_us(volatile uint16_t au16_us)
    while (htim16.Instance->CNT < au16_us);
 }
 
+// _delay_us(2200); max counterclockwise (165 degrees)
+// _delay_us(1300); middle? (90 degrees)
+void coverReset(uint16_t servoPin) {
+   for (int i=0; i<20; i++) {
+      HAL_GPIO_WritePin(GPIOA, servoPin, GPIO_PIN_SET);
+      delay_us(2000);
+      HAL_GPIO_WritePin(GPIOA, servoPin, GPIO_PIN_RESET);
+      HAL_Delay(20);
+   }
+   targetState &= ~servoPin;
+}
+
 #ifdef GPIO_EXTI_READY
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
    // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
    // the flowchart for the switch-statement is drawn...
    switch (GPIO_Pin) {
       case TargetInt1_Pin:
-         coveraction(Servo1_Pin, HIT);
+         targetHitIndication = Servo1_Pin;
          break;
-      case TargetInt2_Pin):
-         coveraction(Servo2_Pin, HIT);
+      case TargetInt2_Pin:
+         targetHitIndication = Servo2_Pin;
          break;
-      case TargetInt3_Pin):
-         coveraction(Servo3_Pin, HIT);
+      case TargetInt3_Pin:
+         targetHitIndication = Servo3_Pin;
          break;
-      case TargetInt4_Pin):
-         coveraction(Servo4_Pin, HIT);
+      case TargetInt4_Pin:
+         targetHitIndication = Servo4_Pin;
          break;
-      case TargetInt5_Pin):
-         coveraction(Servo5_Pin, HIT);
+      case TargetInt5_Pin:
+         targetHitIndication = Servo5_Pin;
          break;
-      case StopwatchStart_Pin):
+      case StopwatchStart_Pin:
          stopWatchState = RUNNING;
          break;
-      case TargetsReset_Pin):
-         coveraction(ALL, RESET);
+      case TargetsReset_Pin:
+         if (stopWatchState == RUNNING) {
+            stopWatchState = STOPPED;
+         }
+         coverReset(Servo1_Pin);
+         coverReset(Servo2_Pin);
+         coverReset(Servo3_Pin);
+         coverReset(Servo4_Pin);
+         coverReset(Servo5_Pin);
          break;
       break;
       default:
@@ -139,11 +171,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 // 7-segment digit   0    1    2    3    4    5    6    7    8    9
 uint8_t ssCode[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x67};
 
-enum stop_watch_state {
-   RUNNING,
-   STOPPED,
-   RESET_
-} stopWatchState = RESET_;
 
 #ifdef STOPWATCH_DISPLAY_READY
 void displaySeconds(uint16_t fourDigitNumber) {
@@ -189,7 +216,7 @@ void displaySeconds(uint16_t fourDigitNumber) {
    }
    // Transmission done - strobe / latch new data onto the output on the shift registers.
    HAL_GPIO_WritePin(GPIOA, SerStrobe_Pin, GPIO_PIN_SET); //PC2 <=> D-SUB#3 = Orange = STROBE
-   HAL_Delay(delay);
+   HAL_Delay(1);
    HAL_GPIO_WritePin(GPIOA, SerStrobe_Pin, GPIO_PIN_RESET);
 }
 
@@ -209,6 +236,8 @@ int main(void)
 {
    /* USER CODE BEGIN 1 */
    uint16_t stopWachTime = 0;
+   uint8_t servoPulses = 0;
+   uint8_t resetSent = 0; // Unsure if this is necessary...
    /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -249,11 +278,29 @@ int main(void)
 #ifdef STOPWATCH_DISPLAY_READY
      if (stopWatchState == RUNNING) {
         resetSent = 0;
+        // if a hit is registered and the servo is activated then an additional
+        // 500 ms must be added to the stopwatch time... - can this be part of the stopwatch loop?
+        if (targetHitIndication != 0) {
+           HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_SET);
+           // Target hit! Cover the target.
+           delay_us(1000);
+           HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_RESET);
+           HAL_Delay(10); // this while loop takes approximately 10 ms, so an additional 10 ms is added to comply with the servo requirements of a pwm-frequency of 50 Hz.
+           stopWachTime++;
+           if (++servoPulses > 20) {
+              targetHitIndication = 0;
+              servoPulses = 0;
+           }
+        }
         if (++stopWachTime > 5999) {
            stopWachTime = 0;
         }
         displaySeconds(stopWachTime);
+        if (targetState == ALL_HIT) {
+           stopWatchState = STOPPED;
+        }
      }
+
      if (stopWatchState == RESET_) {
         if (resetSent == 0) {
            //printf("Stop-watch RESET*\r\n");
