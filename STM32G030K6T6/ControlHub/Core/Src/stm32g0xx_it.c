@@ -146,7 +146,13 @@ void SysTick_Handler(void)
 void EXTI4_15_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
+  uint16_t pin = HAL_GPIO_ReadPin(GPIOA, TargetInt1_Pin);
+  pin |= HAL_GPIO_ReadPin(GPIOA, TargetInt2_Pin);
+  pin |= HAL_GPIO_ReadPin(GPIOA, TargetInt3_Pin);
+  pin |= HAL_GPIO_ReadPin(GPIOA, TargetInt4_Pin);
+  pin |= HAL_GPIO_ReadPin(GPIOA, TargetInt5_Pin);
 
+  printf("\r\nEXTI4_15_IRQHandler on pin: 0x%x\r\n", pin);
   /* USER CODE END EXTI4_15_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(TargetInt1_Pin);
   HAL_GPIO_EXTI_IRQHandler(TargetInt2_Pin);

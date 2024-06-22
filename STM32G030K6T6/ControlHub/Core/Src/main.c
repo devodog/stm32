@@ -21,9 +21,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-#include <string.h>
-#include "appver.h"
 
 /* USER CODE END Includes */
 
@@ -48,6 +45,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim16;
 
 UART_HandleTypeDef huart1;
@@ -61,6 +59,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM16_Init(void);
+static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
 int _write(int fd, char *ptr, int len) {
@@ -119,22 +118,36 @@ void delay_us(volatile uint16_t au16_us)
 // _delay_us(2200); max counterclockwise (165 degrees)
 // _delay_us(1300); middle? (90 degrees)
 void coverReset(uint16_t servoPin) {
+   printf("\r\nTrying to reset cover %d\r\n", servoPin);
    for (int i=0; i<20; i++) {
-      HAL_GPIO_WritePin(GPIOA, servoPin, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_SET);
       delay_us(2000);
-      HAL_GPIO_WritePin(GPIOA, servoPin, GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_RESET);
       HAL_Delay(20);
    }
    targetState &= ~servoPin;
 }
 
+void coverTarget(uint16_t servoPin) {
+   printf("\r\nTrying to cover target %d\r\n", servoPin);
+   for (int i=0; i<20; i++) {
+      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_SET);
+      delay_us(1000);
+      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_RESET);
+      HAL_Delay(20);
+   }
+   targetState |= servoPin;
+}
+
 #ifdef GPIO_EXTI_READY
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
    // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
    // the flowchart for the switch-statement is drawn...
+   printf("\r\nInterrupt from pin: 0x%x", GPIO_Pin);
    switch (GPIO_Pin) {
       case TargetInt1_Pin:
          targetHitIndication = Servo1_Pin;
+
          break;
       case TargetInt2_Pin:
          targetHitIndication = Servo2_Pin;
@@ -149,9 +162,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
          targetHitIndication = Servo5_Pin;
          break;
       case StopwatchStart_Pin:
+         printf("\r\nStopwatchStart_Pin interrupt\r\n");
          stopWatchState = RUNNING;
          break;
       case TargetsReset_Pin:
+         printf("\r\nTargetsReset_Pin interrupt\r\n");
          if (stopWatchState == RUNNING) {
             stopWatchState = STOPPED;
          }
@@ -234,11 +249,11 @@ void displayMinutes(uint16_t fourDigitNumber) {
   */
 int main(void)
 {
-   /* USER CODE BEGIN 1 */
+  /* USER CODE BEGIN 1 */
    uint16_t stopWachTime = 0;
    uint8_t servoPulses = 0;
    uint8_t resetSent = 0; // Unsure if this is necessary...
-   /* USER CODE END 1 */
+  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -260,9 +275,18 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_TIM16_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   printf("\r\nControl Hub initialized. Version: %d.%d - Build: %d\r\n", MAJOR_VERSION, MINOR_VERSION, BUILD);
+  HAL_TIM_Base_Start(&htim16);
+  stopWatchState = STOPPED;
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+  coverReset(Servo1_Pin);
+  //coverReset(Servo2_Pin);
+  //coverReset(Servo3_Pin);
+  //coverReset(Servo4_Pin);
+  //coverReset(Servo5_Pin);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -273,13 +297,18 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  //HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-	  HAL_Delay(1000);
-	  HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+	  //HAL_Delay(1000);
+	  //HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+     if (targetHitIndication != 0) {
+        coverTarget(Servo1_Pin);
+        targetHitIndication = 0;
+     }
 #ifdef STOPWATCH_DISPLAY_READY
      if (stopWatchState == RUNNING) {
         resetSent = 0;
         // if a hit is registered and the servo is activated then an additional
         // 500 ms must be added to the stopwatch time... - can this be part of the stopwatch loop?
+        /*
         if (targetHitIndication != 0) {
            HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_SET);
            // Target hit! Cover the target.
@@ -292,6 +321,7 @@ int main(void)
               servoPulses = 0;
            }
         }
+        */
         if (++stopWachTime > 5999) {
            stopWachTime = 0;
         }
@@ -336,7 +366,12 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
+  RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
+  RCC_OscInitStruct.PLL.PLLN = 8;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -346,14 +381,59 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 0;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 65535;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
+
 }
 
 /**
