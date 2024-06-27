@@ -34,9 +34,7 @@
 #define TARGET_HIT 1
 #define COVER_RESET 0
 #define ALL_HIT 0x001f
-
-#define GPIO_EXTI_READY
-#define STOPWATCH_DISPLAY_READY
+#define SHOW_RESULT_DURATION 30000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -128,6 +126,11 @@ void coverReset(uint16_t servoPin) {
    targetState &= ~servoPin;
 }
 
+void resetAll(void) {
+   for (int i=0; i<5; i++)
+      coverReset(1<<i);
+}
+
 void coverTarget(uint16_t servoPin) {
    printf("\r\nTrying to cover target %d\r\n", servoPin);
    for (int i=0; i<20; i++) {
@@ -139,7 +142,6 @@ void coverTarget(uint16_t servoPin) {
    targetState |= servoPin;
 }
 
-#ifdef GPIO_EXTI_READY
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
    // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
    // the flowchart for the switch-statement is drawn...
@@ -147,7 +149,6 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
    switch (GPIO_Pin) {
       case TargetInt1_Pin:
          targetHitIndication = Servo1_Pin;
-
          break;
       case TargetInt2_Pin:
          targetHitIndication = Servo2_Pin;
@@ -161,48 +162,38 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
       case TargetInt5_Pin:
          targetHitIndication = Servo5_Pin;
          break;
-      case StopwatchStart_Pin:
-         printf("\r\nStopwatchStart_Pin interrupt\r\n");
-         stopWatchState = RUNNING;
-         break;
-      case TargetsReset_Pin:
-         printf("\r\nTargetsReset_Pin interrupt\r\n");
-         if (stopWatchState == RUNNING) {
-            stopWatchState = STOPPED;
-         }
-         coverReset(Servo1_Pin);
-         coverReset(Servo2_Pin);
-         coverReset(Servo3_Pin);
-         coverReset(Servo4_Pin);
-         coverReset(Servo5_Pin);
-         break;
-      break;
       default:
+         break;
    }
 }
-#endif
 
 // Common cathode
 // 7-segment digit   0    1    2    3    4    5    6    7    8    9
 uint8_t ssCode[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x67};
 
 
-#ifdef STOPWATCH_DISPLAY_READY
-void displaySeconds(uint16_t fourDigitNumber) {
-   uint8_t sLine1 = 0;
-   uint8_t sLine2 = 0;
+void displayGameTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
+   uint8_t sLine1 = 0;  // Hundredth
+   uint8_t sLine2 = 0;  // Seconds
+   uint8_t sLine3 = 0;  // Minutes
+   uint8_t sLine4 = 0;  // Hours
+
    uint8_t element = 0;
    uint16_t modulo = 10;
    uint16_t digitPos = 1;
+
    uint8_t digits[4];
+   uint8_t hDigits[4];
 
    // Extract digits to send
    for (int i = 0; i < 3; i++) {
       digits[i] = (fourDigitNumber%modulo)/digitPos;
+      hDigits[i] = (hourMinutes%modulo)/digitPos;
       digitPos *= 10;
       modulo *= 10;
    }
    digits[3] = fourDigitNumber/digitPos;
+   hDigits[3] = hourMinutes/digitPos;
    //printf("Digit string to send: %d %d %d %d\r\n", digits[3],digits[2],digits[1],digits[0]);
    //uint8_t digit = fourDigitNumber%modulo;
 
@@ -212,12 +203,18 @@ void displaySeconds(uint16_t fourDigitNumber) {
          // msb (most significant bit) on the line first => big endian (lowest value at the highest address at the receiving side)
          sLine1 = (ssCode[digits[element]] >> (7-i)) & 0x1;
          sLine2 = (ssCode[digits[element+2]] >> (7-i)) & 0x1;
+
+         sLine3 = (ssCode[hDigits[element]] >> (7-i)) & 0x1;
+         sLine4 = (ssCode[hDigits[element+2]] >> (7-i)) & 0x1;
+
          // Data on sData_Pin
          HAL_GPIO_WritePin(GPIOB, Hundreth7seg_Pin, sLine1); //PC1 <=> D-SUB#4 = Orange&White = DATA for display element 1
          HAL_GPIO_WritePin(GPIOB, Seconds7seg_Pin, sLine2); //PC3 <=> D-SUB#4 = Green&White = DATA for display element 2
-         //HAL_Delay(delay);
-         delay_us(250);
 
+         HAL_GPIO_WritePin(GPIOB, Minutes7seg_Pin, sLine3); //PC1 <=> D-SUB#4 = Orange&White = DATA for display element 1
+         HAL_GPIO_WritePin(GPIOB, Hours7seg_Pin, sLine4); //PC3 <=> D-SUB#4 = Green&White = DATA for display element 2
+
+         delay_us(250);
          // Clock goes HIGH latching the data Neg. Logic
          HAL_GPIO_WritePin(GPIOA, serClk_Pin, GPIO_PIN_SET); //PC0 <=> D-SUB#5 = Green = CLK
          //HAL_Delay(delay);
@@ -235,11 +232,6 @@ void displaySeconds(uint16_t fourDigitNumber) {
    HAL_GPIO_WritePin(GPIOA, SerStrobe_Pin, GPIO_PIN_RESET);
 }
 
-void displayMinutes(uint16_t fourDigitNumber) {
-   //
-}
-#endif
-
 
 /* USER CODE END 0 */
 
@@ -247,103 +239,158 @@ void displayMinutes(uint16_t fourDigitNumber) {
   * @brief  The application entry point.
   * @retval int
   */
-int main(void)
-{
-  /* USER CODE BEGIN 1 */
+int main(void) {
+   /* USER CODE BEGIN 1 */
    uint16_t stopWachTime = 0;
    uint8_t servoPulses = 0;
-   uint8_t resetSent = 0; // Unsure if this is necessary...
-  /* USER CODE END 1 */
+   uint16_t showResultDuration = 0;
 
-  /* MCU Configuration--------------------------------------------------------*/
+   uint8_t minutes = 0;
+   uint8_t hours = 0;
+   uint16_t hoursAndMinutes = 0;
+   /* USER CODE END 1 */
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+   /* MCU Configuration--------------------------------------------------------*/
 
-  /* USER CODE BEGIN Init */
+   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+   HAL_Init();
 
-  /* USER CODE END Init */
+   /* USER CODE BEGIN Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+   /* USER CODE END Init */
 
-  /* USER CODE BEGIN SysInit */
+   /* Configure the system clock */
+   SystemClock_Config();
 
-  /* USER CODE END SysInit */
+   /* USER CODE BEGIN SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_USART1_UART_Init();
-  MX_TIM16_Init();
-  MX_TIM3_Init();
-  /* USER CODE BEGIN 2 */
-  printf("\r\nControl Hub initialized. Version: %d.%d - Build: %d\r\n", MAJOR_VERSION, MINOR_VERSION, BUILD);
-  HAL_TIM_Base_Start(&htim16);
-  stopWatchState = STOPPED;
-  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-  coverReset(Servo1_Pin);
-  //coverReset(Servo2_Pin);
-  //coverReset(Servo3_Pin);
-  //coverReset(Servo4_Pin);
-  //coverReset(Servo5_Pin);
+   /* USER CODE END SysInit */
 
-  /* USER CODE END 2 */
+   /* Initialize all configured peripherals */
+   MX_GPIO_Init();
+   MX_USART1_UART_Init();
+   MX_TIM16_Init();
+   MX_TIM3_Init();
+   /* USER CODE BEGIN 2 */
+   printf("\r\nControl Hub initialized. Version: %d.%d - Build: %d\r\n",
+         MAJOR_VERSION, MINOR_VERSION, BUILD);
+   HAL_TIM_Base_Start(&htim16);
+   stopWatchState = STOPPED;
+   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+   coverReset(Servo1_Pin);
+   //coverReset(Servo2_Pin);
+   //coverReset(Servo3_Pin);
+   //coverReset(Servo4_Pin);
+   //coverReset(Servo5_Pin);
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
+   /* USER CODE END 2 */
 
-    /* USER CODE BEGIN 3 */
-	  //HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-	  //HAL_Delay(1000);
-	  //HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-     if (targetHitIndication != 0) {
-        coverTarget(Servo1_Pin);
-        targetHitIndication = 0;
-     }
-#ifdef STOPWATCH_DISPLAY_READY
-     if (stopWatchState == RUNNING) {
-        resetSent = 0;
-        // if a hit is registered and the servo is activated then an additional
-        // 500 ms must be added to the stopwatch time... - can this be part of the stopwatch loop?
-        /*
-        if (targetHitIndication != 0) {
-           HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_SET);
-           // Target hit! Cover the target.
-           delay_us(1000);
-           HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_RESET);
-           HAL_Delay(10); // this while loop takes approximately 10 ms, so an additional 10 ms is added to comply with the servo requirements of a pwm-frequency of 50 Hz.
-           stopWachTime++;
-           if (++servoPulses > 20) {
-              targetHitIndication = 0;
-              servoPulses = 0;
-           }
-        }
-        */
-        if (++stopWachTime > 5999) {
-           stopWachTime = 0;
-        }
-        displaySeconds(stopWachTime);
-        if (targetState == ALL_HIT) {
-           stopWatchState = STOPPED;
-        }
-     }
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+   while (1) {
+      /* USER CODE END WHILE */
 
-     if (stopWatchState == RESET_) {
-        if (resetSent == 0) {
-           //printf("Stop-watch RESET*\r\n");
-           stopWachTime = 0;
-           displaySeconds(stopWachTime);
-           resetSent = 1;
-        }
-     }
-     HAL_Delay(7); // = approx. 0.01 sec.
-#endif
+      /* USER CODE BEGIN 3 */
+      // We'll monitor the floor/stand switch to determine when the game is running.
+      if (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin)
+            == GPIO_PIN_SET) {
+         if (stopWatchState == RESET_) {
+            stopWatchState = RUNNING;
+         }
 
-  }
-  /* USER CODE END 3 */
+         if (stopWatchState == RUNNING) {
+            // if a hit is registered and the servo is activated then an additional
+            // 500 ms must be added to the stopwatch time... - can this be part of the stopwatch loop?
+
+            if (targetHitIndication != 0) {
+
+               HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_SET);
+               // Target hit! Cover the target.
+               delay_us(1000);
+               HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_RESET);
+               HAL_Delay(10); // this while loop takes approximately 10 ms, so an additional 10 ms is added to comply with the servo requirements of a pwm-frequency of 50 Hz.
+               stopWachTime++;
+
+               if (++servoPulses > 20) {
+                  // The target is completely closed
+                  targetHitIndication = 0;
+                  servoPulses = 0;
+               }
+            }
+
+            if (++stopWachTime > 5999) {
+               stopWachTime = 0;
+               if (++minutes > 59) {
+                  minutes = 0;
+                  if (++hours > 23) {
+                     hours = 0;
+                  }
+               }
+               hoursAndMinutes = hours * 100 + minutes;
+            }
+
+            displayGameTime(stopWachTime, hoursAndMinutes);
+
+            if (targetState == ALL_HIT) {
+               stopWatchState = STOPPED;
+               // Start timer...
+               showResultDuration = 0;
+            }
+         } else if (stopWatchState == STOPPED) {
+            if (showResultDuration++ > SHOW_RESULT_DURATION) { // The player have 30 sec. to get of the target-stand.
+               printf("Stop-watch STOPPED!\r\n");
+               uint8_t countingSeconds = 0;
+               while (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port,
+                     StopwatchStart_Pin) == GPIO_PIN_SET) {
+                  stopWachTime = 9999;
+                  hoursAndMinutes = 9999;
+                  displayGameTime(stopWachTime, hoursAndMinutes);
+                  HAL_Delay(1000);
+                  stopWachTime = 0;
+                  hoursAndMinutes = 0;
+                  displayGameTime(stopWachTime, hoursAndMinutes);
+                  HAL_Delay(1000);
+                  if (countingSeconds++ > 15) {
+                     break;
+                  }
+               }
+               stopWachTime = 0;
+               hoursAndMinutes = 0;
+               displayGameTime(stopWachTime, hoursAndMinutes);
+               stopWatchState = RESET_;
+               resetAll();
+               targetState = 0;
+            }
+         }
+         HAL_Delay(7); // = approx. 0.01 sec.
+      } else { // ... if no one is standing on the target-range stand there is no game running. All target covers shall be covering the targets.
+         // Check if any of the targets are covered.
+         if (targetState != 0) {
+            printf("\r\nGame terminated!\r\n");
+            HAL_Delay(10000);
+            stopWachTime = 0;
+            hoursAndMinutes = 0;
+            displayGameTime(stopWachTime, hoursAndMinutes);
+            stopWatchState = RESET_;
+            resetAll();
+            targetState = 0;
+         } // ...or activate the manual reset.
+         else if ((HAL_GPIO_ReadPin(TargetsReset_GPIO_Port, TargetsReset_Pin)
+               == GPIO_PIN_SET) && (stopWatchState == STOPPED)) {
+            stopWachTime = 0;
+            hoursAndMinutes = 0;
+            displayGameTime(stopWachTime, hoursAndMinutes);
+            stopWatchState = RESET_;
+            resetAll();
+            targetState = 0;
+         } else {
+            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+            HAL_Delay(1000);
+            HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+         }
+      }
+   }
+   /* USER CODE END 3 */
 }
 
 /**
@@ -545,14 +592,14 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : StopwatchStart_Pin */
   GPIO_InitStruct.Pin = StopwatchStart_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(StopwatchStart_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : TargetInt1_Pin TargetInt2_Pin TargetInt3_Pin TargetInt4_Pin
-                           TargetInt5_Pin TargetsReset_Pin */
+                           TargetInt5_Pin */
   GPIO_InitStruct.Pin = TargetInt1_Pin|TargetInt2_Pin|TargetInt3_Pin|TargetInt4_Pin
-                          |TargetInt5_Pin|TargetsReset_Pin;
+                          |TargetInt5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -581,6 +628,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : TargetsReset_Pin */
+  GPIO_InitStruct.Pin = TargetsReset_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(TargetsReset_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);

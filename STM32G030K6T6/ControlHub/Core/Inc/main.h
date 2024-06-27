@@ -62,7 +62,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define StopwatchStart_Pin GPIO_PIN_9
 #define StopwatchStart_GPIO_Port GPIOB
-#define StopwatchStart_EXTI_IRQn EXTI4_15_IRQn
 #define TargetInt1_Pin GPIO_PIN_4
 #define TargetInt1_GPIO_Port GPIOA
 #define TargetInt1_EXTI_IRQn EXTI4_15_IRQn
@@ -92,7 +91,6 @@ void Error_Handler(void);
 #define SerStrobe_GPIO_Port GPIOA
 #define TargetsReset_Pin GPIO_PIN_15
 #define TargetsReset_GPIO_Port GPIOA
-#define TargetsReset_EXTI_IRQn EXTI4_15_IRQn
 #define Servo2_Pin GPIO_PIN_3
 #define Servo2_GPIO_Port GPIOB
 #define Servo1_Pin GPIO_PIN_4
