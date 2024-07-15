@@ -14,6 +14,22 @@
   * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
+  ******************************************************************************
+  * Software intended for the ST32G030K6T6 MCU for Biathlon Toy Targets, version
+  * 2.0 2024.
+  *
+  * MCU resources in use:
+  * SWDIO & SWCLK for ST-Link communication.
+  * 2 GPIOs for UART communication for debug
+  * 5 GPIOs for external interrupts
+  * 5 GPIOs for operating 5 individual analog servo-motors.
+  * 2 GPIOs for detecting Game Start and Game Reset.
+  * 6 GPIOs for sending data to 4 dual big 7-Segment displays for time
+  * measurement. 2 common lines for clock and strobe and 4 GPIOs for serial
+  * data.
+  *
+  * Internal Timer for microseconds delay
+  *
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
@@ -43,7 +59,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim16;
 
 UART_HandleTypeDef huart1;
@@ -57,7 +72,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM16_Init(void);
-static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
 int _write(int fd, char *ptr, int len) {
@@ -118,10 +132,10 @@ void delay_us(volatile uint16_t au16_us)
 void coverReset(uint16_t servoPin) {
    printf("\r\nTrying to reset cover %d\r\n", servoPin);
    for (int i=0; i<20; i++) {
-      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_SET); // RESET for neg-logic for level conversion...
       delay_us(2000);
-      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_RESET);
-      HAL_Delay(20);
+      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_RESET); // SET for neg-logic for level conversion...
+      HAL_Delay(18);
    }
    targetState &= ~servoPin;
 }
@@ -130,7 +144,7 @@ void resetAll(void) {
    for (int i=0; i<5; i++)
       coverReset(1<<i);
 }
-
+/*** NOT FOR NEG-LOGIC!
 void coverTarget(uint16_t servoPin) {
    printf("\r\nTrying to cover target %d\r\n", servoPin);
    for (int i=0; i<20; i++) {
@@ -141,7 +155,7 @@ void coverTarget(uint16_t servoPin) {
    }
    targetState |= servoPin;
 }
-
+**/
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
    // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
    // the flowchart for the switch-statement is drawn...
@@ -239,61 +253,69 @@ void displayGameTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
   * @brief  The application entry point.
   * @retval int
   */
-int main(void) {
-   /* USER CODE BEGIN 1 */
-   uint16_t stopWachTime = 0;
+int main(void)
+{
+  /* USER CODE BEGIN 1 */
+   uint8_t onStand = 0;
+   uint8_t inOperation = 0;
    uint8_t servoPulses = 0;
+   uint16_t stopWachTime = 0;
    uint16_t showResultDuration = 0;
 
    uint8_t minutes = 0;
    uint8_t hours = 0;
    uint16_t hoursAndMinutes = 0;
-   /* USER CODE END 1 */
+  /* USER CODE END 1 */
 
-   /* MCU Configuration--------------------------------------------------------*/
+  /* MCU Configuration--------------------------------------------------------*/
 
-   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-   HAL_Init();
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 
-   /* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-   /* USER CODE END Init */
+  /* USER CODE END Init */
 
-   /* Configure the system clock */
-   SystemClock_Config();
+  /* Configure the system clock */
+  SystemClock_Config();
 
-   /* USER CODE BEGIN SysInit */
+  /* USER CODE BEGIN SysInit */
 
-   /* USER CODE END SysInit */
+  /* USER CODE END SysInit */
 
-   /* Initialize all configured peripherals */
-   MX_GPIO_Init();
-   MX_USART1_UART_Init();
-   MX_TIM16_Init();
-   MX_TIM3_Init();
-   /* USER CODE BEGIN 2 */
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_USART1_UART_Init();
+  MX_TIM16_Init();
+  /* USER CODE BEGIN 2 */
    printf("\r\nControl Hub initialized. Version: %d.%d - Build: %d\r\n",
          MAJOR_VERSION, MINOR_VERSION, BUILD);
    HAL_TIM_Base_Start(&htim16);
    stopWatchState = STOPPED;
    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-   coverReset(Servo1_Pin);
+   //coverReset(Servo1_Pin);
    //coverReset(Servo2_Pin);
-   //coverReset(Servo3_Pin);
+   coverReset(Servo3_Pin);
    //coverReset(Servo4_Pin);
    //coverReset(Servo5_Pin);
 
-   /* USER CODE END 2 */
+  /* USER CODE END 2 */
 
-   /* Infinite loop */
-   /* USER CODE BEGIN WHILE */
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
    while (1) {
-      /* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
-      /* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
       // We'll monitor the floor/stand switch to determine when the game is running.
-      if (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin)
+      //if (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin)
+      if (HAL_GPIO_ReadPin(StartGame_GPIO_Port, StartGame_Pin)
             == GPIO_PIN_SET) {
+         if (onStand == 0) {
+            stopWatchState = RUNNING;
+            printf("Game started\r\n");
+            onStand = 1;
+         }
          if (stopWatchState == RESET_) {
             stopWatchState = RUNNING;
          }
@@ -303,11 +325,16 @@ int main(void) {
             // 500 ms must be added to the stopwatch time... - can this be part of the stopwatch loop?
 
             if (targetHitIndication != 0) {
+               if (inOperation == 0) {
+                  printf("\r\nHit on target : 0x%x", targetHitIndication);
+                  inOperation = 1;
+               }
 
-               HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_SET);
+
+               HAL_GPIO_WritePin(GPIOB, targetHitIndication, GPIO_PIN_SET); // RESET for neg-logic for level conversion...
                // Target hit! Cover the target.
                delay_us(1000);
-               HAL_GPIO_WritePin(GPIOA, targetHitIndication, GPIO_PIN_RESET);
+               HAL_GPIO_WritePin(GPIOB, targetHitIndication, GPIO_PIN_RESET); // SET for neg-logic for level conversion...
                HAL_Delay(10); // this while loop takes approximately 10 ms, so an additional 10 ms is added to comply with the servo requirements of a pwm-frequency of 50 Hz.
                stopWachTime++;
 
@@ -315,6 +342,7 @@ int main(void) {
                   // The target is completely closed
                   targetHitIndication = 0;
                   servoPulses = 0;
+                  inOperation = 0;
                }
             }
 
@@ -340,12 +368,12 @@ int main(void) {
             if (showResultDuration++ > SHOW_RESULT_DURATION) { // The player have 30 sec. to get of the target-stand.
                printf("Stop-watch STOPPED!\r\n");
                uint8_t countingSeconds = 0;
-               while (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port,
-                     StopwatchStart_Pin) == GPIO_PIN_SET) {
+               //while (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin) == GPIO_PIN_SET) {
+               while (HAL_GPIO_ReadPin(StartGame_GPIO_Port, StartGame_Pin) == GPIO_PIN_SET) {
                   stopWachTime = 9999;
                   hoursAndMinutes = 9999;
                   displayGameTime(stopWachTime, hoursAndMinutes);
-                  HAL_Delay(1000);
+                  HAL_Delay(1500);
                   stopWachTime = 0;
                   hoursAndMinutes = 0;
                   displayGameTime(stopWachTime, hoursAndMinutes);
@@ -363,7 +391,13 @@ int main(void) {
             }
          }
          HAL_Delay(7); // = approx. 0.01 sec.
-      } else { // ... if no one is standing on the target-range stand there is no game running. All target covers shall be covering the targets.
+      } else {
+         // ... if no one is standing on the target-range stand, there is no
+         // game running. All target covers shall be covering the targets.
+         if (onStand == 1) {
+            printf("\r\nGame Disrupted!\r\n");
+            onStand = 0;
+         }
          // Check if any of the targets are covered.
          if (targetState != 0) {
             printf("\r\nGame terminated!\r\n");
@@ -384,13 +418,14 @@ int main(void) {
             resetAll();
             targetState = 0;
          } else {
-            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
             HAL_Delay(1000);
             HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+            HAL_Delay(1000);
          }
       }
    }
-   /* USER CODE END 3 */
+  /* USER CODE END 3 */
 }
 
 /**
@@ -429,58 +464,13 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV16;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief TIM3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM3_Init(void)
-{
-
-  /* USER CODE BEGIN TIM3_Init 0 */
-
-  /* USER CODE END TIM3_Init 0 */
-
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM3_Init 1 */
-
-  /* USER CODE END TIM3_Init 1 */
-  htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 65535;
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM3_Init 2 */
-
-  /* USER CODE END TIM3_Init 2 */
-
 }
 
 /**
@@ -580,9 +570,11 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Servo5_Pin|Servo4_Pin|Servo3_Pin|Servo2_Pin
-                          |Servo1_Pin|Hundreth7seg_Pin|Seconds7seg_Pin|Minutes7seg_Pin
-                          |Hours7seg_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Servo5_Pin|Servo4_Pin|Servo2_Pin|Servo1_Pin
+                          |Hundreth7seg_Pin|Seconds7seg_Pin|Minutes7seg_Pin|Hours7seg_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(Servo3_GPIO_Port, Servo3_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
@@ -596,13 +588,23 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(StopwatchStart_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : TargetInt1_Pin TargetInt2_Pin TargetInt3_Pin TargetInt4_Pin
-                           TargetInt5_Pin */
-  GPIO_InitStruct.Pin = TargetInt1_Pin|TargetInt2_Pin|TargetInt3_Pin|TargetInt4_Pin
-                          |TargetInt5_Pin;
+  /*Configure GPIO pin : StartGame_Pin */
+  GPIO_InitStruct.Pin = StartGame_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(StartGame_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : TargetInt1_Pin TargetInt2_Pin TargetInt4_Pin TargetInt5_Pin */
+  GPIO_InitStruct.Pin = TargetInt1_Pin|TargetInt2_Pin|TargetInt4_Pin|TargetInt5_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : TargetInt3_Pin */
+  GPIO_InitStruct.Pin = TargetInt3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(TargetInt3_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Servo5_Pin Servo4_Pin Servo3_Pin Servo2_Pin
                            Servo1_Pin Hundreth7seg_Pin Seconds7seg_Pin Minutes7seg_Pin
