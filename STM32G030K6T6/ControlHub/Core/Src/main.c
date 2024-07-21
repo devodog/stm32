@@ -185,6 +185,24 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
 // 7-segment digit   0    1    2    3    4    5    6    7    8    9
 uint8_t ssCode[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x67};
 
+void printStopwatchTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
+   uint16_t modulo = 10;
+   uint16_t digitPos = 1;
+
+   uint8_t digits[4];
+   uint8_t hDigits[4];
+
+   // Extract digits to send
+   for (int i = 0; i < 3; i++) {
+      digits[i] = (fourDigitNumber%modulo)/digitPos;
+      hDigits[i] = (hourMinutes%modulo)/digitPos;
+      digitPos *= 10;
+      modulo *= 10;
+   }
+   digits[3] = fourDigitNumber/digitPos;
+   hDigits[3] = hourMinutes/digitPos;
+   printf("Time duration from start: %d%d.%d%d s\r\n", digits[3],digits[2],digits[1],digits[0]);
+}
 
 void displayGameTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
    uint8_t sLine1 = 0;  // Hundredth
@@ -294,7 +312,7 @@ int main(void)
    stopWatchState = STOPPED;
    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
    //coverReset(Servo1_Pin);
-   //coverReset(Servo2_Pin);
+   coverReset(Servo2_Pin);
    coverReset(Servo3_Pin);
    //coverReset(Servo4_Pin);
    //coverReset(Servo5_Pin);
@@ -308,8 +326,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
       // We'll monitor the floor/stand switch to determine when the game is running.
-      //if (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin)
-      if (HAL_GPIO_ReadPin(StartGame_GPIO_Port, StartGame_Pin)
+      if (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin)
+      //if (HAL_GPIO_ReadPin(StartGame_GPIO_Port, StartGame_Pin)
             == GPIO_PIN_SET) {
          if (onStand == 0) {
             stopWatchState = RUNNING;
@@ -345,8 +363,8 @@ int main(void)
                   inOperation = 0;
                }
             }
-
-            if (++stopWachTime > 5999) {
+            stopWachTime+=2;
+            if (stopWachTime > 5999) {
                stopWachTime = 0;
                if (++minutes > 59) {
                   minutes = 0;
@@ -368,8 +386,8 @@ int main(void)
             if (showResultDuration++ > SHOW_RESULT_DURATION) { // The player have 30 sec. to get of the target-stand.
                printf("Stop-watch STOPPED!\r\n");
                uint8_t countingSeconds = 0;
-               //while (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin) == GPIO_PIN_SET) {
-               while (HAL_GPIO_ReadPin(StartGame_GPIO_Port, StartGame_Pin) == GPIO_PIN_SET) {
+               while (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin) == GPIO_PIN_SET) {
+               //while (HAL_GPIO_ReadPin(StartGame_GPIO_Port, StartGame_Pin) == GPIO_PIN_SET) {
                   stopWachTime = 9999;
                   hoursAndMinutes = 9999;
                   displayGameTime(stopWachTime, hoursAndMinutes);
@@ -390,12 +408,14 @@ int main(void)
                targetState = 0;
             }
          }
-         HAL_Delay(7); // = approx. 0.01 sec.
+         HAL_Delay(4); // = approx. 0.01 sec.
       } else {
          // ... if no one is standing on the target-range stand, there is no
          // game running. All target covers shall be covering the targets.
          if (onStand == 1) {
-            printf("\r\nGame Disrupted!\r\n");
+            printf("\r\nGame Disrupted at: %d ms\r\n", stopWachTime*10);
+            printStopwatchTime(stopWachTime, hoursAndMinutes);
+            stopWachTime = 0;
             onStand = 0;
          }
          // Check if any of the targets are covered.
@@ -419,9 +439,9 @@ int main(void)
             targetState = 0;
          } else {
             HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-            HAL_Delay(1000);
+            HAL_Delay(500);
             HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-            HAL_Delay(1000);
+            HAL_Delay(500);
          }
       }
    }
@@ -594,17 +614,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(StartGame_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : TargetInt1_Pin TargetInt2_Pin TargetInt4_Pin TargetInt5_Pin */
-  GPIO_InitStruct.Pin = TargetInt1_Pin|TargetInt2_Pin|TargetInt4_Pin|TargetInt5_Pin;
+  /*Configure GPIO pins : TargetInt1_Pin TargetInt2_Pin TargetInt3_Pin TargetInt4_Pin
+                           TargetInt5_Pin */
+  GPIO_InitStruct.Pin = TargetInt1_Pin|TargetInt2_Pin|TargetInt3_Pin|TargetInt4_Pin
+                          |TargetInt5_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : TargetInt3_Pin */
-  GPIO_InitStruct.Pin = TargetInt3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(TargetInt3_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Servo5_Pin Servo4_Pin Servo3_Pin Servo2_Pin
                            Servo1_Pin Hundreth7seg_Pin Seconds7seg_Pin Minutes7seg_Pin
