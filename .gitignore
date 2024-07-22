@@ -1,16 +1,14 @@
+# STM32 git ignore
 # eclipse specific git ignore
 **/.metadata/
-
-.settings/
-Debug/
+**/.settings/*
 *.launch
+**/Debug/*
+!**/Debug/prebuild.py
+!**/Debug/appver.h
+#**/Debug/Core
+#**/Debug/Drivers
 
-# STM32 git ignore
-#*.mxproject
 
-#Nucleo-F302R8/.metadata/
-#Nucleo-F302R8/.metadata/.ide.log
-#Nucleo-F302R8/.metadata/.log
-#Nucleo-F302R8/.metadata/version.ini
-#Nucleo-F302R8/.metadata/.plugins/org.eclipse.cdt.core/.log
-#Nucleo-F302R8/.metadata/.plugins/org.eclipse.cdt.core/bare-metal.1704442826818.pdom
+#git check-ignore -v STM32G030K6T6\ControlHub\Debug\appver.h
+
