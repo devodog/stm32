@@ -140,7 +140,7 @@ void coverReset(uint16_t servoPin) {
    targetState &= ~servoPin;
 }
 
-void resetAll(void) {
+void resetAllTargets(void) {
    for (int i=0; i<5; i++)
       coverReset(1<<i);
 }
@@ -201,7 +201,7 @@ void printStopwatchTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
    }
    digits[3] = fourDigitNumber/digitPos;
    hDigits[3] = hourMinutes/digitPos;
-   printf("Time duration from start: %d%d.%d%d s\r\n", digits[3],digits[2],digits[1],digits[0]);
+   printf("Time duration from start: %d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
 }
 
 void displayGameTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
@@ -311,9 +311,10 @@ int main(void)
    HAL_TIM_Base_Start(&htim16);
    stopWatchState = STOPPED;
    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+   resetAllTargets();
    //coverReset(Servo1_Pin);
-   coverReset(Servo2_Pin);
-   coverReset(Servo3_Pin);
+   //coverReset(Servo2_Pin);
+   //coverReset(Servo3_Pin);
    //coverReset(Servo4_Pin);
    //coverReset(Servo5_Pin);
 
@@ -404,7 +405,7 @@ int main(void)
                hoursAndMinutes = 0;
                displayGameTime(stopWachTime, hoursAndMinutes);
                stopWatchState = RESET_;
-               resetAll();
+               resetAllTargets();
                targetState = 0;
             }
          }
@@ -416,6 +417,7 @@ int main(void)
             printf("\r\nGame Disrupted at: %d ms\r\n", stopWachTime*10);
             printStopwatchTime(stopWachTime, hoursAndMinutes);
             stopWachTime = 0;
+            hoursAndMinutes = 0;
             onStand = 0;
          }
          // Check if any of the targets are covered.
@@ -426,7 +428,7 @@ int main(void)
             hoursAndMinutes = 0;
             displayGameTime(stopWachTime, hoursAndMinutes);
             stopWatchState = RESET_;
-            resetAll();
+            resetAllTargets();
             targetState = 0;
          } // ...or activate the manual reset.
          else if ((HAL_GPIO_ReadPin(TargetsReset_GPIO_Port, TargetsReset_Pin)
@@ -435,7 +437,7 @@ int main(void)
             hoursAndMinutes = 0;
             displayGameTime(stopWachTime, hoursAndMinutes);
             stopWatchState = RESET_;
-            resetAll();
+            resetAllTargets();
             targetState = 0;
          } else {
             HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
