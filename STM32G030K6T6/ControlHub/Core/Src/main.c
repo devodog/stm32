@@ -50,7 +50,9 @@
 #define TARGET_HIT 1
 #define COVER_RESET 0
 #define ALL_HIT 0x001f
-#define SHOW_RESULT_DURATION 30000
+#define SHOW_RESULT_DURATION 5000 // 4 ms x 5000 = 20 sec. which is the time the
+// the result is shown, if all targets has been hit.
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -160,6 +162,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
    // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
    // the flowchart for the switch-statement is drawn...
    printf("\r\nInterrupt from pin: 0x%x", GPIO_Pin);
+
    switch (GPIO_Pin) {
       case TargetInt1_Pin:
          targetHitIndication = Servo1_Pin;
@@ -317,6 +320,7 @@ int main(void)
    //coverReset(Servo3_Pin);
    //coverReset(Servo4_Pin);
    //coverReset(Servo5_Pin);
+   targetState = 0;
 
   /* USER CODE END 2 */
 
@@ -327,9 +331,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
       // We'll monitor the floor/stand switch to determine when the game is running.
-      if (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin)
-      //if (HAL_GPIO_ReadPin(StartGame_GPIO_Port, StartGame_Pin)
-            == GPIO_PIN_SET) {
+      if (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin) == GPIO_PIN_SET) {
          if (onStand == 0) {
             stopWatchState = RUNNING;
             printf("Game started\r\n");
@@ -359,6 +361,7 @@ int main(void)
 
                if (++servoPulses > 20) {
                   // The target is completely closed
+                  targetState |= targetHitIndication;
                   targetHitIndication = 0;
                   servoPulses = 0;
                   inOperation = 0;
@@ -385,10 +388,10 @@ int main(void)
             }
          } else if (stopWatchState == STOPPED) {
             if (showResultDuration++ > SHOW_RESULT_DURATION) { // The player have 30 sec. to get of the target-stand.
-               printf("Stop-watch STOPPED!\r\n");
+
+               /***
                uint8_t countingSeconds = 0;
                while (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin) == GPIO_PIN_SET) {
-               //while (HAL_GPIO_ReadPin(StartGame_GPIO_Port, StartGame_Pin) == GPIO_PIN_SET) {
                   stopWachTime = 9999;
                   hoursAndMinutes = 9999;
                   displayGameTime(stopWachTime, hoursAndMinutes);
@@ -401,12 +404,14 @@ int main(void)
                      break;
                   }
                }
+               ***/
                stopWachTime = 0;
                hoursAndMinutes = 0;
                displayGameTime(stopWachTime, hoursAndMinutes);
                stopWatchState = RESET_;
                resetAllTargets();
                targetState = 0;
+               printf("Ready for new game!\r\n");
             }
          }
          HAL_Delay(4); // = approx. 0.01 sec.
