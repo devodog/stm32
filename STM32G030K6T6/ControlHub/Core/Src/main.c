@@ -51,6 +51,9 @@
 #define COVER_RESET 0
 #define ALL_HIT 0x001f
 #define SHOW_RESULT_DURATION 5000 // 4 ms x 5000 = 20 sec. which is the time the
+#define ONE_HOUR 3600000
+#define ONE_MINUTE 60000
+#define GET_SYS_TICK
 // the result is shown, if all targets has been hit.
 
 /* USER CODE END PD */
@@ -286,6 +289,12 @@ int main(void)
    uint8_t minutes = 0;
    uint8_t hours = 0;
    uint16_t hoursAndMinutes = 0;
+
+   uint32_t startTime;
+   uint32_t elapsedTime = 0;
+   uint32_t elapsedSeconds = 0;
+   uint32_t elapsedMinutes = 0;
+   uint32_t endTime;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -336,6 +345,7 @@ int main(void)
             stopWatchState = RUNNING;
             printf("Game started\r\n");
             onStand = 1;
+            startTime = HAL_GetTick();
          }
          if (stopWatchState == RESET_) {
             stopWatchState = RUNNING;
@@ -368,6 +378,7 @@ int main(void)
                }
             }
             stopWachTime+=2;
+
             if (stopWachTime > 5999) {
                stopWachTime = 0;
                if (++minutes > 59) {
@@ -378,33 +389,27 @@ int main(void)
                }
                hoursAndMinutes = hours * 100 + minutes;
             }
-
+#ifndef GET_SYS_TICK
             displayGameTime(stopWachTime, hoursAndMinutes);
+#else
+            /*** NEW TIMING CODE ***/
+            elapsedTime = HAL_GetTick() - startTime;
+            if (elapsedTime < ONE_HOUR) {
+               elapsedMinutes = elapsedTime/ONE_MINUTE;
+               elapsedSeconds = (elapsedTime%ONE_MINUTE)/10; // need only hundredth of a second...
+               displayGameTime((uint16_t)elapsedSeconds, (uint16_t)elapsedMinutes);
+            }
+#endif
 
             if (targetState == ALL_HIT) {
                stopWatchState = STOPPED;
                // Start timer...
                showResultDuration = 0;
+               endTime = HAL_GetTick() - startTime;
+               printf("\r\nendTime = %d[ms]\r\n", (int)endTime);
             }
          } else if (stopWatchState == STOPPED) {
             if (showResultDuration++ > SHOW_RESULT_DURATION) { // The player have 30 sec. to get of the target-stand.
-
-               /***
-               uint8_t countingSeconds = 0;
-               while (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin) == GPIO_PIN_SET) {
-                  stopWachTime = 9999;
-                  hoursAndMinutes = 9999;
-                  displayGameTime(stopWachTime, hoursAndMinutes);
-                  HAL_Delay(1500);
-                  stopWachTime = 0;
-                  hoursAndMinutes = 0;
-                  displayGameTime(stopWachTime, hoursAndMinutes);
-                  HAL_Delay(1000);
-                  if (countingSeconds++ > 15) {
-                     break;
-                  }
-               }
-               ***/
                stopWachTime = 0;
                hoursAndMinutes = 0;
                displayGameTime(stopWachTime, hoursAndMinutes);
