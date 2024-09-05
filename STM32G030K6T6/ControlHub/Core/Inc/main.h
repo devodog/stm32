@@ -107,7 +107,7 @@ void Error_Handler(void);
 #define Hours7seg_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+#define DEBUG_CODE
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

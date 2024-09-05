@@ -164,26 +164,38 @@ void coverTarget(uint16_t servoPin) {
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
    // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
    // the flowchart for the switch-statement is drawn...
-   printf("\r\nInterrupt from pin: 0x%x", GPIO_Pin);
+   uint8_t target = 0;
 
    switch (GPIO_Pin) {
       case TargetInt1_Pin:
+         target = 5;
          targetHitIndication = Servo1_Pin;
          break;
       case TargetInt2_Pin:
+         target = 4;
          targetHitIndication = Servo2_Pin;
          break;
       case TargetInt3_Pin:
+         target = 3;
          targetHitIndication = Servo3_Pin;
          break;
       case TargetInt4_Pin:
+         target = 2;
          targetHitIndication = Servo4_Pin;
          break;
       case TargetInt5_Pin:
          targetHitIndication = Servo5_Pin;
+         target = 1;
          break;
       default:
          break;
+   }
+
+   if ((target > 0)||(target < 6)) {
+      printf("\r\nIrq from target: %d", target);
+   }
+   else {
+      printf("\r\nIrq from unknown source\r\n");
    }
 }
 
@@ -207,7 +219,8 @@ void printStopwatchTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
    }
    digits[3] = fourDigitNumber/digitPos;
    hDigits[3] = hourMinutes/digitPos;
-   printf("Time duration from start: %d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
+   //printf("Time duration from start: %d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
+   printf("%d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
 }
 
 void displayGameTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
@@ -294,7 +307,7 @@ int main(void)
    uint32_t elapsedTime = 0;
    uint32_t elapsedSeconds = 0;
    uint32_t elapsedMinutes = 0;
-   uint32_t endTime;
+   //uint32_t endTime;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -400,13 +413,13 @@ int main(void)
                displayGameTime((uint16_t)elapsedSeconds, (uint16_t)elapsedMinutes);
             }
 #endif
-
             if (targetState == ALL_HIT) {
                stopWatchState = STOPPED;
-               // Start timer...
+               // Start timer for showing the result for approximately 20 seconds...
                showResultDuration = 0;
-               endTime = HAL_GetTick() - startTime;
-               printf("\r\nendTime = %d[ms]\r\n", (int)endTime);
+               //endTime = HAL_GetTick() - startTime;
+               printStopwatchTime(elapsedSeconds, elapsedMinutes);
+               //printf("\r\nendTime = %d[ms]\r\n", (int)endTime);
             }
          } else if (stopWatchState == STOPPED) {
             if (showResultDuration++ > SHOW_RESULT_DURATION) { // The player have 30 sec. to get of the target-stand.
@@ -421,18 +434,37 @@ int main(void)
          }
          HAL_Delay(4); // = approx. 0.01 sec.
       } else {
-         // ... if no one is standing on the target-range stand, there is no
-         // game running. All target covers shall be covering the targets.
-         if (onStand == 1) {
-            printf("\r\nGame Disrupted at: %d ms\r\n", stopWachTime*10);
+         /* Two conditions can occur when no one is standing on the target-
+          * range stand.
+          * 1. Game not started. All targets are  shown.
+          * 2. Game running as the result of the target-range stand has been 
+          * activated by the gamer, but the gamer has stepped off the stand 
+          * before all targets has been hit.
+          * When this happens, the stopwatch display is not updated and the
+          * running time is stopped and printed on the debug port.
+          * After 10 seconds the system will reset any covered target and make
+          * the targets ready for a new game.
+          */
+         if ((onStand == 1) && (stopWatchState != STOPPED)) {
+            printf("\r\nGame Disrupted after: ");
+#ifndef GET_SYS_TICK
             printStopwatchTime(stopWachTime, hoursAndMinutes);
             stopWachTime = 0;
             hoursAndMinutes = 0;
+#else
+            /*** NEW TIMING CODE ***/
+            elapsedTime = HAL_GetTick() - startTime;
+            if (elapsedTime < ONE_HOUR) {
+               elapsedMinutes = elapsedTime/ONE_MINUTE;
+               elapsedSeconds = (elapsedTime%ONE_MINUTE)/10; // need only hundredth of a second...
+               printStopwatchTime((uint16_t)elapsedSeconds, (uint16_t)elapsedMinutes);
+            }
+#endif            
             onStand = 0;
          }
          // Check if any of the targets are covered.
          if (targetState != 0) {
-            printf("\r\nGame terminated!\r\n");
+            printf("\r\nGame reset!\r\n");
             HAL_Delay(10000);
             stopWachTime = 0;
             hoursAndMinutes = 0;
@@ -441,6 +473,7 @@ int main(void)
             resetAllTargets();
             targetState = 0;
          } // ...or activate the manual reset.
+         /** NOT CURRENTLY APPLICABLE  
          else if ((HAL_GPIO_ReadPin(TargetsReset_GPIO_Port, TargetsReset_Pin)
                == GPIO_PIN_SET) && (stopWatchState == STOPPED)) {
             stopWachTime = 0;
@@ -449,7 +482,9 @@ int main(void)
             stopWatchState = RESET_;
             resetAllTargets();
             targetState = 0;
-         } else {
+         }
+         **/
+         else {
             HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
             HAL_Delay(500);
             HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);

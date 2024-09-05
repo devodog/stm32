@@ -1,0 +1,205 @@
+
+Control Hub initialized. Version: 0.1 - Build: 118
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+
+Control Hub initialized. Version: 0.1 - Build: 120
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+Game started
+
+Game Disrupted at: 140 ms
+Time duration from start: 00:00:00.14 s
+Game started
+
+Game Disrupted at: 40 ms
+Time duration from start: 00:00:00.04 s
+Game started
+
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x100
+Hit on target : 0x1
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x80
+Hit on target : 0x2
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x40
+Hit on target : 0x4
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Interrupt from pin: 0x20
+Hit on target : 0x8
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Interrupt from pin: 0x20
+Interrupt from pin: 0x40
+Hit on target : 0x4
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Interrupt from pin: 0x20
+Hit on target : 0x8
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Interrupt from pin: 0x20
+Interrupt from pin: 0x40
+Hit on target : 0x4
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Interrupt from pin: 0x20
+Interrupt from pin: 0x40
+Hit on target : 0x4
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Interrupt from pin: 0x20
+Interrupt from pin: 0x40
+Hit on target : 0x4
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Hit on target : 0x10
+endTime = 37254[ms]
+
+Game Disrupted at: 34920 ms
+Time duration from start: 00:00:34.92 s
+
+Game terminated!
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+
+Control Hub initialized. Version: 0.1 - Build: 120
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+
+Control Hub initialized. Version: 0.1 - Build: 120
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+Game started
+
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x100
+Hit on target : 0x1
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x80
+Hit on target : 0x2
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x40
+Hit on target : 0x4
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x20
+Hit on target : 0x8
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Interrupt from pin: 0x20
+Hit on target : 0x8
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Hit on target : 0x10
+endTime = 7828[ms]
+
+Game Disrupted at: 7120 ms
+Time duration from start: 00:00:07.12 s
+
+Game terminated!
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+Game started
+
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x100
+Hit on target : 0x1
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x80
+Hit on target : 0x2
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x40
+Hit on target : 0x4
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x20
+Hit on target : 0x8
+EXTI4_15_IRQHandler on pin: 0x1
+
+Interrupt from pin: 0x10
+Hit on target : 0x10
+endTime = 13640[ms]
+
+Game Disrupted at: 12710 ms
+Time duration from start: 00:00:12.71 s
+
+Game terminated!
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
