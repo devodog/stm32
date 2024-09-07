@@ -1,0 +1,136 @@
+
+Control Hub initialized. Version: 0.1 - Build: 120
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+
+Control Hub initialized. Version: 0.1 - Build: 123
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+Game started
+
+Game Disrupted after: 00:00:04.47 s
+Game started
+
+Irq from target: 1
+Hit on target : 0x1
+Irq from target: 2
+Hit on target : 0x2
+Irq from target: 3
+Irq from target: 4
+Hit on target : 0x8
+Irq from target: 5
+Irq from target: 5
+Irq from target: 3
+Hit on target : 0x4
+Irq from target: 5
+Irq from target: 5
+Hit on target : 0x10
+Game Disrupted after: 00:00:16.36 s
+
+Game reset!
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+Game started
+
+Irq from target: 2
+Hit on target : 0x2
+Irq from target: 3
+Irq from target: 3
+Hit on target : 0x4
+Irq from target: 1
+Hit on target : 0x1
+Irq from target: 4
+Hit on target : 0x8
+Irq from target: 5
+Hit on target : 0x1000:00:08.69 s
+
+Game reset!
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+
+Game Disrupted after: 00:00:27.93 s
+Game started
+
+Irq from target: 3
+Hit on target : 0x4
+Irq from target: 2
+Hit on target : 0x2
+Irq from target: 1
+Hit on target : 0x1
+Irq from target: 4
+Hit on target : 0x8
+Irq from target: 5
+Irq from target: 5
+Hit on target : 0x1000:00:09.03 s
+
+Game reset!
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+
+Game Disrupted after: 00:00:25.79 s
+Game started
+
+Irq from target: 3
+Hit on target : 0x4
+Irq from target: 2
+Hit on target : 0x2
+Irq from target: 1
+Hit on target : 0x1
+Irq from target: 4
+Hit on target : 0x8
+Irq from target: 5
+Hit on target : 0x1000:00:25.96 s
+
+Game reset!
+
+Trying to reset cover 1
+
+Trying to reset cover 2
+
+Trying to reset cover 4
+
+Trying to reset cover 8
+
+Trying to reset cover 16
+
+Game Disrupted after: 00:00:40.64 s

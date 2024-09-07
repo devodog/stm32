@@ -132,10 +132,9 @@ void delay_us(volatile uint16_t au16_us)
    while (htim16.Instance->CNT < au16_us);
 }
 
-// _delay_us(2200); max counterclockwise (165 degrees)
-// _delay_us(1300); middle? (90 degrees)
+// delay_us(2200); max counterclockwise (165 degrees)
+// delay_us(1300); middle? (90 degrees)
 void coverReset(uint16_t servoPin) {
-   printf("\r\nTrying to reset cover %d\r\n", servoPin);
    for (int i=0; i<20; i++) {
       HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_SET); // RESET for neg-logic for level conversion...
       delay_us(2000);
@@ -190,9 +189,8 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
       default:
          break;
    }
-
    if ((target > 0)||(target < 6)) {
-      printf("\r\nIrq from target: %d", target);
+      printf("Hit on target: %d\r\n", target);
    }
    else {
       printf("\r\nIrq from unknown source\r\n");
@@ -220,7 +218,7 @@ void printStopwatchTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
    digits[3] = fourDigitNumber/digitPos;
    hDigits[3] = hourMinutes/digitPos;
    //printf("Time duration from start: %d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
-   printf("%d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
+   printf("Result: %d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
 }
 
 void displayGameTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
@@ -337,13 +335,7 @@ int main(void)
    stopWatchState = STOPPED;
    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
    resetAllTargets();
-   //coverReset(Servo1_Pin);
-   //coverReset(Servo2_Pin);
-   //coverReset(Servo3_Pin);
-   //coverReset(Servo4_Pin);
-   //coverReset(Servo5_Pin);
    targetState = 0;
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -370,10 +362,8 @@ int main(void)
 
             if (targetHitIndication != 0) {
                if (inOperation == 0) {
-                  printf("\r\nHit on target : 0x%x", targetHitIndication);
-                  inOperation = 1;
+                  inOperation = 1; // ...meaning that the operation to cover the target are in progress.
                }
-
 
                HAL_GPIO_WritePin(GPIOB, targetHitIndication, GPIO_PIN_SET); // RESET for neg-logic for level conversion...
                // Target hit! Cover the target.
@@ -387,7 +377,7 @@ int main(void)
                   targetState |= targetHitIndication;
                   targetHitIndication = 0;
                   servoPulses = 0;
-                  inOperation = 0;
+                  inOperation = 0; // ... meaning that the recently hit target is now covered, and a new hit can be detected.
                }
             }
             stopWachTime+=2;
@@ -445,7 +435,7 @@ int main(void)
           * After 10 seconds the system will reset any covered target and make
           * the targets ready for a new game.
           */
-         if ((onStand == 1) && (stopWatchState != STOPPED)) {
+         if ((onStand == 1) && (stopWatchState == RUNNING)) {
             printf("\r\nGame Disrupted after: ");
 #ifndef GET_SYS_TICK
             printStopwatchTime(stopWachTime, hoursAndMinutes);
@@ -465,7 +455,7 @@ int main(void)
          // Check if any of the targets are covered.
          if (targetState != 0) {
             printf("\r\nGame reset!\r\n");
-            HAL_Delay(10000);
+            HAL_Delay(5000);
             stopWachTime = 0;
             hoursAndMinutes = 0;
             displayGameTime(stopWachTime, hoursAndMinutes);
