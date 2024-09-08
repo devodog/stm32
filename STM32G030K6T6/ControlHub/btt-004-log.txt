@@ -1,0 +1,182 @@
+
+Control Hub initialized. Version: 0.1 - Build: 125
+Game started
+Hit on target: 3
+Hit on target: 2
+Hit on target: 1
+Hit on target: 4
+Hit on target: 5
+Hit on target: 5
+Result: 00:00:13.94 s
+
+Game reset!
+
+Game Disrupted after: Result: 00:01:30.96 s
+Game started
+Hit on target: 1
+Hit on target: 2
+Hit on target: 3
+Hit on target: 2
+Hit on target: 3
+Hit on target: 2
+Hit on target: 3
+Hit on target: 2
+Hit on target: 4
+Hit on target: 5
+Hit on target: 4
+Result: 00:00:20.54 s
+
+Game reset!
+
+Game Disrupted after: Result: 00:04:20.59 s
+
+Control Hub initialized. Version: 0.1 - Build: 125
+Game started
+Hit on target: 1
+Hit on target: 2
+Hit on target: 3
+Hit on target: 2
+Hit on target: 3
+Hit on target: 2
+Hit on target: 3
+Hit on target: 4
+Hit on target: 5
+Hit on target: 4
+Hit on target: 5
+Hit on target: 2
+Hit on target: 3
+Hit on target: 4
+Hit on target: 2
+Hit on target: 1
+Hit on target: 3
+
+Game Disrupted after: Result: 00:00:37.89 s
+
+Game reset!
+Game started
+
+Game Disrupted after: Result: 00:00:11.80 s
+Game started
+
+Game Disrupted after: Result: 00:00:00.06 s
+Game started
+
+Game Disrupted after: Result: 00:00:00.08 s
+Game started
+
+Game Disrupted after: Result: 00:00:00.17 s
+Game started
+Hit on target: 1
+Hit on target: 2
+Hit on target: 3
+Hit on target: 4
+Hit on target: 5
+Hit on target: 4
+Hit on target: 5
+Hit on target: 4
+Result: 00:00:17.07 s
+
+Game reset!
+
+Game Disrupted after: Result: 00:01:39.57 s
+Game started
+Hit on target: 1
+Hit on target: 2
+Hit on target: 3
+Hit on target: 2
+Hit on target: 5
+Hit on target: 4
+Hit on target: 3
+Hit on target: 5
+Hit on target: 4
+Hit on target: 5
+Hit on target: 4
+Hit on target: 5
+Result: 00:00:33.77 s
+
+Game reset!
+
+Game Disrupted after: Result: 00:02:40.46 s
+Game started
+Hit on target: 1
+Hit on target: 2
+Hit on target: 3
+Hit on target: 2
+Hit on target: 3
+Hit on target: 5
+Hit on target: 3
+Hit on target: 2
+Hit on target: 1
+Hit on target: 5
+Hit on target: 4
+
+Game Disrupted after: Result: 00:00:44.63 s
+
+Game reset!
+Game started
+Hit on target: 1
+Hit on target: 2
+Hit on target: 3
+Hit on target: 4
+Hit on target: 5
+Result: 00:00:20.81 s
+
+Game reset!
+Hit on target: 2
+Hit on target: 1
+Hit on target: 3
+Hit on target: 3
+Hit on target: 5
+Hit on target: 4
+
+Game Disrupted after: Result: 00:00:58.91 s
+
+Game reset!
+Game started
+Hit on target: 1
+Hit on target: 2
+Hit on target: 2
+Hit on target: 3
+Hit on target: 3
+Hit on target: 4
+Hit on target: 5
+Hit on target: 5
+Result: 00:00:25.03 s
+
+Game reset!
+
+Game Disrupted after: Result: 00:03:32.92 s
+Game started
+
+Game Disrupted after: Result: 00:00:00.19 s
+Game started
+Hit on target: 1
+Hit on target: 3
+Hit on target: 2
+Hit on target: 4
+Hit on target: 5
+Hit on target: 3
+Hit on target: 1
+Result: 00:03:45.46 s
+Ready for new game! ==> SEEMS TO KEEP ON COUNTING THE TIME EVEN IF THE GAME WAS COMPLETED
+
+Game Disrupted after: Result: 00:04:50.05 s
+Game started
+Hit on target: 2
+Hit on target: 1
+Hit on target: 3
+Hit on target: 4 ==> TARGET 4 WAS HIT BUT THIS INTERRUPT CAME TOGETHER WITH TARGET 5 INTERRUPT
+Hit on target: 5 ==> TARGET 5 CLOSED
+Hit on target: 4 ===> THIS AND THE FOLLOWING TWO CAME WHEN TARGET 4 WAS HIT AND WAS NOW CLOSED
+Hit on target: 5 ===>
+Hit on target: 4 ===>
+Result: 00:07:35.57 s
+Ready for new game! ==> WHEN STIL ON STAND IT CONTINUED COUNTING TIME.
+
+
+
+
+
+
+
+Game Disrupted after: Result: 00:08:19.19 s

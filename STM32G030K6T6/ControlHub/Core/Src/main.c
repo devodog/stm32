@@ -281,6 +281,35 @@ void displayGameTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
    HAL_GPIO_WritePin(GPIOA, SerStrobe_Pin, GPIO_PIN_RESET);
 }
 
+void clearDisplay() {
+   uint8_t element = 0;
+
+   while (element < 2) {
+      for (int i = 0; i < 8; i++) {
+         // Data on sData_Pin...it is expected that sending all zeros ('0') will blank the display...
+         HAL_GPIO_WritePin(GPIOB, Hundreth7seg_Pin, 0); //PC1 <=> D-SUB#4 = Orange&White = DATA for display element 1
+         HAL_GPIO_WritePin(GPIOB, Seconds7seg_Pin, 0); //PC3 <=> D-SUB#4 = Green&White = DATA for display element 2
+
+         HAL_GPIO_WritePin(GPIOB, Minutes7seg_Pin, 0); //PC1 <=> D-SUB#4 = Orange&White = DATA for display element 1
+         HAL_GPIO_WritePin(GPIOB, Hours7seg_Pin, 0); //PC3 <=> D-SUB#4 = Green&White = DATA for display element 2
+
+         delay_us(250);
+         // Clock goes HIGH latching the data Neg. Logic
+         HAL_GPIO_WritePin(GPIOA, serClk_Pin, GPIO_PIN_SET); //PC0 <=> D-SUB#5 = Green = CLK
+         //HAL_Delay(delay);
+         delay_us(250);
+         //
+         HAL_GPIO_WritePin(GPIOA, serClk_Pin, GPIO_PIN_RESET);
+         //HAL_Delay(delay);
+         delay_us(250);
+      }
+      element++;
+   }
+   // Transmission done - strobe / latch new data onto the output on the shift registers.
+   HAL_GPIO_WritePin(GPIOA, SerStrobe_Pin, GPIO_PIN_SET); //PC2 <=> D-SUB#3 = Orange = STROBE
+   HAL_Delay(1);
+   HAL_GPIO_WritePin(GPIOA, SerStrobe_Pin, GPIO_PIN_RESET);
+}
 
 /* USER CODE END 0 */
 
@@ -305,7 +334,9 @@ int main(void)
    uint32_t elapsedTime = 0;
    uint32_t elapsedSeconds = 0;
    uint32_t elapsedMinutes = 0;
-   //uint32_t endTime;
+
+   uint8_t c = 0;
+   uint8_t displayCleared = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -332,7 +363,7 @@ int main(void)
    printf("\r\nControl Hub initialized. Version: %d.%d - Build: %d\r\n",
          MAJOR_VERSION, MINOR_VERSION, BUILD);
    HAL_TIM_Base_Start(&htim16);
-   stopWatchState = STOPPED;
+   stopWatchState = RESET_;
    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
    resetAllTargets();
    targetState = 0;
@@ -346,14 +377,11 @@ int main(void)
     /* USER CODE BEGIN 3 */
       // We'll monitor the floor/stand switch to determine when the game is running.
       if (HAL_GPIO_ReadPin(StopwatchStart_GPIO_Port, StopwatchStart_Pin) == GPIO_PIN_SET) {
-         if (onStand == 0) {
+         if ((onStand == 0) && (stopWatchState == RESET_)) {
             stopWatchState = RUNNING;
             printf("Game started\r\n");
             onStand = 1;
             startTime = HAL_GetTick();
-         }
-         if (stopWatchState == RESET_) {
-            stopWatchState = RUNNING;
          }
 
          if (stopWatchState == RUNNING) {
@@ -419,6 +447,7 @@ int main(void)
                stopWatchState = RESET_;
                resetAllTargets();
                targetState = 0;
+               onStand = 0;
                printf("Ready for new game!\r\n");
             }
          }
@@ -451,34 +480,33 @@ int main(void)
             }
 #endif            
             onStand = 0;
-         }
-         // Check if any of the targets are covered.
-         if (targetState != 0) {
-            printf("\r\nGame reset!\r\n");
             HAL_Delay(5000);
             stopWachTime = 0;
             hoursAndMinutes = 0;
             displayGameTime(stopWachTime, hoursAndMinutes);
+            // Check if any of the targets are covered.
+            if (targetState != 0) {
+               resetAllTargets();
+               targetState = 0;
+            }
             stopWatchState = RESET_;
-            resetAllTargets();
-            targetState = 0;
-         } // ...or activate the manual reset.
-         /** NOT CURRENTLY APPLICABLE  
-         else if ((HAL_GPIO_ReadPin(TargetsReset_GPIO_Port, TargetsReset_Pin)
-               == GPIO_PIN_SET) && (stopWatchState == STOPPED)) {
-            stopWachTime = 0;
-            hoursAndMinutes = 0;
-            displayGameTime(stopWachTime, hoursAndMinutes);
-            stopWatchState = RESET_;
-            resetAllTargets();
-            targetState = 0;
+            printf("\r\nGame reset!\r\n");
          }
-         **/
          else {
-            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
-            HAL_Delay(500);
-            HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-            HAL_Delay(500);
+            HAL_Delay(10);
+            if (++c > 100) {
+               c=0;
+               HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+
+               if (displayCleared == 1) {
+                  displayGameTime(0,0);
+                  displayCleared = 0;
+               }
+               else {
+                  clearDisplay();
+                  displayCleared = 1;
+               }
+            }
          }
       }
    }
