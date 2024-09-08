@@ -447,11 +447,12 @@ int main(void)
                stopWatchState = RESET_;
                resetAllTargets();
                targetState = 0;
-               onStand = 0;
+               //onStand = 0;
                printf("Ready for new game!\r\n");
             }
          }
          HAL_Delay(4); // = approx. 0.01 sec.
+
       } else {
          /* Two conditions can occur when no one is standing on the target-
           * range stand.
@@ -491,6 +492,21 @@ int main(void)
             }
             stopWatchState = RESET_;
             printf("\r\nGame reset!\r\n");
+         }
+         else if (stopWatchState == STOPPED) {
+            if (showResultDuration++ > SHOW_RESULT_DURATION) {
+               stopWachTime = 0;
+               hoursAndMinutes = 0;
+               displayGameTime(stopWachTime, hoursAndMinutes);
+               stopWatchState = RESET_;
+               resetAllTargets();
+               targetState = 0;
+               onStand = 0;
+               printf("Ready for new game!\r\n");
+            }
+         }
+         else if ((stopWatchState == RESET_) && (onStand == 1)) {
+            onStand = 0;
          }
          else {
             HAL_Delay(10);
