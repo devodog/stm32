@@ -451,7 +451,7 @@ int main(void)
                printf("Ready for new game!\r\n");
             }
          }
-         HAL_Delay(4); // = approx. 0.01 sec.
+         HAL_Delay(4);
 
       } else {
          /* Two conditions can occur when no one is standing on the target-
@@ -504,6 +504,7 @@ int main(void)
                onStand = 0;
                printf("Ready for new game!\r\n");
             }
+            HAL_Delay(4);
          }
          else if ((stopWatchState == RESET_) && (onStand == 1)) {
             onStand = 0;
