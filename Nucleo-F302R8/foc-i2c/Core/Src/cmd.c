@@ -301,9 +301,21 @@ typedef struct cw {
    uint8_t DLEN : 2;
 };
 */
+
+int8_t regName2index(char* regName) {
+   int8_t nameIndex = 0xff;
+   for (uint8_t i = 0; i < sizeof(eepromAddr); i++) {
+      if (strcmp(regName, regNames[i]) == 0) {
+         nameIndex = i;
+         break;
+      }
+   }
+   return nameIndex;
+}
+
 void EEPROM(char* paramStr, int* paramValues) {
    // NOT COMPLETED...
-   uint8_t paramStartPos;
+   uint8_t paramStartPos = 0;
    //uint16_t regAddr = 0;
    //uint8_t regDataByte;
    //uint8_t rxData[7] = {0};
@@ -313,58 +325,130 @@ void EEPROM(char* paramStr, int* paramValues) {
    if (strncmp(paramStr, "WRITE", 5) == 0) {
       i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
       paramStartPos = 6;
-      // For initial test we'll attempt to write predefined data into one
-      // of the shadow registers.
-      // Make up the DataWord
-      i2cDataWord[1] = (eepromAddr[ISD_CONFIG] >> 8)&(0xff);
-      i2cDataWord[2] = (eepromAddr[ISD_CONFIG])&(0xff);
-      //memcpy(&i2cDataWord[1], &eepromAddr[ISD_CONFIG], 2);
-      memcpy(&i2cDataWord[3], &eepromRegValues[ISD_CONFIG], 4);
-      /***
-      // TEST!
-      printf("\r\nI2C Data Word: ");
-      for (int i = 0; i < 7; i++) {
-         printf("0x%02x ", i2cDataWord[i]);
-      }
-       ***/
-      // Load Control Word and data into the device's registers
-      //if (HAL_I2C_Mem_Write(&hi2c1, 0x02, 0x00, 7, (uint8_t*)&i2cDataWord[0], 7, 1) != HAL_OK) {
-      if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
-         printf("\r\nHAL_I2C FUNCTION FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+
+      if (strncmp(&paramStr[paramStartPos], "DEFAULT", 3) == 0) {
+         for (int i = 0; i < sizeof(eepromAddr); i++) {
+            i2cDataWord[1] = (eepromAddr[i] >> 8)&(0xff);
+            i2cDataWord[2] = (eepromAddr[i])&(0xff);
+            memcpy(&i2cDataWord[3], &eepromRegValues[ISD_CONFIG], 4);
+
+            if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+               printf("\r\nHAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+            }
+            else {
+               printf("\r\nHAL_I2C_Master_Transmit() OK!\r\n");
+            }
+         }
+         // All loaded into shadow memory. Now write it into EEPROM
+         i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
+         i2cDataWord[1] = (eeprom2MemAddr >> 8)&(0xff);
+         i2cDataWord[2] = (eeprom2MemAddr)&(0xff);
+         memcpy(&i2cDataWord[3], &eeprom2MemRW[WRITE_EEPROM], 4);
+         /*** TEST
+         printf("\r\nI2C Data Word: "); for (int i = 0; i < 7; i++) {printf("0x%02x ", i2cDataWord[i]);}
+          ***/
+         if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+            printf("\r\nHAL_I2C_Master_Transmit for EEPROM WRITE FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+            return;
+         }
+         else {
+            printf("\r\nData stored in EEPROM OK!\r\n");
+         }
       }
       else {
-         printf("\r\nHAL_I2C_Master_Transmit() OK!\r\n");
+         // For initial test we'll attempt to write predefined data into one
+         // of the shadow registers.
+         // Make up the DataWord
+         i2cDataWord[1] = (eepromAddr[ISD_CONFIG] >> 8)&(0xff);
+         i2cDataWord[2] = (eepromAddr[ISD_CONFIG])&(0xff);
+         memcpy(&i2cDataWord[3], &eepromRegValues[ISD_CONFIG], 4);
+         /***
+         printf("\r\nI2C Data Word: "); for (int i = 0; i < 7; i++) {printf("0x%02x ", i2cDataWord[i]);}
+         ***/
+
+         // Load Control Word and data into the device's registers
+         //if (HAL_I2C_Mem_Write(&hi2c1, 0x02, 0x00, 7, (uint8_t*)&i2cDataWord[0], 7, 1) != HAL_OK) {
+         if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+            printf("\r\nHAL_I2C FUNCTION FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+         }
+         else {
+            printf("\r\nHAL_I2C_Master_Transmit() to ISD_CONFIG OK!\r\n");
+         }
+         void promt();
+         return;
       }
-      void promt();
-      return;
    }
    else if (strncmp(paramStr, "READ", 4) == 0) {
-      //uint32_t *data = 0; -> will cause a system crash!
-      //uint32_t *data = NULL;
-      paramStartPos = 5;   // ...the "string-pointer" position for the start of
-                           // the second argument to the EEPROM command
+      /***
+      In MCF8316A, EEPROM read procedure is as follows,
+      1. Write 0x40000000 into register 0x0000EA to read the EEPROM data into the shadow registers
+      (0x000080-0x0000AE).
+      2. Wait for 100ms for the EEPROM read operation to complete.
+      3. Read the shadow register values,1 or 2 registers at a time, using the I2C read command as explained
+      in Section 7.6.2. Shadow register addresses are in the range of 0x000080-0x0000AE. Register address
+      increases in steps of 2 for 32-bit read operation (since each address is a 16-bit location).
+      ***/
+      i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
+      i2cDataWord[1] = (eeprom2MemAddr >> 8)&(0xff);
+      i2cDataWord[2] = (eeprom2MemAddr)&(0xff);
+      memcpy(&i2cDataWord[3], &eeprom2MemRW[READ_EEPROM], 4);
+      /*** TEST
+      printf("\r\nI2C Data Word: "); for (int i = 0; i < 7; i++) {printf("0x%02x ", i2cDataWord[i]);}
+       ***/
 
-      // To read data from one of the shadow registers, we'll have to first
-      // issue a I2C write command and the make a read command.
-      // Making the write command for the shadow read operation...
-      // Here we'll address a specific location in the shadow register block.
-      // next to try is REV_DRIVE_CONFIG
-      i2cDataWord[0] |= (READ_OPERATION << RW_OPERATION_BIT_POS);
-      i2cDataWord[1] = (eepromAddr[ISD_CONFIG] >> 8)&(0xff);
-      i2cDataWord[2] = (eepromAddr[ISD_CONFIG])&(0xff);
-
-      if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
-         printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+      if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+         printf("\r\nHAL_I2C FUNCTION FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+         return;
       }
       else {
-         if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
+         printf("\r\nEEPROM data loaded into memory OK!\r\n");
+      }
+
+      if (strncmp(&paramStr[paramStartPos], "ALL", 1) == 0) {       // we'll only check for the first letter since no register name starts with an 'A'.
+         i2cDataWord[0] |= (READ_OPERATION << RW_OPERATION_BIT_POS);
+
+         for (int i = 0; i < sizeof(eepromAddr); i++) {
+            i2cDataWord[1] = (eepromAddr[i] >> 8)&(0xff);
+            i2cDataWord[2] = (eepromAddr[i])&(0xff);
+            if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
+               printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+            }
+            else {
+               if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
+                  printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+               }
+               else {
+                  //memcpy(data, &i2cDataWord[4],4);
+                  //printf("\r\nData read:x0%x at Addr.: 0x%02x%02x\r\n", (unsigned int)*data, i2cDataWord[1], i2cDataWord[2]);
+                  printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
+               }
+            }
+         }
+      }
+      else {
+         // To read data from one of the shadow registers, we'll have to first
+         // issue a I2C write command and the make a read command.
+         // Making the write command for the shadow read operation...
+         // Here we'll address a specific location in the shadow register block.
+         // next to try is REV_DRIVE_CONFIG
+         i2cDataWord[0] |= (READ_OPERATION << RW_OPERATION_BIT_POS);
+         i2cDataWord[1] = (eepromAddr[ISD_CONFIG] >> 8)&(0xff);
+         i2cDataWord[2] = (eepromAddr[ISD_CONFIG])&(0xff);
+
+         if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
             printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
          }
          else {
-            //memcpy(data, &i2cDataWord[4],4);
-            //printf("\r\nData read:x0%x at Addr.: 0x%02x%02x\r\n", (unsigned int)*data, i2cDataWord[1], i2cDataWord[2]);
-            printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
+            if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
+               printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+            }
+            else {
+               //memcpy(data, &i2cDataWord[4],4);
+               //printf("\r\nData read:x0%x at Addr.: 0x%02x%02x\r\n", (unsigned int)*data, i2cDataWord[1], i2cDataWord[2]);
+               printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
+            }
          }
+
       }
    }
    else {
@@ -372,7 +456,7 @@ void EEPROM(char* paramStr, int* paramValues) {
       void promt();
       return;
    }
-   // If we want to real all device registers...
+   // If we want to read all device registers...
    if ((strncmp(&paramStr[paramStartPos], "ALL", 3) == 0) && (paramStartPos == 5)) {
       /************************************************************************
       In MCF8316A, EEPROM read procedure is as follows,

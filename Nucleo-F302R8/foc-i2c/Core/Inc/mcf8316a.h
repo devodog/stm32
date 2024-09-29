@@ -7,6 +7,14 @@
 
 #ifndef INC_MCF8316A_H_
 #define INC_MCF8316A_H_
+uint16_t eeprom2MemAddr = 0x000000EA;
+//                        READ EEPROM  WRITE EEPROM
+uint32_t eeprom2MemRW[] = {0x40000000, 0x8A500000};
+enum EEPROM_RW {
+   READ_EEPROM = 0,
+   WRITE_EEPROM
+};
+
 // Register addresses
 uint16_t eepromAddr[] = {
       0x00000080,
