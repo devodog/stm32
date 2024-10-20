@@ -163,38 +163,43 @@ void coverTarget(uint16_t servoPin) {
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
    // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
    // the flowchart for the switch-statement is drawn...
-   uint8_t target = 0;
+   //uint8_t target = 0;
+
+   if (targetHitIndication != 0)
+      return;
 
    switch (GPIO_Pin) {
       case TargetInt1_Pin:
-         target = 5;
+         //target = 5;
          targetHitIndication = Servo1_Pin;
          break;
       case TargetInt2_Pin:
-         target = 4;
+         //target = 4;
          targetHitIndication = Servo2_Pin;
          break;
       case TargetInt3_Pin:
-         target = 3;
+         //target = 3;
          targetHitIndication = Servo3_Pin;
          break;
       case TargetInt4_Pin:
-         target = 2;
+         //target = 2;
          targetHitIndication = Servo4_Pin;
          break;
       case TargetInt5_Pin:
+         //target = 1;
          targetHitIndication = Servo5_Pin;
-         target = 1;
          break;
       default:
          break;
    }
+   /**
    if ((target > 0)||(target < 6)) {
       printf("Hit on target: %d\r\n", target);
    }
    else {
       printf("\r\nIrq from unknown source\r\n");
    }
+   **/
 }
 
 // Common cathode
@@ -321,7 +326,6 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
    uint8_t onStand = 0;
-   uint8_t inOperation = 0;
    uint8_t servoPulses = 0;
    uint16_t stopWachTime = 0;
    uint16_t showResultDuration = 0;
@@ -389,9 +393,7 @@ int main(void)
             // 500 ms must be added to the stopwatch time... - can this be part of the stopwatch loop?
 
             if (targetHitIndication != 0) {
-               if (inOperation == 0) {
-                  inOperation = 1; // ...meaning that the operation to cover the target are in progress.
-               }
+               // ...meaning that the operation to cover the target are in progress.
 
                HAL_GPIO_WritePin(GPIOB, targetHitIndication, GPIO_PIN_SET); // RESET for neg-logic for level conversion...
                // Target hit! Cover the target.
@@ -403,9 +405,14 @@ int main(void)
                if (++servoPulses > 20) {
                   // The target is completely closed
                   targetState |= targetHitIndication;
-                  targetHitIndication = 0;
+                  for (int i = 0; i < 5; i++) {
+                     if (targetHitIndication>>i == 1) {
+                        printf("Hit on target: %d\r\n", i+1);
+                        break;
+                     }
+                  }
+                  targetHitIndication = 0; // ... meaning that the recently hit target is now covered, and a new hit can be detected.
                   servoPulses = 0;
-                  inOperation = 0; // ... meaning that the recently hit target is now covered, and a new hit can be detected.
                }
             }
             stopWachTime+=2;
