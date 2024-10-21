@@ -172,22 +172,27 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
       case TargetInt1_Pin:
          //target = 5;
          targetHitIndication = Servo1_Pin;
+         targetState |= targetHitIndication;
          break;
       case TargetInt2_Pin:
          //target = 4;
          targetHitIndication = Servo2_Pin;
+         targetState |= targetHitIndication;
          break;
       case TargetInt3_Pin:
          //target = 3;
          targetHitIndication = Servo3_Pin;
+         targetState |= targetHitIndication;
          break;
       case TargetInt4_Pin:
          //target = 2;
          targetHitIndication = Servo4_Pin;
+         targetState |= targetHitIndication;
          break;
       case TargetInt5_Pin:
          //target = 1;
          targetHitIndication = Servo5_Pin;
+         targetState |= targetHitIndication;
          break;
       default:
          break;
@@ -404,7 +409,7 @@ int main(void)
 
                if (++servoPulses > 20) {
                   // The target is completely closed
-                  targetState |= targetHitIndication;
+                  //targetState |= targetHitIndication; // <-- this is done in the isr.
                   for (int i = 0; i < 5; i++) {
                      if (targetHitIndication>>i == 1) {
                         printf("Hit on target: %d\r\n", i+1);
@@ -413,6 +418,14 @@ int main(void)
                   }
                   targetHitIndication = 0; // ... meaning that the recently hit target is now covered, and a new hit can be detected.
                   servoPulses = 0;
+                  if (targetState == ALL_HIT) {
+                     stopWatchState = STOPPED;
+                     // Start timer for showing the result for approximately 20 seconds...
+                     showResultDuration = 0;
+                     //endTime = HAL_GetTick() - startTime;
+                     printStopwatchTime(elapsedSeconds, elapsedMinutes);
+                     //printf("\r\nendTime = %d[ms]\r\n", (int)endTime);
+                  }
                }
             }
             stopWachTime+=2;
@@ -427,25 +440,21 @@ int main(void)
                }
                hoursAndMinutes = hours * 100 + minutes;
             }
+
+            if (targetState != ALL_HIT) {
 #ifndef GET_SYS_TICK
-            displayGameTime(stopWachTime, hoursAndMinutes);
+               displayGameTime(stopWachTime, hoursAndMinutes);
 #else
-            /*** NEW TIMING CODE ***/
-            elapsedTime = HAL_GetTick() - startTime;
-            if (elapsedTime < ONE_HOUR) {
-               elapsedMinutes = elapsedTime/ONE_MINUTE;
-               elapsedSeconds = (elapsedTime%ONE_MINUTE)/10; // need only hundredth of a second...
-               displayGameTime((uint16_t)elapsedSeconds, (uint16_t)elapsedMinutes);
-            }
+               /*** NEW TIMING CODE ***/
+               elapsedTime = HAL_GetTick() - startTime;
+               if (elapsedTime < ONE_HOUR) {
+                  elapsedMinutes = elapsedTime/ONE_MINUTE;
+                  elapsedSeconds = (elapsedTime%ONE_MINUTE)/10; // need only hundredth of a second...
+                  displayGameTime((uint16_t)elapsedSeconds, (uint16_t)elapsedMinutes);
+               }
 #endif
-            if (targetState == ALL_HIT) {
-               stopWatchState = STOPPED;
-               // Start timer for showing the result for approximately 20 seconds...
-               showResultDuration = 0;
-               //endTime = HAL_GetTick() - startTime;
-               printStopwatchTime(elapsedSeconds, elapsedMinutes);
-               //printf("\r\nendTime = %d[ms]\r\n", (int)endTime);
             }
+
          } else if (stopWatchState == STOPPED) {
             if (showResultDuration++ > SHOW_RESULT_DURATION) { // The player have 30 sec. to get of the target-stand.
                stopWachTime = 0;
