@@ -1,0 +1,21 @@
+test 19.10.24
+treff på selvanviserfront på "uheldige plasser" kan bli registrert som treff på nærliggende blink.
+treff på enkelte blink kan bli registrert som treff på andre blink - ikke nødvendigvis nabo.
+
+2 vesentlige feil
+1. Ser ut til at selvanviserfront har akkustisk forbindelse med treff-sensor systemet. 
+Vil prøve å gjøre treff-sensor systemet mer akkustisk uabhengig av selvanviser konstruksjonen.
+
+2. Som følge av feilen over så registrerer Interrupt service rutinen flere interrupt enn ønskelig.
+   Selv om den blinken som er truffet registreres først så ser det ut til at denne informasjonen overskrives av neste påfølgende interrupt.
+Må forbedre denne funskjonen! Kan ikke akseptere neste interrupt før den først registrerte er blitt behandlet, dvs at treff er markert.
+
+test 22.10.24 med ver. 0.4 Build 138
+
+defekt 1 - ingen tiltak
+registrerte 1 feil-registrering av treff. 
+
+defekt 2 - tiltak: kode for interrupt fiksa + mer presis registering av tid brukt for å treffe alle.
+Etter 5-6 runder med test så ut til å fungere ok -
+
+design feil? tid-målingen, for 5-treff, står på dislpay i 30 sekunder, som kan virke noe lenge... 

@@ -50,7 +50,7 @@
 #define TARGET_HIT 1
 #define COVER_RESET 0
 #define ALL_HIT 0x001f
-#define SHOW_RESULT_DURATION 5000 // 4 ms x 5000 = 20 sec. which is the time the
+#define SHOW_RESULT_DURATION 3000 //*0.004 = 12 sec. - should be sufficient.
 #define ONE_HOUR 3600000
 #define ONE_MINUTE 60000
 #define GET_SYS_TICK
