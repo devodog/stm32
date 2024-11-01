@@ -148,18 +148,7 @@ void resetAllTargets(void) {
    for (int i=0; i<5; i++)
       coverReset(1<<i);
 }
-/*** NOT FOR NEG-LOGIC!
-void coverTarget(uint16_t servoPin) {
-   printf("\r\nTrying to cover target %d\r\n", servoPin);
-   for (int i=0; i<20; i++) {
-      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_SET);
-      delay_us(1000);
-      HAL_GPIO_WritePin(GPIOB, servoPin, GPIO_PIN_RESET);
-      HAL_Delay(20);
-   }
-   targetState |= servoPin;
-}
-**/
+
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
    // See https://www.geeksforgeeks.org/c-switch-statement/ especially for how
    // the flowchart for the switch-statement is drawn...
@@ -197,14 +186,6 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin) {
       default:
          break;
    }
-   /**
-   if ((target > 0)||(target < 6)) {
-      printf("Hit on target: %d\r\n", target);
-   }
-   else {
-      printf("\r\nIrq from unknown source\r\n");
-   }
-   **/
 }
 
 // Common cathode
@@ -228,7 +209,7 @@ void printStopwatchTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
    digits[3] = fourDigitNumber/digitPos;
    hDigits[3] = hourMinutes/digitPos;
    //printf("Time duration from start: %d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
-   printf("Result: %d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
+   printf("Time used: %d%d:%d%d:%d%d.%d%d s\r\n", hDigits[3], hDigits[2], hDigits[1], hDigits[0], digits[3],digits[2],digits[1],digits[0]);
 }
 
 void displayGameTime(uint16_t fourDigitNumber, uint16_t hourMinutes) {
@@ -464,7 +445,7 @@ int main(void)
                resetAllTargets();
                targetState = 0;
                //onStand = 0;
-               printf("Ready for new game!\r\n");
+               printf("New game!\r\n");
             }
          }
          HAL_Delay(4);
@@ -482,7 +463,7 @@ int main(void)
           * the targets ready for a new game.
           */
          if ((onStand == 1) && (stopWatchState == RUNNING)) {
-            printf("\r\nGame Disrupted after: ");
+            printf("\r\nDisrupted game after ");
 #ifndef GET_SYS_TICK
             printStopwatchTime(stopWachTime, hoursAndMinutes);
             stopWachTime = 0;
@@ -507,7 +488,7 @@ int main(void)
                targetState = 0;
             }
             stopWatchState = RESET_;
-            printf("\r\nGame reset!\r\n");
+            printf("\r\nReset!\r\n");
          }
          else if (stopWatchState == STOPPED) {
             if (showResultDuration++ > SHOW_RESULT_DURATION) {
@@ -518,7 +499,7 @@ int main(void)
                resetAllTargets();
                targetState = 0;
                onStand = 0;
-               printf("Ready for new game!\r\n");
+               printf("New game!\r\n");
             }
             HAL_Delay(4);
          }
