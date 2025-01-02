@@ -20,7 +20,7 @@
  * This is the main entry point for a command-line interface for configuring a
  * field oriented control BLDC driver MCF8316A from Texas Instruments.
  *
- * 200 min. 04JUN24
+ *
  *
  */
 /* USER CODE END Header */
