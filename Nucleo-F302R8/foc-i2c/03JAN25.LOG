@@ -1,0 +1,701 @@
+
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM READ ISD_CONFIG
+Found Register name: ISD_CONFIG
+EEPROM data loaded into memory OK!
+
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 119
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 120
+Nucleo_M>
+Nucleo_M> EEPROM READ ISD_CONFIG
+Found Register name: ISD_CONFIG
+EEPROM data loaded into memory OK!
+
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 120
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 122
+Nucleo_M> EEPROM READ IDC_CONFIG
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 122
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 122
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM READ
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 123
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 124
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> EEPROM r
+UNKNOWN OR INCORRECT COMMAND FORMAT
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 124
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 125
+Nucleo_M>
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> EEPROM READ
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 125
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 125
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 126
+Nucleo_M>
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> EEPROM READ
+HAL_I2C FUNCTION FAILED! Error code: 0x4
+
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 126
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 127
+Nucleo_M> EEPROM READ
+EEPROM data loaded into memory OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 127
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 128
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ MOTOR_STARTUP1
+EEPROM prepared for read OK!
+
+Found Register name: MOTOR_STARTUP1 & index: 2
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 128
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 129
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ REV_DRIVE_CONFIG
+EEPROM prepared for read OK!
+
+Found Register name: REV_DRIVE_CONFIG & index: 1
+Data read:0xa8200000 at Addr.: 0x0082
+Nucleo_M> EEPROM READ MOTOR_STARTUP1
+EEPROM prepared for read OK!
+
+Found Register name: MOTOR_STARTUP1 & index: 2
+Data read:0x0b6807d0 at Addr.: 0x0084
+Nucleo_M> EEPROM READ MOTOR_STARTUP2
+EEPROM prepared for read OK!
+
+Found Register name: MOTOR_STARTUP2 & index: 3
+Data read:0xa306600c at Addr.: 0x0086
+Nucleo_M> EEPROM READ PIN_CONFIG
+EEPROM prepared for read OK!
+
+Found Register name: PIN_CONFIG & index: 16
+Data read:0x00000000 at Addr.: 0x00a4
+Nucleo_M> EEPROM READ DEVICE_CONFIG1
+EEPROM prepared for read OK!
+
+Found Register name: DEVICE_CONFIG1 & index: 17
+Data read:0x00101462 at Addr.: 0x00a6
+Nucleo_M> EEPROM READ DEVICE_CONFIG2
+EEPROM prepared for read OK!
+
+Found Register name: DEVICE_CONFIG2 & index: 18
+Data read:0xc000f00f at Addr.: 0x00a8
+Nucleo_M> EEPROM READ PERI_CONFIG1
+EEPROM prepared for read OK!
+
+Found Register name: PERI_CONFIG1 & index: 19
+Data read:0xc1c01f00 at Addr.: 0x00aa
+Nucleo_M> EEPROM READ CLOSED_LOOP4
+EEPROM prepared for read OK!
+
+Found Register name: CLOSED_LOOP4 & index: 7
+Data read:0x00000000 at Addr.: 0x008e
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 129
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 130
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ SPEED_PROFILES1
+EEPROM prepared for read OK!
+
+Found Register name: SPEED_PROFILES1 & index: 8
+Data read:0x00000000 at Addr.: 0x0094
+Nucleo_M> EEPROM READ ALL
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Data read:0xa8200000 at Addr.: 0x0082
+Data read:0x0b6807d0 at Addr.: 0x0084
+Data read:0xa306600c at Addr.: 0x0086
+Data read:0x0d3201b5 at Addr.: 0x0088
+Data read:0x9bad0000 at Addr.: 0x008a
+Data read:0x00000000 at Addr.: 0x008c
+Data read:0x00000000 at Addr.: 0x008e
+Data read:0x00000000 at Addr.: 0x0094
+Data read:0x00000000 at Addr.: 0x0096
+Data read:0x00000000 at Addr.: 0x0098
+Data read:0x800d0000 at Addr.: 0x009a
+Data read:0x00000000 at Addr.: 0x009c
+Data read:0x00000000 at Addr.: 0x009e
+Data read:0xbec80106 at Addr.: 0x0090
+Data read:0xf0d00888 at Addr.: 0x0092
+Data read:0x00000000 at Addr.: 0x00a4
+Data read:0x00101462 at Addr.: 0x00a6
+Data read:0xc000f00f at Addr.: 0x00a8
+Data read:0xc1c01f00 at Addr.: 0x00aa
+Data read:0x9c450100 at Addr.: 0x00ac
+Data read:0x80200000 at Addr.: 0x00ae
+Data read:0xa433407d at Addr.: 0x00a0
+Data read:0x000001a7 at Addr.: 0x00a2
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x003f55f5 at Addr.: 0x0000
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x03e80000 at Addr.: 0x07d0
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x00000000 at Addr.: 0x01b5
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x003f55f5 at Addr.: 0x0000
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f68b5 at Addr.: 0x000d
+Data read:0x003f68b5 at Addr.: 0x000d
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 130
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 133
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ ALL
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 133
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 133
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 134
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ REV_DRIVE_CONFIG
+EEPROM prepared for read OK!
+
+Found Register name: REV_DRIVE_CONFIG & index: 1
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 134
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 135
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ REV_DRIVE
+EEPROM prepared for read OK!
+
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 135
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ REV_DRIVE_CONFIG
+EEPROM prepared for read OK!
+
+Found Register name: REV_DRIVE_CONFIG & index: 1
+Data read:0xa8200000 at Addr.: 0x0082
+Nucleo_M> EEPROM READ ALL
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Data read:0xa8200000 at Addr.: 0x0082
+Data read:0x0b6807d0 at Addr.: 0x0084
+Data read:0xa306600c at Addr.: 0x0086
+Data read:0x0d3201b5 at Addr.: 0x0088
+Data read:0x9bad0000 at Addr.: 0x008a
+Data read:0x00000000 at Addr.: 0x008c
+Data read:0x00000000 at Addr.: 0x008e
+Data read:0x00000000 at Addr.: 0x0094
+Data read:0x00000000 at Addr.: 0x0096
+Data read:0x00000000 at Addr.: 0x0098
+Data read:0x800d0000 at Addr.: 0x009a
+Data read:0x00000000 at Addr.: 0x009c
+Data read:0x00000000 at Addr.: 0x009e
+Data read:0xbec80106 at Addr.: 0x0090
+Data read:0xf0d00888 at Addr.: 0x0092
+Data read:0x00000000 at Addr.: 0x00a4
+Data read:0x00101462 at Addr.: 0x00a6
+Data read:0xc000f00f at Addr.: 0x00a8
+Data read:0xc1c01f00 at Addr.: 0x00aa
+Data read:0x9c450100 at Addr.: 0x00ac
+Data read:0x80200000 at Addr.: 0x00ae
+Data read:0xa433407d at Addr.: 0x00a0
+Data read:0x000001a7 at Addr.: 0x00a2
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x003f55f5 at Addr.: 0x0000
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x03e80000 at Addr.: 0x07d0
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x00000000 at Addr.: 0x01b5
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x003f55f5 at Addr.: 0x0000
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f55f5 at Addr.: 0x0000
+Data read:0x003f68b5 at Addr.: 0x000d
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 135
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 136
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM READ
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Nucleo_M> EEPROM READ ALL
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Data read:0xa8200000 at Addr.: 0x0082
+Data read:0x0b6807d0 at Addr.: 0x0084
+Data read:0xa306600c at Addr.: 0x0086
+Data read:0x0d3201b5 at Addr.: 0x0088
+Data read:0x9bad0000 at Addr.: 0x008a
+Data read:0x00000000 at Addr.: 0x008c
+Data read:0x00000000 at Addr.: 0x008e
+Data read:0x00000000 at Addr.: 0x0094
+Data read:0x00000000 at Addr.: 0x0096
+Data read:0x00000000 at Addr.: 0x0098
+Data read:0x800d0000 at Addr.: 0x009a
+Data read:0x00000000 at Addr.: 0x009c
+Data read:0x00000000 at Addr.: 0x009e
+Data read:0xbec80106 at Addr.: 0x0090
+Data read:0xf0d00888 at Addr.: 0x0092
+Data read:0x00000000 at Addr.: 0x00a4
+Data read:0x00101462 at Addr.: 0x00a6
+Data read:0xc000f00f at Addr.: 0x00a8
+Data read:0xc1c01f00 at Addr.: 0x00aa
+Data read:0x9c450100 at Addr.: 0x00ac
+Data read:0x80200000 at Addr.: 0x00ae
+Data read:0xa433407d at Addr.: 0x00a0
+Data read:0x000001a7 at Addr.: 0x00a2
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 136
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 140
+Nucleo_M>
+Nucleo_M> EEPROM WRITE INT_ALGO1 0X
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 140
+Nucleo_M> EEPROM WRITE INT_ALGO1 0x24334070
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 140
+Nucleo_M> eeprom
+The command: eeprom[8], is not recognized
+Nucleo_M> EEPROM WRITE
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 140
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 141
+Nucleo_M> EEPROM WRITE INT_ALGO1 0x12345678
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 141
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 142
+Nucleo_M> EEPROM WRITE INT_ALGO1 0x24334079
+No valid user input for register value.
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 142
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 143
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM WRITE INT_ALGO1 0x12345678
+No valid user input for register value (NT_ALGO1 0x12345678)
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 143
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 144
+Nucleo_M>
+Nucleo_M> EEPROM WRITE INT_ALGO1 0x12345678
+No valid user input for register value (NT_ALGO1 0x12345678)
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 144
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 145
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM WRITE INT_ALGO1 0x12345678
+No valid user input for register value (NT_ALGO1 0x12345678)
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 145
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 146
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM WRITE INT_ALGO1 0x12345678
+No valid user input for register value (NT_ALGO1 0x12345678)
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 146
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 147
+Nucleo_M> EEPROM WRITE INT_ALGO1 0x12345678
+No valid user input for register value (NT_ALGO1 0x12345678)
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM WRITE REV_DRIVE_CONFIG 0x12345678
+Found Register name: REV_DRIVE_CONFIG & index: 1
+HAL_I2C_Master_Transmit() OK!
+
+0x00340012 loaded at Addr.: 0x5682 [REV_DRIVE_CONFIG]
+Data stored in EEPROM OK!
+
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 147
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 149
+Nucleo_M> EEPROM WRITE REV_DRIVE_CONFIG 0x12345678
+Found Register name: REV_DRIVE_CONFIG & index: 1
+HAL_I2C_Master_Transmit() OK!
+
+0x00123456 loaded at Addr.: 0x0082 [REV_DRIVE_CONFIG]
+Data stored in EEPROM OK!
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 149
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 150
+Nucleo_M> EEPROM WRITE REV_DRIVE_CONFIG 0x12345678
+Found Register name: REV_DRIVE_CONFIG & index: 1
+Valid user input for register value: 305419896
+HAL_I2C_Master_Transmit() OK!
+
+0x00123456 loaded at Addr.: 0x0082 [REV_DRIVE_CONFIG]
+Data stored in EEPROM OK!
+
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM READ REV_DRIVE_CONFIG
+EEPROM prepared for read OK!
+
+Found Register name: REV_DRIVE_CONFIG & index: 1
+Data read:0x12345678 at Addr.: 0x0082
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 150
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 151
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> EEPROM WRITE REV_DRIVE_CONFIG 0x28200000
+Found Register name: REV_DRIVE_CONFIG & index: 1
+Valid user input for register value: 0x28200000
+HAL_I2C_Master_Transmit() OK!
+
+0x28200000 loaded at Addr.: 0x0082 [REV_DRIVE_CONFIG]
+Data stored in EEPROM OK!
+
+Nucleo_M> EEPROM READ REV_RI
+EEPROM prepared for read OK!
+
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.1 - Build No. 151
+Nucleo_M> EEPROM READ REV_DRIVE_CONFIG
+EEPROM prepared for read OK!
+
+Found Register name: REV_DRIVE_CONFIG & index: 1
+Data read:0x28200000 at Addr.: 0x0082
+Nucleo_M> EEPROM READ ALL
+EEPROM prepared for read OK!
+
+Data read:0x64738c20 at Addr.: 0x0080
+Data read:0x28200000 at Addr.: 0x0082
+Data read:0x0b6807d0 at Addr.: 0x0084
+Data read:0xa306600c at Addr.: 0x0086
+Data read:0x0d3201b5 at Addr.: 0x0088
+Data read:0x9bad0000 at Addr.: 0x008a
+Data read:0x00000000 at Addr.: 0x008c
+Data read:0x00000000 at Addr.: 0x008e
+Data read:0x00000000 at Addr.: 0x0094
+Data read:0x00000000 at Addr.: 0x0096
+Data read:0x00000000 at Addr.: 0x0098
+Data read:0x800d0000 at Addr.: 0x009a
+Data read:0x00000000 at Addr.: 0x009c
+Data read:0x00000000 at Addr.: 0x009e
+Data read:0xbec80106 at Addr.: 0x0090
+Data read:0xf0d00888 at Addr.: 0x0092
+Data read:0x00000000 at Addr.: 0x00a4
+Data read:0x00101462 at Addr.: 0x00a6
+Data read:0xc000f00f at Addr.: 0x00a8
+Data read:0xc1c01f00 at Addr.: 0x00aa
+Data read:0x9c450100 at Addr.: 0x00ac
+Data read:0x80200000 at Addr.: 0x00ae
+Data read:0xa433407d at Addr.: 0x00a0
+Data read:0x000001a7 at Addr.: 0x00a2
+Nucleo_M> SYS
+Nucleo_M> SYS BN
+Build no.:151
+Nucleo_M> SYS BD
+Build date: 2025-01-03 12:15:24.041137
+Nucleo_M> SYS VER
+Version:0.1
+Nucleo_M>

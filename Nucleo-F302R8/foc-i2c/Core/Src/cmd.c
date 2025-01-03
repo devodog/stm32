@@ -102,46 +102,6 @@ void LED(char* paramStr, int* paramValues) {
    //return led2;
 }
 
-void I2C(char* paramStr, int* paramValues) {
-   uint8_t i2cDataWord[7] = {0}; // I2C Data Word without CRC
-   i2cDataWord[0] = (DATA_LENGTH_32 << DATA_LEN_POS);
-   i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
-   i2cDataWord[1] = (eepromAddr[ISD_CONFIG] >> 8)&(0xff);
-   i2cDataWord[2] = (eepromAddr[ISD_CONFIG])&(0xff);
-   memcpy(&i2cDataWord[3], &eepromRegValues[ISD_CONFIG], 4);
-
-   if ((strncmp(paramStr, "TEST", 4) == 0) || (strncmp(paramStr, "test", 4)) == 0) {
-
-
-      if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
-         printf("\r\nHAL_I2C FUNCTION FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
-      }
-      else {
-         printf("\r\nHAL_I2C_Mem_Write() OK!");
-      }
-
-
-      /****
-      if (HAL_I2C_IsDeviceReady(&hi2c1, 0x2, 1, 10) != HAL_OK) {
-         printf("\r\nHAL_I2C_IsDeviceReady failed with error code 0x%02x\r\n", hi2c1.ErrorCode);
-      }
-      ****/
-
-      printf("\r\nScanning all addresses...\r\n");
-      for (uint16_t i = 2; i < 128; i++) {
-         if (HAL_I2C_Master_Transmit(&hi2c1, i<<1, (uint8_t*)&i2cDataWord[0], 7, 1000) == HAL_OK) {
-            printf("\r\nI2C device addr. 0x%02x responded!", i<<1);
-            return;
-         }
-         printf(".");
-      }
-      printf("\r\nNO I2C Device responded!");
-   }
-   else {
-      printf("\r\nUNKNOWN I2C COMMAND");
-   }
-}
-
 void DRVOFF(char* paramStr, int* paramValues) {
    char cmdParameter;
    cmdParameter = toupper((unsigned char) *paramStr);
@@ -188,149 +148,23 @@ void DIR(char* paramStr, int* paramValues) {
    }
 }
 
-void CONFIG(char* paramStr, int* paramValues) {
-   uint8_t paramStartPos;
-   uint16_t regAddr = 0;
-   uint8_t regDataByte;
-   uint8_t i2cDataWord[7] = {0};
-
-   i2cDataWord[0] = (DATA_LENGTH_32 << DATA_LEN_POS);
-
-   if (strncmp(paramStr, "WRITE", 5) == 0) {
-      i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
-      paramStartPos = 6;
-   }
-   else if (strncmp(paramStr, "READ", 4) == 0) {
-      i2cDataWord[0] |= (READ_OPERATION << RW_OPERATION_BIT_POS);
-      paramStartPos = 5;
-   }
-   else {
-      printf("\r\nUNKNOWN OR INCORRECT COMMAND FORMAT");
-      return;
-   }
-   // Get the register address and the data to be written to this register.
-   // Will treat the command line input for this EEPROM WRITE command strict.
-   // Only a single format are accepted.
-   // Nucleo_M>WRITE 0x080 0x12345678
-   // Register address is 12 bit while the data is 32 bit.
-
-   // The first check that two hexadecimal values have been entered.
-   if ((strncmp(&paramStr[paramStartPos], "0x", 2) != 0) || (strncmp(&paramStr[paramStartPos+6], "0x", 2) != 0) || (strlen(paramStr) != 22)) {
-      printf("\r\nUNKNOWN OR INCORRECT COMMAND FORMAT");
-      return;
-   }
-
-   // The second parameter in the EEPROM WRITE command is the register
-   // address, 12 bit, which means that there shall be 3 ascii characters
-   // representing the hexadecimal value to be converted to a binary value
-   // starting at string position 8 (for WRITE command).
-   uint8_t parameterStart = paramStartPos + 2;
-   uint8_t parameterEnd = parameterStart + 3;
-   for(uint8_t i = parameterStart; i < parameterEnd; i++) {
-      if (paramStr[i] < 'A') {
-         regAddr |= (paramStr[i] - 48);
-      }
-      else if ((paramStr[i] >= 'A') && (paramStr[i] < 'G')) {
-         regAddr |= (paramStr[i] - 55); // 65 - 55 = 10
-      }
-      else if ((paramStr[i] >= 'a') && (paramStr[i] < 'g')) {
-         regAddr |= (paramStr[i] - 87);
-      }
-      else {
-         regAddr |= 0;
-      }
-      if (i < (parameterEnd-1)) {
-         regAddr = regAddr << 4;
-      }
-      else
-         break;
-   }
-   i2cDataWord[1] |= ((regAddr >> 8) & 0x0f);
-   i2cDataWord[2] = regAddr & 0xff;
-   uint8_t dwIndex = 7; // the last index of the data word byte buffer
-   uint8_t mst = 1;
-   // The third parameter to the EEPROM WRITE command is the data to be
-   // written into the actual register, which must be a 32 bit hexadecimal
-   // value. This parameter starts at the command string position 14.
-   parameterStart = paramStartPos + 8;
-   parameterEnd = parameterStart + 8;
-   for(uint8_t i = parameterStart; i < parameterEnd; i++) {
-
-      if (paramStr[i] < 'A') {
-         regDataByte |= (paramStr[i] - 48);
-      }
-      else if ((paramStr[i] >= 'A') && (paramStr[i] < 'G')) {
-         regDataByte |= paramStr[i] - 55;
-      }
-      else if ((paramStr[i] >= 'a') && (paramStr[i] < 'g')) {
-         regDataByte |= paramStr[i] - 87;
-      }
-      else {
-         regDataByte |= 0;
-      }
-      if (mst == 1) {
-         regDataByte = regDataByte << 4;
-         mst = 0;
-      }
-      else {
-         // Make sure that the least significant byte is sent first on the i2c bus.
-         // The first address values read are considered to be the most significant values...
-         i2cDataWord[--dwIndex] = regDataByte;
-         regDataByte = 0;
-         mst = 1;
-      }
-   }
-
-   // TEST!
-   printf("\r\ni2c control word: ");
-   for (int i = 0; i < 7; i++) {
-      printf("0x%02x ", i2cDataWord[i]);
-   }
-   // Make sure that the motor is not spinning.
-   // Pushing the data onto the "shadow register"
-   //HAL_I2C_Master_Transmit(&hi2c3, MCF8316A_ADDRESS, (uint8_t*)&dataWord, 7, 1000);
-}
-
-/*
- * EEPROM READ ONLY - ALL ADDRESSES
- */
-/*
-typedef struct cw {
-   uint8_t OP_RW : 1;
-   uint8_t CRC_EN : 1;
-   uint8_t DLEN : 2;
-};
-*/
-
-int8_t regName2index(char* regName) {
-   int8_t nameIndex = -1;
-   for (int8_t i = 0; i < sizeof(eepromAddr); i++) {
-      if (strcmp(regName, regNames[i]) == 0) {
-         nameIndex = i;
-         break;
-      }
-   }
-   return nameIndex;
-}
 
 void EEPROM(char* paramStr, int* paramValues) {
-   // IN PROGRESS... NOT COMPLETED...BY FAR...
+   // IN PROGRESS... NOT COMPLETED...
    uint8_t paramStartPos = 0;
-   //uint16_t regAddr = 0;
-   //uint8_t regDataByte;
-   //uint8_t rxData[7] = {0};
    uint8_t i2cDataWord[8] = {0}; // I2C Data Word without CRC
    i2cDataWord[0] = (DATA_LENGTH_32 << DATA_LEN_POS);
 
    if (strncmp(paramStr, "WRITE", 5) == 0) {
       i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
       paramStartPos = 6;
-
-      // If the second parameter is the word 'DEFAULT' the EEPROM WRITE command
-      // will load the predefined register (in eepromRegValues) values into the
-      // shadow registers and then execute the 'store in EEPROM' command.
+      // Check if the second parameter is a letter or not
       if ((paramStr[paramStartPos] >= 65 )&&(paramStr[paramStartPos] <= 90 )) {
+
          if (strncmp(&paramStr[paramStartPos], "DEFAULT", 3) == 0) {
+            // If the second parameter is the word 'DEFAULT' the EEPROM WRITE command
+            // will load the predefined register (in eepromRegValues) values into the
+            // shadow registers and then execute the 'store in EEPROM' command.
             for (int i = 0; i < sizeof(eepromAddr)/2; i++) {
                i2cDataWord[1] = (eepromAddr[i] >> 8)&(0xff);
                i2cDataWord[2] = (eepromAddr[i])&(0xff);
@@ -341,58 +175,64 @@ void EEPROM(char* paramStr, int* paramValues) {
                }
                else {
                   printf("\r\nHAL_I2C_Master_Transmit() OK!\r\n");
+                  printf("\r\n0x%02x%02x%02x%02x loaded at Addr.: 0x%02x%02x [%s]",
+                        i2cDataWord[6],i2cDataWord[5], i2cDataWord[4], i2cDataWord[3], i2cDataWord[1], i2cDataWord[2], regNames[i]);
                }
             }
-            // All loaded into shadow memory. Now write it into EEPROM
-            // First construct the
-            i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
-            i2cDataWord[1] = (eeprom2MemAddr >> 8)&(0xff);
-            i2cDataWord[2] = (eeprom2MemAddr)&(0xff);
-            memcpy(&i2cDataWord[3], &eeprom2MemRW[WRITE_EEPROM], 4);
-            /*** TEST
-            printf("\r\nI2C Data Word: "); for (int i = 0; i < 7; i++) {printf("0x%02x ", i2cDataWord[i]);}
-             ***/
-            if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
-               printf("\r\nHAL_I2C_Master_Transmit for EEPROM WRITE FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
-               return;
-            }
-            else {
-               printf("\r\nData stored in EEPROM OK!\r\n");
-            }
-         } // END "DEFAULT"
-         else { // write specific value to the eeprom...
-            for (int i = 0; sizeof(eepromAddr)/2; i++) {
-               if (strncmp(&paramStr[paramStartPos], regNames[i], strlen(regNames[i])) == 0) {
+         } /*** "DEFAULT" END ***/
+         // write specific value to the eeprom...
+         else {
+            int nameIndex = 0;
+            for (int i = 0; i < sizeof(eepromAddr)/2; i++) {
+               if (strncmp((char*)&paramStr[paramStartPos], regNames[i], strlen(regNames[i])) == 0) {
                   printf("\r\nFound Register name: %s & index: %d", regNames[i], i);
                   i2cDataWord[1] = (eepromAddr[i] >> 8)&(0xff);
                   i2cDataWord[2] = (eepromAddr[i])&(0xff);
                   paramStartPos += strlen(regNames[i]);
+                  nameIndex = i;
                   break;
                }
             }
-         }
-      }
-      else {
-         // For initial TEST we'll attempt to write predefined data into one
-         // of the shadow registers.
-         // Make up the DataWord
-         i2cDataWord[1] = (eepromAddr[ISD_CONFIG] >> 8)&(0xff);
-         i2cDataWord[2] = (eepromAddr[ISD_CONFIG])&(0xff);
-         memcpy(&i2cDataWord[3], &eepromRegValues[ISD_CONFIG], 4);
-         /***
-         printf("\r\nI2C Data Word: "); for (int i = 0; i < 7; i++) {printf("0x%02x ", i2cDataWord[i]);}
-         ***/
+            // Now read the user input value for the specific register...
+            uint8_t userInputRegValue[4] = {0};
+            if (strncmp(&paramStr[paramStartPos+1], "0x", 2) == 0) {
 
-         // Load Control Word and data into the device's registers
-         //if (HAL_I2C_Mem_Write(&hi2c1, 0x02, 0x00, 7, (uint8_t*)&i2cDataWord[0], 7, 1) != HAL_OK) {
+               int number = (int)strtol(&paramStr[paramStartPos+1], NULL, 0);
+               printf("\r\nValid user input for register value: 0x%x", number);
+               memcpy(&userInputRegValue[0], &number, 4);
+            }
+            else {
+               printf("\r\nNo valid user input for register value (%s)", &paramStr[paramStartPos]);
+               return;
+            }
+            memcpy(&i2cDataWord[3], &userInputRegValue[0], 4);
+
+            if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+               printf("\r\nHAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+            }
+            else {
+               printf("\r\nHAL_I2C_Master_Transmit() OK!\r\n");
+               printf("\r\n0x%02x%02x%02x%02x loaded at Addr.: 0x%02x%02x [%s]",
+                     i2cDataWord[6],i2cDataWord[5], i2cDataWord[4], i2cDataWord[3], i2cDataWord[1], i2cDataWord[2], regNames[nameIndex]);
+            }
+
+         }
+         // All loaded into shadow memory. Now write it into EEPROM
+         // First construct the
+         i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
+         i2cDataWord[1] = (eeprom2MemAddr >> 8)&(0xff);
+         i2cDataWord[2] = (eeprom2MemAddr)&(0xff);
+         memcpy(&i2cDataWord[3], &eeprom2MemRW[WRITE_EEPROM], 4);
+         /*** TEST
+         printf("\r\nI2C Data Word: "); for (int i = 0; i < 7; i++) {printf("0x%02x ", i2cDataWord[i]);}
+          ***/
          if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
-            printf("\r\nHAL_I2C FUNCTION FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+            printf("\r\nHAL_I2C_Master_Transmit for EEPROM WRITE FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+            return;
          }
          else {
-            printf("\r\nHAL_I2C_Master_Transmit() to ISD_CONFIG OK!\r\n");
+            printf("\r\nData stored in EEPROM OK!\r\n");
          }
-         void promt();
-         return;
       }
    }
    else if (strncmp(paramStr, "READ", 4) == 0) {
@@ -418,7 +258,7 @@ void EEPROM(char* paramStr, int* paramValues) {
          return;
       }
       else {
-         printf("\r\nEEPROM prepared for read OK!\r\n");
+         printf("\r\nEEPROM prepared for read OK!");
       }
       //#2___ ...the print statements will for sure take some time... - no HalDelay() used.
       //#3_1
@@ -441,13 +281,11 @@ void EEPROM(char* paramStr, int* paramValues) {
                      printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
                   }
                   else {
-                     //memcpy(data, &i2cDataWord[4],4);
-                     //printf("\r\nData read:x0%x at Addr.: 0x%02x%02x\r\n", (unsigned int)*data, i2cDataWord[1], i2cDataWord[2]);
                      printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
                   }
                }
-               //HAL_Delay(100);
             }
+            printf("\r\nDone!");
          }
          else {
             for (int i = 0; sizeof(eepromAddr)/2; i++) {
@@ -475,6 +313,7 @@ void EEPROM(char* paramStr, int* paramValues) {
             }
          }
       } // NO PARAMETER
+      /***
       else {
          //#3_2 No register specified - by default we'll give the content og the ISD_CONFIG register...
          i2cDataWord[1] = (eepromAddr[ISD_CONFIG] >> 8)&(0xff);
@@ -494,6 +333,7 @@ void EEPROM(char* paramStr, int* paramValues) {
             }
          }
       }
+      ***/
    }
    else {
       printf("\r\nUNKNOWN OR INCORRECT COMMAND FORMAT");
@@ -530,11 +370,9 @@ struct command {
 // Command array initialization
 struct command mcuCmds [] = {
   {"LED", 2, 6, {"ON", "OFF", "BLINK", "HELP"}, {0, 500}, &LED},
-  {"I2C", 1, 5, {"test", "TEST"}, {1}, &I2C},
   {"DRVOFF", 1, 4, {"YES", "NO"}, {1}, &DRVOFF},
   {"DIR", 1, 4, {"ABC", "ACB"}, {1}, &DIR},
   {"BRAKE", 1, 4, {"ON", "OFF"}, {1}, &BRAKE},
-  {"CONFIG", 3, 6, {"READ", "WRITE"}, {0, 0}, &CONFIG},
   {"EEPROM", 3, 6, {"READ", "WRITE"}, {0, 0}, &EEPROM},
   {"SYS", 3, 4, {"BN", "BD", "VER"}, {0, 0, 0}, &SYS}
 };
