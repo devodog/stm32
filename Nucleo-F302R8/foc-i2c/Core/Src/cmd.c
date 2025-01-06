@@ -22,7 +22,8 @@
 #define LED_ON 1
 #define LED_BLINK 2
 
-#define MCF8316A_ADDRESS 0x1 << 1
+//#define MCF8316A_ADDRESS 0x1 << 1
+#define MCF8316A_ADDRESS 0x0 << 1
 //  device I2C register address
 #define GET_DATA_READY_STATUS 0x0202
 #define READ_MEASURMENT 0x0300
@@ -32,8 +33,6 @@
 #define COMMAND_NAME_LENGTH 20
 #define NUMBERS_OF_MCU_COMMANDS 2
 ///////////////////////////////////////////////////////////////////////////////
-#define MCF8316A_ADDRESS 0x1 << 1
-
 #define DATA_LENGTH_16 0x0
 #define DATA_LENGTH_32 0x1
 #define DATA_LENGTH_64 0x2
@@ -56,6 +55,7 @@ extern I2C_HandleTypeDef hi2c1;
 extern uint8_t led2;
 int msValue = 0; // milliseconds value
 int lastError = 0;
+uint16_t i2cAddress = MCF8316A_ADDRESS;
 
 // The cmd-line Command structure
 struct command {
@@ -163,22 +163,23 @@ void FAULT(char* paramStr, int* paramValues) {
       faultDescriptions = &gateDriveFaultDescription[0];
    }
    else if (strncmp(paramStr, "CFS", 3) == 0) {
-      i2cDataWord[2] = 0xe2;
+      i2cDataWord[2] = 0xe4;
       numOfFaultDescriptions = 31-numOfCFdescriptions;
       faultDescriptions = &controllerFaultDescription[0];
    }
    else {
 
    }
-   if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
-      printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+   if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
+      printf("\r\nHAL_I2C_Master_Transmit() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
    }
    else {
-      if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
+      if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
          printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
       }
       else {
          memcpy(&ControllerFaultStatus, &i2cDataWord[4], 4);
+
          for (int i = 31; i >= numOfFaultDescriptions; i--) {
             if (((ControllerFaultStatus >> i) & 0x1) == 0) {
                printf("\r\nNO %s", faultDescriptions[31-i]);
@@ -187,13 +188,13 @@ void FAULT(char* paramStr, int* paramValues) {
                printf("\r\n%s", faultDescriptions[31-i]);
             }
          }
-         //printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
+         printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
       }
    }
 }
 
 void EEPROM(char* paramStr, int* paramValues) {
-   // IN PROGRESS... NOT COMPLETED...
+   // IN PROGRESS...
    uint8_t paramStartPos = 0;
    uint8_t i2cDataWord[8] = {0}; // I2C Data Word without CRC
    i2cDataWord[0] = (DATA_LENGTH_32 << DATA_LEN_POS);
@@ -204,7 +205,7 @@ void EEPROM(char* paramStr, int* paramValues) {
       // Check if the second parameter is a letter or not
       if ((paramStr[paramStartPos] >= 65 )&&(paramStr[paramStartPos] <= 90 )) {
 
-         if (strncmp(&paramStr[paramStartPos], "DEFAULT", 3) == 0) {
+         if (strncmp(&paramStr[paramStartPos], "DEFAULT1", 8) == 0) {
             // If the second parameter is the word 'DEFAULT' the EEPROM WRITE command
             // will load the predefined register (in eepromRegValues) values into the
             // shadow registers and then execute the 'store in EEPROM' command.
@@ -213,7 +214,7 @@ void EEPROM(char* paramStr, int* paramValues) {
                i2cDataWord[2] = (eepromAddr[i])&(0xff);
                memcpy(&i2cDataWord[3], &eepromRegValues[i], 4);
 
-               if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+               if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
                   printf("\r\nHAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
                }
                else {
@@ -222,7 +223,26 @@ void EEPROM(char* paramStr, int* paramValues) {
                         i2cDataWord[6],i2cDataWord[5], i2cDataWord[4], i2cDataWord[3], i2cDataWord[1], i2cDataWord[2], regNames[i]);
                }
             }
-         } /*** "DEFAULT" END ***/
+         } /*** "DEFAULT1" END ***/
+         else if (strncmp(&paramStr[paramStartPos], "DEFAULT2", 8) == 0) {
+            // If the second parameter is the word 'DEFAULT' the EEPROM WRITE command
+            // will load the predefined register (in eepromRegValues) values into the
+            // shadow registers and then execute the 'store in EEPROM' command.
+            for (int i = 0; i < sizeof(eepromAddr)/2; i++) {
+               i2cDataWord[1] = (eepromAddr[i] >> 8)&(0xff);
+               i2cDataWord[2] = (eepromAddr[i])&(0xff);
+               memcpy(&i2cDataWord[3], &eepromRegValues2[i], 4);
+
+               if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+                  printf("\r\nHAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+               }
+               else {
+                  printf("\r\nHAL_I2C_Master_Transmit() OK!\r\n");
+                  printf("\r\n0x%02x%02x%02x%02x loaded at Addr.: 0x%02x%02x [%s]",
+                        i2cDataWord[6],i2cDataWord[5], i2cDataWord[4], i2cDataWord[3], i2cDataWord[1], i2cDataWord[2], regNames[i]);
+               }
+            }
+         } /*** "DEFAULT2" END ***/
          // write specific value to the eeprom...
          else {
             int nameIndex = 0;
@@ -250,7 +270,7 @@ void EEPROM(char* paramStr, int* paramValues) {
             }
             memcpy(&i2cDataWord[3], &userInputRegValue[0], 4);
 
-            if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+            if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
                printf("\r\nHAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
             }
             else {
@@ -269,7 +289,7 @@ void EEPROM(char* paramStr, int* paramValues) {
          /*** TEST
          printf("\r\nI2C Data Word: "); for (int i = 0; i < 7; i++) {printf("0x%02x ", i2cDataWord[i]);}
           ***/
-         if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+         if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
             printf("\r\nHAL_I2C_Master_Transmit for EEPROM WRITE FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
             return;
          }
@@ -296,7 +316,7 @@ void EEPROM(char* paramStr, int* paramValues) {
       i2cDataWord[2] = (eeprom2MemAddr)&(0xff);
       memcpy(&i2cDataWord[3], &eeprom2MemRW[READ_EEPROM], 4);
 
-      if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+      if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
          printf("\r\nHAL_I2C FUNCTION FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
          return;
       }
@@ -316,11 +336,11 @@ void EEPROM(char* paramStr, int* paramValues) {
             for (int i = 0; i < sizeof(eepromAddr)/2; i++) {
                i2cDataWord[1] = (eepromAddr[i] >> 8)&(0xff);
                i2cDataWord[2] = (eepromAddr[i])&(0xff);
-               if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
+               if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
                   printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
                }
                else {
-                  if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
+                  if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
                      printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
                   }
                   else {
@@ -341,16 +361,79 @@ void EEPROM(char* paramStr, int* paramValues) {
                }
             }
             ///
-            if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
+            if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
                printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
             }
             else {
-               if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
+               if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
                   printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
                }
                else {
                   //memcpy(data, &i2cDataWord[4],4);
                   //printf("\r\nData read:x0%x at Addr.: 0x%02x%02x\r\n", (unsigned int)*data, i2cDataWord[1], i2cDataWord[2]);
+                  printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
+               }
+            }
+         }
+      }
+   }
+   else {
+      printf("\r\nUNKNOWN OR INCORRECT COMMAND FORMAT");
+      void promt();
+      return;
+   }
+}
+
+void RAM(char* paramStr, int* paramValues){
+   uint8_t paramStartPos = 0;
+   uint8_t i2cDataWord[8] = {0}; // I2C Data Word without CRC
+   i2cDataWord[0] = (DATA_LENGTH_32 << DATA_LEN_POS);
+
+   if (strncmp(paramStr, "READ", 4) == 0) {
+      i2cDataWord[0] |= (READ_OPERATION << RW_OPERATION_BIT_POS);
+      paramStartPos = 5;
+
+      if ((paramStr[paramStartPos] >= 65 )&&(paramStr[paramStartPos] <= 90 )) {
+         // List all eeprom locations...
+         if (strncmp(&paramStr[paramStartPos], "ALL", 3) == 0) {
+            for (int i = 0; i < sizeof(ramAddr)/2; i++) {
+               i2cDataWord[1] = (ramAddr[i] >> 8)&(0xff);
+               i2cDataWord[2] = (ramAddr[i])&(0xff);
+               if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
+                  printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+               }
+               else {
+                  if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
+                     printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+                  }
+                  else {
+                     printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x = %s",
+                           i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2], volatileRegNames[i]);
+                  }
+               }
+            }
+            printf("\r\nDone!");
+         }
+         else {
+            for (int i = 0; sizeof(ramAddr)/2; i++) {
+               if (strncmp(&paramStr[paramStartPos], volatileRegNames[i], strlen(volatileRegNames[i])) == 0) {
+                  printf("\r\nFound Register name: %s & index: %d", volatileRegNames[i], i);
+                  i2cDataWord[1] = (ramAddr[i] >> 8)&(0xff);
+                  i2cDataWord[2] = (ramAddr[i])&(0xff);
+                  paramStartPos += strlen(volatileRegNames[i]);
+                  break;
+               }
+            }
+            if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, HAL_MAX_DELAY) != HAL_OK) {
+            //if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, HAL_MAX_DELAY) != HAL_OK) {
+               printf("\r\nHAL_I2C_Master_Transmit() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+            }
+            else {
+               if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, HAL_MAX_DELAY) != HAL_OK) {
+               //if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, HAL_MAX_DELAY) != HAL_OK) {
+                  printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+               }
+               else {
                   printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
                }
             }
@@ -397,6 +480,7 @@ struct command mcuCmds [] = {
   {"BRAKE", 1, 4, {"ON", "OFF"}, {1}, &BRAKE},
   {"FAULT", 2, 5, {"GDFS", "CFS"}, {0, 0}, &FAULT},
   {"EEPROM", 3, 6, {"READ", "WRITE"}, {0, 0}, &EEPROM},
+  {"RAM", 2, 6, {"READ", "WRITE"}, {0, 0}, &RAM},
   {"SYS", 3, 4, {"BN", "BD", "VER"}, {0, 0, 0}, &SYS}
 };
 

@@ -1,0 +1,735 @@
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT GDSF
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M> FAULT R
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT
+Nucleo_M> FAULT R
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT RE
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT RE
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT RE
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> EEPROM READ ISD_CONFIG
+HAL_I2C FUNCTION FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M>
+The command: [8], is not recognized
+Nucleo_M> EEPROM READ ISD_CONFIG
+HAL_I2C FUNCTION FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> fau
+The command: fau[8], is not recognized
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT GDFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> FAULT CFS
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M> FAULT
+Nucleo_M> EEPROM WRITE DEFAULT1
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x4
+
+HAL_I2C_Master_Transmit for EEPROM WRITE FAILED! Error code: 0x4
+
+Nucleo_M> FAULT CFS
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 165
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 166
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Transmit() FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 166
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 167
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Transmit() FAILED! Error code: 0x4
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Transmit() FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 167
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 168
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Transmit() FAILED! Error code: 0x4
+
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 168
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 169
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+Data read:0x00000000 at Addr.: 0x04e6
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 169
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 170
+Nucleo_M> RA
+The command: RA[8], is not recognized
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+Data read:0x00000000 at Addr.: 0x04e6
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 170
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 171
+Nucleo_M> EEPROM READ ALL
+EEPROM prepared for read OK!
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Done!
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Transmit() FAILED! Error code: 0x4
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+Data read:0x00000000 at Addr.: 0x04e6
+Nucleo_M> EEPROM READ ALL
+EEPROM prepared for read OK!
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+HAL_I2C_Master_Receive() FAILED! Error code: 0x4
+
+Done!
+Nucleo_M> EE
+The command: EE[8], is not recognized
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+HAL_I2C_Master_Transmit() FAILED! Error code: 0x4
+
+Nucleo_M> RAM READ ID
+Found Register name: ID & index: 28
+Data read:0x00000000 at Addr.: 0x04e6
+Nucleo_M> RAM READ CONTROLLER_FAULT_STATUS
+Found Register name: CONTROLLER_FAULT_STATUS & index: 1
+Data read:0x00000300 at Addr.: 0x00e4
+Nucleo_M> FAULT CFS
+NO Controller fault condition is detected
+NO Bit is reserved
+NO IPD frequency fault detected
+NO IPD T1 fault detected
+NO IPD T2 fault detected
+NO Bus current limit fault detected
+NO MPET IPD fault detected
+NO MPET BEMF fault detected
+NO Abnormal speed fault detected
+NO Abnormal BEMF fault detected
+NO Missing motor fault detected
+NO Motor lock fault detected
+NO Lock current limit fault detected
+NO Hardware lock current limit fault detected
+NO Motor undervoltage detected
+NO Motor overvoltage detected
+NO Speed loop saturation detected
+NO Current loop saturation detected
+Nucleo_M> RAM READ CONTROLLER_FAULT_STATUS
+Found Register name: CONTROLLER_FAULT_STATUS & index: 1
+Data read:0x00000100 at Addr.: 0x00e4
+Nucleo_M> FAULLT
+The command: FAULLT[8], is not recognized
+Nucleo_M> FAULT CFS
+NO Controller fault condition is detected
+NO Bit is reserved
+NO IPD frequency fault detected
+NO IPD T1 fault detected
+NO IPD T2 fault detected
+NO Bus current limit fault detected
+NO MPET IPD fault detected
+NO MPET BEMF fault detected
+NO Abnormal speed fault detected
+NO Abnormal BEMF fault detected
+NO Missing motor fault detected
+NO Motor lock fault detected
+NO Lock current limit fault detected
+NO Hardware lock current limit fault detected
+NO Motor undervoltage detected
+NO Motor overvoltage detected
+NO Speed loop saturation detected
+NO Current loop saturation detected
+Nucleo_M> RAM READ CONTROLLER_FAULT_STATUS
+Found Register name: CONTROLLER_FAULT_STATUS & index: 1
+Data read:0x00000080 at Addr.: 0x00e4
+Nucleo_M> RAM READ CONTROLLER_FAULT_STATUS
+Found Register name: CONTROLLER_FAULT_STATUS & index: 1
+Data read:0x00000280 at Addr.: 0x00e4
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 171
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 172
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 172
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 173
+Nucleo_M> FAULT CFS
+NO Controller fault condition is detected
+NO Bit is reserved
+NO IPD frequency fault detected
+NO IPD T1 fault detected
+NO IPD T2 fault detected
+NO Bus current limit fault detected
+NO MPET IPD fault detected
+NO MPET BEMF fault detected
+NO Abnormal speed fault detected
+NO Abnormal BEMF fault detected
+NO Missing motor fault detected
+NO Motor lock fault detected
+NO Lock current limit fault detected
+NO Hardware lock current limit fault detected
+NO Motor undervoltage detected
+NO Motor overvoltage detected
+NO Speed loop saturation detected
+NO Current loop saturation detected
+Data read:0x00000000 at Addr.: 0x00e2
+Nucleo_M> RAM READ CONTROLLER_FAULT_STATUS
+Found Register name: CONTROLLER_FAULT_STATUS & index: 1
+Data read:0x00000880 at Addr.: 0x00e4
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 173
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 174
+Nucleo_M> FAULT CFS
+NO Controller fault condition is detected
+NO Bit is reserved
+NO IPD frequency fault detected
+NO IPD T1 fault detected
+NO IPD T2 fault detected
+NO Bus current limit fault detected
+NO MPET IPD fault detected
+NO MPET BEMF fault detected
+NO Abnormal speed fault detected
+NO Abnormal BEMF fault detected
+NO Missing motor fault detected
+NO Motor lock fault detected
+NO Lock current limit fault detected
+NO Hardware lock current limit fault detected
+NO Motor undervoltage detected
+NO Motor overvoltage detected
+NO Speed loop saturation detected
+NO Current loop saturation detected
+Data read:0x00000600 at Addr.: 0x00e4
+Nucleo_M> RAM READ CONTROLLER_FAULT_STATUS
+Found Register name: CONTROLLER_FAULT_STATUS & index: 1
+Data read:0x00000080 at Addr.: 0x00e4
+Nucleo_M> RAM READ CONTROLLER_FAULT_STATUS
+Found Register name: CONTROLLER_FAULT_STATUS & index: 1
+Data read:0x00000080 at Addr.: 0x00e4
+Nucleo_M> FAULT CFS
+NO Controller fault condition is detected
+NO Bit is reserved
+NO IPD frequency fault detected
+NO IPD T1 fault detected
+NO IPD T2 fault detected
+NO Bus current limit fault detected
+NO MPET IPD fault detected
+NO MPET BEMF fault detected
+NO Abnormal speed fault detected
+NO Abnormal BEMF fault detected
+NO Missing motor fault detected
+NO Motor lock fault detected
+NO Lock current limit fault detected
+NO Hardware lock current limit fault detected
+NO Motor undervoltage detected
+NO Motor overvoltage detected
+NO Speed loop saturation detected
+NO Current loop saturation detected
+Data read:0x00000200 at Addr.: 0x00e4
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> FAULT GDFS
+NO Gate Driver fault condition is detected
+NO Buck regulator fault condition is detected
+NO Reserved info
+NO Overcurrent condition is detected
+NO No power-on-reset condition is detected on VM
+NO Overvoltage condition is detected on VM
+NO Overtemperature warning / shutdown is detected
+NO Reserved info
+NO Overtemperature warning is detected
+NO Overtemperature shutdown is detected
+NO Overcurrent detected on high-side switch of OUTC
+NO Overcurrent detected on low-side switch of OUTC
+NO Overcurrent detected on high-side switch of OUTB
+NO Overcurrent detected on low-side switch of OUTB
+NO Overcurrent detected on high-side switch of OUTA
+NO Overcurrent detected on low-side switch of OUTA
+NO Reserved info
+NO OTP Error is detected
+NO Buck regulator overcurrent is detected
+NO Buck regulator undervoltage is detected
+NO Charge pump undervoltage is detected
+Data read:0x00000000 at Addr.: 0x00e0
+Nucleo_M> EEPROM READ ALL
+EEPROM prepared for read OK!
+Data read:0x44638c20 at Addr.: 0x0080
+Data read:0x283af064 at Addr.: 0x0082
+Data read:0x0b6807d0 at Addr.: 0x0084
+Data read:0x23066000 at Addr.: 0x0086
+Data read:0x0c3181b0 at Addr.: 0x0088
+Data read:0x1aad0000 at Addr.: 0x008a
+Data read:0x00000000 at Addr.: 0x008c
+Data read:0x0000012c at Addr.: 0x008e
+Data read:0x00000000 at Addr.: 0x0094
+Data read:0x00000000 at Addr.: 0x0096
+Data read:0x00000000 at Addr.: 0x0098
+Data read:0x00000000 at Addr.: 0x009a
+Data read:0x00000000 at Addr.: 0x009c
+Data read:0x00000000 at Addr.: 0x009e
+Data read:0x5fe80206 at Addr.: 0x0090
+Data read:0x74000000 at Addr.: 0x0092
+Data read:0x00000000 at Addr.: 0x00a4
+Data read:0x00000000 at Addr.: 0x00a6
+Data read:0x0000b000 at Addr.: 0x00a8
+Data read:0x40000000 at Addr.: 0x00aa
+Data read:0x00000100 at Addr.: 0x00ac
+Data read:0x00200000 at Addr.: 0x00ae
+Data read:0x00000000 at Addr.: 0x00a0
+Data read:0x00b3407d at Addr.: 0x00a2
+Done!
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 174
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 175
+Nucleo_M>
+Nucleo_M>
+Nucleo_M> ram
+The command: ram [8], is not recognized
+Nucleo_M> RAM READ ALL
+Data read:0x00000000 at Addr.: 0x00e0 = GATE_DRIVER_FAULT_STATUS
+Data read:0x00000200 at Addr.: 0x00e4 = CONTROLLER_FAULT_STATUS
+Data read:0x00000000 at Addr.: 0x00e6 = ALGO_STATUS
+Data read:0x0a000000 at Addr.: 0x00e8 = MTR_PARAMS
+Data read:0x00000000 at Addr.: 0x00ea = ALGO_STATUS_MPET
+Data read:0x00000000 at Addr.: 0x00ec = DEV_CTRL DEV_CTRL
+Data read:0x00000000 at Addr.: 0x00ee = ALGO_CTRL1
+Data read:0x000c0701 at Addr.: 0x00f0 = ALGO_CTRL2
+Data read:0x00000000 at Addr.: 0x00f2 = CURRENT_PI
+Data read:0x00000000 at Addr.: 0x0210 = SPEED_PI
+Data read:0x7fffffff at Addr.: 0x0216 = ALGORITHM_STATE
+Data read:0x00000000 at Addr.: 0x0410 = FG_SPEED_FDBK
+Data read:0x00000000 at Addr.: 0x043e = BUS_CURRENT
+Data read:0x00000000 at Addr.: 0x0440 = PHASE_CURRENT_A
+Data read:0x00000000 at Addr.: 0x0442 = PHASE_CURRENT_B
+Data read:0x00010003 at Addr.: 0x0466 = PHASE_CURRENT_C
+Data read:0x00000002 at Addr.: 0x0476 = CSA_GAIN_FEEDBACK
+Data read:0x01228000 at Addr.: 0x0478 = VOLTAGE_GAIN_FEEDBACK
+Data read:0x00000000 at Addr.: 0x047e = VM_VOLTAGE
+Data read:0x00000000 at Addr.: 0x0480 = PHASE_VOLTAGE_VA
+Data read:0x00000000 at Addr.: 0x0482 = PHASE_VOLTAGE_VB
+Data read:0x00000000 at Addr.: 0x04ba = PHASE_VOLTAGE_VC
+Data read:0x00000000 at Addr.: 0x04bc = SIN_COMMUTATION_ANGLE
+Data read:0x00000000 at Addr.: 0x04d4 = COS_COMMUTATION_ANGLE
+Data read:0x00000000 at Addr.: 0x04d6 = IALPHA
+Data read:0x00000000 at Addr.: 0x04d8 = IBETA
+Data read:0x00000000 at Addr.: 0x04da = VALPHA
+Data read:0x00000000 at Addr.: 0x04e4 = VBETA
+Data read:0x00000000 at Addr.: 0x04e6 = ID
+Data read:0x00000000 at Addr.: 0x04e8 = IQ
+Data read:0x00000000 at Addr.: 0x04ea = VD
+Data read:0x00000000 at Addr.: 0x0524 = VQ
+Data read:0x00000000 at Addr.: 0x053a = IQ_REF_ROTOR_ALIGN
+Data read:0x00000000 at Addr.: 0x0548 = SPEED_REF_OPEN_LOOP
+Data read:0x00000000 at Addr.: 0x05cc = IQ_REF_OPEN_LOOP
+Data read:0x00000000 at Addr.: 0x05fc = SPEED_REF_CLOSED_LOOP
+Data read:0x00000000 at Addr.: 0x05fe = ID_REF_CLOSED_LOOP
+Data read:0x00000000 at Addr.: 0x067a = IQ_REF_CLOSED_LOOP
+Data read:0x00000000 at Addr.: 0x0684 = ISD_STATE
+Data read:0x00000000 at Addr.: 0x06b8 = ISD_SPEED
+Data read:0x00000000 at Addr.: 0x06fc = IPD_STATE
+Data read:0x00000000 at Addr.: 0x0742 = IPD_ANGLE
+Data read:0x00000000 at Addr.: 0x0744 = ED
+Data read:0x00000000 at Addr.: 0x0752 = EQ
+Data read:0x00000000 at Addr.: 0x0756 = SPEED_FDBK
+Done!
+Nucleo_M>
+
+FOC config support on STM32-NUCLEO-F302R8 development board
+Ver. 0.2 - Build No. 176
+Nucleo_M> RAM READ ALL
+Data read:0x00000000 at Addr.: 0x00e0 = GATE_DRIVER_FAULT_STATUS
+Data read:0x00000000 at Addr.: 0x00e2 = CONTROLLER_FAULT_STATUS
+Data read:0x00000080 at Addr.: 0x00e4 = ALGO_STATUS
+Data read:0x00000000 at Addr.: 0x00e6 = MTR_PARAMS
+Data read:0x0a000000 at Addr.: 0x00e8 = ALGO_STATUS_MPET
+Data read:0x00000000 at Addr.: 0x00ea = DEV_CTRL DEV_CTRL
+Data read:0x00000000 at Addr.: 0x00ec = ALGO_CTRL1
+Data read:0x00000000 at Addr.: 0x00ee = ALGO_CTRL2
+Data read:0x000c0701 at Addr.: 0x00f0 = CURRENT_PI
+Data read:0x00000000 at Addr.: 0x00f2 = SPEED_PI
+Data read:0x00000000 at Addr.: 0x0210 = ALGORITHM_STATE
+Data read:0x7fffffff at Addr.: 0x0216 = FG_SPEED_FDBK
+Data read:0x00000000 at Addr.: 0x0410 = BUS_CURRENT
+Data read:0x00000000 at Addr.: 0x043e = PHASE_CURRENT_A
+Data read:0x00000000 at Addr.: 0x0440 = PHASE_CURRENT_B
+Data read:0x00000000 at Addr.: 0x0442 = PHASE_CURRENT_C
+Data read:0x00010003 at Addr.: 0x0466 = CSA_GAIN_FEEDBACK
+Data read:0x00000002 at Addr.: 0x0476 = VOLTAGE_GAIN_FEEDBACK
+Data read:0x0123e000 at Addr.: 0x0478 = VM_VOLTAGE
+Data read:0x00000000 at Addr.: 0x047e = PHASE_VOLTAGE_VA
+Data read:0x00000000 at Addr.: 0x0480 = PHASE_VOLTAGE_VB
+Data read:0x00000000 at Addr.: 0x0482 = PHASE_VOLTAGE_VC
+Data read:0x00000000 at Addr.: 0x04ba = SIN_COMMUTATION_ANGLE
+Data read:0x00000000 at Addr.: 0x04bc = COS_COMMUTATION_ANGLE
+Data read:0x00000000 at Addr.: 0x04d4 = IALPHA
+Data read:0x00000000 at Addr.: 0x04d6 = IBETA
+Data read:0x00000000 at Addr.: 0x04d8 = VALPHA
+Data read:0x00000000 at Addr.: 0x04da = VBETA
+Data read:0x00000000 at Addr.: 0x04e4 = ID
+Data read:0x00000000 at Addr.: 0x04e6 = IQ
+Data read:0x00000000 at Addr.: 0x04e8 = VD
+Data read:0x00000000 at Addr.: 0x04ea = VQ
+Data read:0x00000000 at Addr.: 0x0524 = IQ_REF_ROTOR_ALIGN
+Data read:0x00000000 at Addr.: 0x053a = SPEED_REF_OPEN_LOOP
+Data read:0x00000000 at Addr.: 0x0548 = IQ_REF_OPEN_LOOP
+Data read:0x00000000 at Addr.: 0x05cc = SPEED_REF_CLOSED_LOOP
+Data read:0x00000000 at Addr.: 0x05fc = ID_REF_CLOSED_LOOP
+Data read:0x00000000 at Addr.: 0x05fe = IQ_REF_CLOSED_LOOP
+Data read:0x00000000 at Addr.: 0x067a = ISD_STATE
+Data read:0x00000000 at Addr.: 0x0684 = ISD_SPEED
+Data read:0x00000000 at Addr.: 0x06b8 = IPD_STATE
+Data read:0x00000000 at Addr.: 0x06fc = IPD_ANGLE
+Data read:0x00000000 at Addr.: 0x0742 = ED
+Data read:0x00000000 at Addr.: 0x0744 = EQ
+Data read:0x00000000 at Addr.: 0x0752 = SPEED_FDBK
+Data read:0x00000000 at Addr.: 0x0756 = THETA_EST
+Done!
+Nucleo_M>
