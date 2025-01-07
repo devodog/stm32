@@ -17,87 +17,87 @@ enum EEPROM_RW {
 
 // Register addresses
 uint16_t eepromAddr[] = {
-   0x00000080,
-   0x00000082,
-   0x00000084,
-   0x00000086,
-   0x00000088,
-   0x0000008A,
-   0x0000008C,
-   0x0000008E,
-   0x00000094,
-   0x00000096,
-   0x00000098,
-   0x0000009A,
-   0x0000009C,
-   0x0000009E,
-   0x00000090,
-   0x00000092,
-   0x000000A4,
-   0x000000A6,
-   0x000000A8,
-   0x000000AA,
-   0x000000AC,
-   0x000000AE,
-   0x000000A0,
+   0x00000080, 
+   0x00000082, 
+   0x00000084, 
+   0x00000086, 
+   0x00000088, 
+   0x0000008A, 
+   0x0000008C, 
+   0x0000008E, 
+   0x00000094, 
+   0x00000096, 
+   0x00000098, 
+   0x0000009A, 
+   0x0000009C, 
+   0x0000009E, 
+   0x00000090, 
+   0x00000092, 
+   0x000000A4, 
+   0x000000A6, 
+   0x000000A8, 
+   0x000000AA, 
+   0x000000AC, 
+   0x000000AE, 
+   0x000000A0, 
    0x000000A2
 };
 
 // Recommended Default Register Values
 uint32_t eepromRegValues[] = {
-   0x64738C20,
-   0x28200000,
-   0x0B6807D0,
-   0x2306600C,
-   0x0D3201B5,
-   0x1BAD0000,
-   0x00000000,
-   0x00000000,
-   0x00000000,
-   0x00000000,
-   0x00000000,
-   0x000D0000,
-   0x00000000,
-   0x00000000,
-   0x3EC80106,
-   0x70D00888,
-   0x00000000,
-   0x00101462, // 31-28 = 0, 27-24 = 0, 23-20 = 1 => i2c ADDRESS = 0x1
-   0x4000F00F,
-   0x41C01F00,
-   0x1C450100,
-   0x00200000,
-   0x2433407D,
-   0x000001A7
+   0x64738C20, // ISD_CONFIG,
+   0x28200000, // REV_DRIVE_CONFIG,
+   0x0B6807D0, // MOTOR_STARTUP1,
+   0x2306600C, // MOTOR_STARTUP2,
+   0x0D3201B5, // CLOSED_LOOP1,
+   0x1BAD0000, // CLOSED_LOOP2,
+   0x00000000, // CLOSED_LOOP3,
+   0x00000000, // CLOSED_LOOP4,
+   0x00000000, // SPEED_PROFILES1,
+   0x00000000, // SPEED_PROFILES2,
+   0x00000000, // SPEED_PROFILES3,
+   0x000D0000, // SPEED_PROFILES4,
+   0x00000000, // SPEED_PROFILES5,
+   0x00000000, // SPEED_PROFILES6,
+   0x3EC80106, // FAULT_CONFIG1,
+   0x70D00888, // FAULT_CONFIG2,
+   0x00000000, // PIN_CONFIG,
+   0x00101462, // DEVICE_CONFIG1, // 31-28 = 0, 27-24 = 0, 23-20 = 1 => i2c ADDRESS = 0x1
+   0x4000F00F, // DEVICE_CONFIG2,
+   0x41C01F00, // PERI_CONFIG1,
+   0x1C450100, // GD_CONFIG1,
+   0x00200000, // GD_CONFIG2,
+   0x2433407D, // INT_ALGO_1,
+   0x000001A7  // INT_ALGO_2
 };
 
 uint32_t eepromRegValues2[] = {
-   0x44638C20,
-   0x283AF064,
-   0x0B6807D0,
-   0x23066000,
-   0x0C3181B0,
-   0x1AAD0000,
-   0x00000000,
-   0x0000012C,
-   0x00000000,
-   0x00000000,
-   0x00000000,
-   0x00000000,
-   0x00000000,
-   0x00000000,
-   0x5FE80206,
-   0x74000000,
-   0x00000000,
-   0x00000000, // ADDRESS 0X0
-   0x0000B000,
-   0x40000000,
-   0x00000100,
-   0x00200000,
-   0x00000000,
-   0x00B3407D,
-   0x000001A7
+   0x44638C20, // ISD_CONFIG,
+   0x283AF064, // REV_DRIVE_CONFIG,
+   0x0B6807D0, // MOTOR_STARTUP1,
+   0x23066000, // MOTOR_STARTUP2,
+   0x0C3181B0, // CLOSED_LOOP1,
+   0x1AAD0000, // CLOSED_LOOP2,
+   0x00000000, // CLOSED_LOOP3,
+   0x0000012C, // CLOSED_LOOP4,
+   0x00000000, // SPEED_PROFILES1,
+   0x00000000, // SPEED_PROFILES2,
+   0x00000000, // SPEED_PROFILES3,
+   0x00000000, // SPEED_PROFILES4,
+   0x00000000, // SPEED_PROFILES5,
+   0x00000000, // SPEED_PROFILES6,
+   0x5FE80206, // FAULT_CONFIG1,
+   0x74000000, // FAULT_CONFIG2,
+   0x00000000, // PIN_CONFIG,
+   0x00000000, // DEVICE_CONFIG1, // 20 - 26 i2c ADDRESS
+   0x0000B000, // DEVICE_CONFIG2,
+   0x40000000, // PERI_CONFIG1,
+   0x00000100, // GD_CONFIG1,
+   0x00200000, // GD_CONFIG2,
+   0x00B3407D, // INT_ALGO_1,
+   0x000001A7  // INT_ALGO_2
 };
+
 enum registerIndex {
    ISD_CONFIG = 0,
    REV_DRIVE_CONFIG,
@@ -205,9 +205,9 @@ char* volatileRegNames[] = {
    "ALGO_STATUS",                // System Status Register ALGO_STATUS Register (Address = E4h)[Reset = 00000000h]
    "MTR_PARAMS",                 // System Status Register MTR_PARAMS Register (Address = E6h)[Reset = 00000000h]
    "ALGO_STATUS_MPET",           // System Status Register ALGO_STATUS_MPET Register (Address =E8h) [Reset = 00000000h]
-   "DEV_CTRL DEV_CTRL",          // Register (Address = EAh) [Reset = 00000000h]
-   "ALGO_CTRL1",                 // Algorithm Control Register ALGO_CTRL1 Register (Address = ECh)[Reset = 00000000h]
-   "ALGO_CTRL2",                 // Algorithm Control Register ALGO_CTRL2 Register (Address = EEh)[Reset = 00000000h]
+   "DEV_CTRL",                   // DEVICE_CONTROL Register R/W (Address = EAh) [Reset = 00000000h]
+   "ALGO_CTRL1",                 // Algorithm Control Register ALGO_CTRL1 Register R/W (Address = ECh)[Reset = 00000000h]
+   "ALGO_CTRL2",                 // Algorithm Control Register ALGO_CTRL2 Register R/W (Address = EEh)[Reset = 00000000h]
    "CURRENT_PI",                 // Current PI Controller Register CURRENT_PI Register (Address = F0h)[Reset = 00000000h]
    "SPEED_PI",                   // Speed PI Controller Register SPEED_PI Register (Address = F2h) [Reset = 00000000h]
    "ALGORITHM_STATE",            // Current Algorithm State Register ALGORITHM_STATE Register (Address = 210h) [Reset = 00000000h]

@@ -22,8 +22,9 @@
 #define LED_ON 1
 #define LED_BLINK 2
 
-//#define MCF8316A_ADDRESS 0x1 << 1
-#define MCF8316A_ADDRESS 0x0 << 1
+// Default device i2c address - can be changed in the DEVICE_CONFIG1 register
+#define MCF8316A_ADDRESS 0x1 << 1
+
 //  device I2C register address
 #define GET_DATA_READY_STATUS 0x0202
 #define READ_MEASURMENT 0x0300
@@ -148,7 +149,69 @@ void DIR(char* paramStr, int* paramValues) {
    }
 }
 
+void ramWrite(uint8_t lowPartRegAddr, uint32_t regValue) {
+   // Only 3 ram registers can be written to...
+   uint8_t i2cDataWord[8] = {0}; // I2C Data Word without CRC
+   i2cDataWord[0] = (DATA_LENGTH_32 << DATA_LEN_POS);
+   i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
+   i2cDataWord[1] = 0; // we know that the most significant part of the register address is 0x00
+   i2cDataWord[2] = lowPartRegAddr;
+   memcpy(&i2cDataWord[3], &regValue, 4);
+
+   if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+      printf("\r\nHAL_I2C_Master_Transmit for write operation FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+   }
+   else {
+      printf("\r\nHAL_I2C_Master_Transmit() OK!");
+      printf("\r\n0x%02x%02x%02x%02x loaded at Addr.: 0x%02x%02x",
+            i2cDataWord[6],i2cDataWord[5], i2cDataWord[4], i2cDataWord[3], i2cDataWord[1], i2cDataWord[2]);
+   }
+}
+
+void ALGO_CTRL1(char* paramStr, int* paramValues) {
+   uint8_t paramStartPos = 0;
+
+   if (strncmp(paramStr, "SET", 3) == 0) {
+      paramStartPos = 4;
+      // Now read the user input value for the specific register...
+      if (strncmp(&paramStr[paramStartPos], "0x", 2) == 0) {
+         int regdata = (int)strtol(&paramStr[paramStartPos+1], NULL, 0);
+         printf("\r\nValid user input for register value: 0x%x", regdata);
+         ramWrite(0xec, regdata);
+      }
+      else {
+         printf("\r\nNo valid user input for register value (%s)", &paramStr[paramStartPos]);
+         return;
+      }
+   }
+   else {
+      printf("\r\nUNKNOWN ALGO_CTRL1 COMMAND");
+   }
+}
+
+void ALGO_CTRL2(char* paramStr, int* paramValues) {
+   uint8_t paramStartPos = 0;
+
+   if (strncmp(paramStr, "SET", 3) == 0) {
+      paramStartPos = 4;
+      // Now read the user input value for the specific register...
+      if (strncmp(&paramStr[paramStartPos], "0x", 2) == 0) {
+         int regdata = (int)strtol(&paramStr[paramStartPos+1], NULL, 0);
+         printf("\r\nValid user input for register value: 0x%x", regdata);
+         ramWrite(0xee, regdata);
+      }
+      else {
+         printf("\r\nNo valid user input for register value (%s)", &paramStr[paramStartPos]);
+         return;
+      }
+   }
+   else {
+      printf("\r\nUNKNOWN ALGO_CTRL2 COMMAND");
+   }
+}
+
 void FAULT(char* paramStr, int* paramValues) {
+   uint8_t paramStartPos = 0;
    uint8_t numOfFaultDescriptions = 0;
    char** faultDescriptions;
    uint8_t i2cDataWord[8] = {0}; // I2C Data Word without CRC
@@ -167,9 +230,23 @@ void FAULT(char* paramStr, int* paramValues) {
       numOfFaultDescriptions = 31-numOfCFdescriptions;
       faultDescriptions = &controllerFaultDescription[0];
    }
-   else {
-
+   else if (strncmp(paramStr, "CLEAR", 5) == 0) {
+      paramStartPos = 6;
+      if (strncmp(&paramStr[paramStartPos], "ALL", 3) == 0) {
+         ramWrite(0xea, 0x20000000); // Clears all faults
+      }
+      else if (strncmp(&paramStr[paramStartPos], "COUNT", 5) == 0) {
+         ramWrite(0xea, 0x10000000); // Clears fault retry count
+      }
+      else {
+         printf("\r\nNothing to clear...");
+      }
    }
+   else {
+      printf("\r\nUNKNOWN FAULT COMMAND");
+      return;
+   }
+
    if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
       printf("\r\nHAL_I2C_Master_Transmit() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
    }
@@ -447,6 +524,21 @@ void RAM(char* paramStr, int* paramValues){
    }
 }
 
+void I2C(char* paramStr, int* paramValues) {
+   if (strncmp(paramStr, "GET", 3) == 0) {
+      printf("\r\nI2C Address:0x%02x", i2cAddress);
+   }
+   else if (strncmp(paramStr, "SET", 3) == 0) {
+      // Auto-detect base -> if address is hex, start with 0x... if decimal just type the decimal.
+      i2cAddress = ((uint16_t)strtol(&paramStr[3+1], NULL, 0))<<1;
+   }
+   else {
+      printf("\r\nUNKNOWN OR INCORRECT COMMAND FORMAT");
+      void promt();
+      return;
+   }
+}
+
 void SYS(char* paramStr, int* paramValues){
    if (strncmp(paramStr, "BN", 2) == 0) {
       printf("\r\nBuild no.:%d", BUILD);
@@ -478,9 +570,12 @@ struct command mcuCmds [] = {
   {"DRVOFF", 1, 4, {"YES", "NO"}, {1}, &DRVOFF},
   {"DIR", 1, 4, {"ABC", "ACB"}, {1}, &DIR},
   {"BRAKE", 1, 4, {"ON", "OFF"}, {1}, &BRAKE},
+  {"ALGO_CTRL1", 1, 4, {"SET", "GET"}, {0, 0}, &ALGO_CTRL1},
+  {"ALGO_CTRL2", 1, 4, {"SET", "GET"}, {0, 0}, &ALGO_CTRL2},
   {"FAULT", 2, 5, {"GDFS", "CFS"}, {0, 0}, &FAULT},
   {"EEPROM", 3, 6, {"READ", "WRITE"}, {0, 0}, &EEPROM},
   {"RAM", 2, 6, {"READ", "WRITE"}, {0, 0}, &RAM},
+  {"I2C", 2, 3, {"GET", "SET"}, {0, 0}, &I2C},
   {"SYS", 3, 4, {"BN", "BD", "VER"}, {0, 0, 0}, &SYS}
 };
 
