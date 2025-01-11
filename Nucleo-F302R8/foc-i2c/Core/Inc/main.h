@@ -67,9 +67,7 @@ void Error_Handler(void);
 #define LD2_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define ON 1
-#define OFF 0
-#define BLINKING 2
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -32,7 +32,6 @@
 #define COMMAND_PARAMS 10
 #define COMMAND_PARAM_LENGTH 10
 #define COMMAND_NAME_LENGTH 20
-#define NUMBERS_OF_MCU_COMMANDS 2
 ///////////////////////////////////////////////////////////////////////////////
 #define DATA_LENGTH_16 0x0
 #define DATA_LENGTH_32 0x1
@@ -65,88 +64,117 @@ struct command {
   int maxParamLength; // max param word length.
   char paramWords[COMMAND_PARAMS][COMMAND_PARAM_LENGTH];
   int paramValues[COMMAND_PARAMS];  // to preserve the operation state...
-  void (*cmdFunction)(char*, int*); // the command support function...
+  void (*cmdFunction)(char*, struct command*); // the command support function...
+};
+
+enum binaryState {
+   OFF,
+   ON,
+   STATE
 };
 
 ///////////////////////////////////////////////////
 // Define cmd-line Command support functions below.
-
-void LED(char* paramStr, int* paramValues) {
-	//uint8_t led2 = paramValues[0];
-
-   if (strncmp(paramStr, "ON", 2) == 0) {
+void led(char* paramStr, struct command* pCmd) {
+   if (strncmp(paramStr, pCmd->paramWords[ON], strlen(pCmd->paramWords[ON])) == 0) {
       HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
-		paramValues[0] = 1;
-      //led2 = ON;
-      printf("\r\nLED ON");
+		pCmd->paramValues[0] = ON;
+      printf("\r\nled on");
 	}
-	else if (strncmp(paramStr, "OFF", 3) == 0) {
+	else if (strncmp(paramStr, pCmd->paramWords[OFF], strlen(pCmd->paramWords[OFF])) == 0) {
 	   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-		paramValues[0] = 0;
-      //led2 = OFF;
-      printf("\r\nLED OFF");
+	   pCmd->paramValues[0] = OFF;
+      printf("\r\nled off");
 	}
-	else if (strncmp(paramStr, "BLINK", 5) == 0) {
-      paramValues[0] = 2;
-
-      if (strncmp(&paramStr[6], "0", 3) != 0) {
-         // Blink interval to be used...
-		   paramValues[1] = atoi(&paramStr[6]);
-		   msValue = atoi(&paramStr[6]);
-         //led2 = BLINKING;
-		}
-		printf("\r\nLED BLINK %d", msValue);
+   else if (strncmp(paramStr, pCmd->paramWords[STATE], strlen(pCmd->paramWords[STATE])) == 0) {
+      printf("\r\nled state = %s", pCmd->paramWords[pCmd->paramValues[0]]);
    }
 	else {
-		printf("\r\nUNKNOWN LED COMMAND");
+		printf("\r\nUnknown led command");
 	}
    //return led2;
 }
 
-void DRVOFF(char* paramStr, int* paramValues) {
-   char cmdParameter;
-   cmdParameter = toupper((unsigned char) *paramStr);
-
-   if (cmdParameter == 'Y') {
+void drv(char* paramStr, struct command* pCmd) {
+   if (strncmp(paramStr, pCmd->paramWords[OFF], strlen(pCmd->paramWords[OFF])) == 0) {
       HAL_GPIO_WritePin(GPIOA, DRVOFF_Pin, GPIO_PIN_SET);
-      paramValues[0] = 1;
+      pCmd->paramValues[0] = OFF;
+   }
+   else if (strncmp(paramStr, pCmd->paramWords[ON], strlen(pCmd->paramWords[ON])) == 0) {
+      HAL_GPIO_WritePin(GPIOA, DRVOFF_Pin, GPIO_PIN_RESET);
+      pCmd->paramValues[0] = ON;
+   }
+   else if (strncmp(paramStr, pCmd->paramWords[STATE], strlen(pCmd->paramWords[STATE])) == 0) {
+         printf("\r\ndrv state = %s", pCmd->paramWords[pCmd->paramValues[0]]);
    }
    else {
-      HAL_GPIO_WritePin(GPIOA, DRVOFF_Pin, GPIO_PIN_RESET);
-      paramValues[0] = 0;
+      printf("\r\nUnknown drv command");
    }
 }
 
-void BRAKE(char* paramStr, int* paramValues) {
-   if (strncmp(paramStr, "ON", 2) == 0) {
-         printf("\r\nBRAKE ON!");
-         paramValues[0] = 1;
+void brk(char* paramStr, struct command* pCmd) {
+   if (strncmp(paramStr, pCmd->paramWords[ON], strlen(pCmd->paramWords[ON])) == 0) {
+         printf("\r\nBrake ON!");
+         pCmd->paramValues[0] = ON;
          HAL_GPIO_WritePin(GPIOA, BRAKE_Pin, GPIO_PIN_SET);
       }
-      else if (strncmp(paramStr, "OFF", 3) == 0) {
-         printf("\r\nBRAKE OFF!");
-         paramValues[0] = 0;
+      else if (strncmp(paramStr, pCmd->paramWords[OFF], strlen(pCmd->paramWords[OFF])) == 0) {
+         printf("\r\nBrake OFF!");
+         pCmd->paramValues[0] = OFF;
          HAL_GPIO_WritePin(GPIOA, BRAKE_Pin, GPIO_PIN_RESET);
       }
+      else if (strncmp(paramStr, pCmd->paramWords[STATE], strlen(pCmd->paramWords[STATE])) == 0) {
+            printf("\r\nbrk state = %s", pCmd->paramWords[pCmd->paramValues[0]]);
+      }
       else {
-         printf("\r\nUNKNOWN BRAKE COMMAND");
+         printf("\r\nUnknown drv command");
       }
 }
 
-void DIR(char* paramStr, int* paramValues) {
-   if (strncmp(paramStr, "ABC", 3) == 0) {
-            printf("\r\nDIR High -> Phase sequence is A->B->C");
-            paramValues[0] = 1;
-            HAL_GPIO_WritePin(GPIOA, DIR_Pin, GPIO_PIN_SET);
+enum dirState {
+   ABC,
+   ACB
+};
+
+void dir(char* paramStr, struct command* pCmd) {
+   if (strncmp(paramStr, pCmd->paramWords[ABC], strlen(pCmd->paramWords[ABC])) == 0) {
+      printf("\r\nDIR pin high -> Phase sequence is A->B->C");
+      pCmd->paramValues[0] = ABC;
+      HAL_GPIO_WritePin(GPIOA, DIR_Pin, GPIO_PIN_SET);
    }
-   else if (strncmp(paramStr, "ACB", 3) == 0) {
-      printf("\r\nDIR Low -> Phase sequence is A->C->B");
-      paramValues[0] = 1;
+   else if (strncmp(paramStr, pCmd->paramWords[ACB], strlen(pCmd->paramWords[ACB])) == 0) {
+      printf("\r\nDIR pin low -> Phase sequence is A->C->B");
+      pCmd->paramValues[0] = ACB;
       HAL_GPIO_WritePin(GPIOA, DIR_Pin, GPIO_PIN_RESET);
    }
-   else {
-      printf("\r\nUNKNOWN DIR COMMAND");
+   else if (strncmp(paramStr, pCmd->paramWords[STATE], strlen(pCmd->paramWords[STATE])) == 0) {
+         printf("\r\ndrv state = %s", pCmd->paramWords[pCmd->paramValues[0]]);
    }
+   else {
+      printf("\r\nUnknown dir command");
+   }
+}
+
+void i2c(char* paramStr, struct command* pCmd) {
+   if (strncmp(paramStr, "get", 3) == 0) {
+      printf("\r\nI2C Address:0x%02x", i2cAddress);
+   }
+   else if (strncmp(paramStr, "set", 3) == 0) {
+      // Auto-detect base -> if address is hex, start with 0x... if decimal just type the decimal.
+      i2cAddress = ((uint16_t)strtol(&paramStr[3+1], NULL, 0))<<1;
+      printf("\r\nI2C Address = 0x%02x", i2cAddress);
+   }
+   else {
+      printf("\r\nUnknown i2c command");
+      void promt();
+      return;
+   }
+}
+
+void sys(char* paramStr, struct command* pCmd){
+   printf("\r\nBuild no.:%d", BUILD);
+   printf("\r\nBuild date: %s", BUILD_DATE_AND_TIME);
+   printf("\r\nVersion:%d.%d", MAJOR_VERSION, MINOR_VERSION);
 }
 
 void ramWrite(uint8_t lowPartRegAddr, uint32_t regValue) {
@@ -168,7 +196,7 @@ void ramWrite(uint8_t lowPartRegAddr, uint32_t regValue) {
    }
 }
 
-void ALGO_CTRL1(char* paramStr, int* paramValues) {
+void ALGO_CTRL1(char* paramStr, struct command* pCmd) {
    uint8_t paramStartPos = 0;
 
    if (strncmp(paramStr, "SET", 3) == 0) {
@@ -189,7 +217,7 @@ void ALGO_CTRL1(char* paramStr, int* paramValues) {
    }
 }
 
-void ALGO_CTRL2(char* paramStr, int* paramValues) {
+void ALGO_CTRL2(char* paramStr, struct command* pCmd) {
    uint8_t paramStartPos = 0;
 
    if (strncmp(paramStr, "SET", 3) == 0) {
@@ -210,67 +238,7 @@ void ALGO_CTRL2(char* paramStr, int* paramValues) {
    }
 }
 
-void FAULT(char* paramStr, int* paramValues) {
-   uint8_t paramStartPos = 0;
-   uint8_t numOfFaultDescriptions = 0;
-   char** faultDescriptions;
-   uint8_t i2cDataWord[8] = {0}; // I2C Data Word without CRC
-   uint32_t ControllerFaultStatus = 0;
-   i2cDataWord[0] = (DATA_LENGTH_32 << DATA_LEN_POS);
-   i2cDataWord[0] |= (READ_OPERATION << RW_OPERATION_BIT_POS);
-   i2cDataWord[1] = 0; // we know that the most significant part of the register address is 0x00
-
-   if (strncmp(paramStr, "GDFS", 4) == 0) {
-      i2cDataWord[2] = 0xe0;
-      numOfFaultDescriptions = 31-numOfGDFdescriptions;
-      faultDescriptions = &gateDriveFaultDescription[0];
-   }
-   else if (strncmp(paramStr, "CFS", 3) == 0) {
-      i2cDataWord[2] = 0xe4;
-      numOfFaultDescriptions = 31-numOfCFdescriptions;
-      faultDescriptions = &controllerFaultDescription[0];
-   }
-   else if (strncmp(paramStr, "CLEAR", 5) == 0) {
-      paramStartPos = 6;
-      if (strncmp(&paramStr[paramStartPos], "ALL", 3) == 0) {
-         ramWrite(0xea, 0x20000000); // Clears all faults
-      }
-      else if (strncmp(&paramStr[paramStartPos], "COUNT", 5) == 0) {
-         ramWrite(0xea, 0x10000000); // Clears fault retry count
-      }
-      else {
-         printf("\r\nNothing to clear...");
-      }
-   }
-   else {
-      printf("\r\nUNKNOWN FAULT COMMAND");
-      return;
-   }
-
-   if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
-      printf("\r\nHAL_I2C_Master_Transmit() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
-   }
-   else {
-      if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
-         printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
-      }
-      else {
-         memcpy(&ControllerFaultStatus, &i2cDataWord[4], 4);
-
-         for (int i = 31; i >= numOfFaultDescriptions; i--) {
-            if (((ControllerFaultStatus >> i) & 0x1) == 0) {
-               printf("\r\nNO %s", faultDescriptions[31-i]);
-            }
-            else {
-               printf("\r\n%s", faultDescriptions[31-i]);
-            }
-         }
-         printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
-      }
-   }
-}
-
-void EEPROM(char* paramStr, int* paramValues) {
+void EEPROM(char* paramStr, struct command* pCmd) {
    // IN PROGRESS...
    uint8_t paramStartPos = 0;
    uint8_t i2cDataWord[8] = {0}; // I2C Data Word without CRC
@@ -461,7 +429,7 @@ void EEPROM(char* paramStr, int* paramValues) {
    }
 }
 
-void RAM(char* paramStr, int* paramValues){
+void RAM(char* paramStr, struct command* pCmd){
    uint8_t paramStartPos = 0;
    uint8_t i2cDataWord[8] = {0}; // I2C Data Word without CRC
    i2cDataWord[0] = (DATA_LENGTH_32 << DATA_LEN_POS);
@@ -491,67 +459,108 @@ void RAM(char* paramStr, int* paramValues){
             }
             printf("\r\nDone!");
          }
-         else {
-            for (int i = 0; sizeof(ramAddr)/2; i++) {
-               if (strncmp(&paramStr[paramStartPos], volatileRegNames[i], strlen(volatileRegNames[i])) == 0) {
-                  printf("\r\nFound Register name: %s & index: %d", volatileRegNames[i], i);
-                  i2cDataWord[1] = (ramAddr[i] >> 8)&(0xff);
-                  i2cDataWord[2] = (ramAddr[i])&(0xff);
-                  paramStartPos += strlen(volatileRegNames[i]);
-                  break;
+         else if (strncmp(&paramStr[paramStartPos], "FAULT", 5) == 0) {
+            paramStartPos += 6;
+            uint8_t numOfFaultDescriptions = 0;
+            uint32_t ControllerFaultStatus = 0;
+            char** faultDescriptions;
+            /****
+            if (strncmp(&paramStr[paramStartPos], "CLEAR", 5) == 0) {
+               paramStartPos = 6;
+               if (strncmp(&paramStr[paramStartPos], "ALL", 3) == 0) {
+                  ramWrite(0xea, 0x20000000); // Clears all faults
+               }
+               else if (strncmp(&paramStr[paramStartPos], "COUNT", 5) == 0) {
+                  ramWrite(0xea, 0x10000000); // Clears fault retry count
+               }
+               else {
+                  printf("\r\nNothing to clear...");
                }
             }
-            if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, HAL_MAX_DELAY) != HAL_OK) {
-            //if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, HAL_MAX_DELAY) != HAL_OK) {
+            else
+            ****/
+            if (strncmp(&paramStr[paramStartPos], "GATE", 4) == 0) {
+               i2cDataWord[2] = 0xe0;
+               numOfFaultDescriptions = 31-numOfGDFdescriptions;
+               faultDescriptions = &gateDriveFaultDescription[0];
+            }
+            else if (strncmp(&paramStr[paramStartPos], "CTRL", 4) == 0) {
+               i2cDataWord[2] = 0xe4;
+               numOfFaultDescriptions = 31-numOfCFdescriptions;
+               faultDescriptions = &controllerFaultDescription[0];
+            }
+            else {
+               printf("\r\nUNKNOWN FAULT COMMAND");
+               return;
+            }
+
+            if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
                printf("\r\nHAL_I2C_Master_Transmit() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
             }
             else {
-               if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, HAL_MAX_DELAY) != HAL_OK) {
-               //if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, HAL_MAX_DELAY) != HAL_OK) {
+               if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, 1000) != HAL_OK) {
                   printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
                }
                else {
+                  memcpy(&ControllerFaultStatus, &i2cDataWord[4], 4);
+
+                  for (int i = 31; i >= numOfFaultDescriptions; i--) {
+                     if (((ControllerFaultStatus >> i) & 0x1) == 0) {
+                        printf("\r\nNO %s", faultDescriptions[31-i]);
+                     }
+                     else {
+                        printf("\r\n%s", faultDescriptions[31-i]);
+                     }
+                  }
                   printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
                }
             }
          }
+         else {
+            int valideReg = 0;
+            for (int i = 0; i < sizeof(ramAddr)/2; i++) {
+               if (strncmp(&paramStr[paramStartPos], volatileRegNames[i], strlen(volatileRegNames[i])) == 0) {
+                  printf("\r\nFound Register name: %s & index: %d", volatileRegNames[i], i);
+                  i2cDataWord[1] = (ramAddr[i] >> 8)&(0xff);
+                  i2cDataWord[2] = (ramAddr[i])&(0xff);
+                  valideReg = strlen(volatileRegNames[i]);
+                  //paramStartPos += strlen(volatileRegNames[i]);
+                  break;
+               }
+            }
+            if (valideReg != 0) {
+               if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, HAL_MAX_DELAY) != HAL_OK) {
+               //if (HAL_I2C_Master_Transmit(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[0], 3, HAL_MAX_DELAY) != HAL_OK) {
+                  printf("\r\nHAL_I2C_Master_Transmit() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+               }
+               else {
+                  if (HAL_I2C_Master_Receive(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[4], 4, HAL_MAX_DELAY) != HAL_OK) {
+                  //if (HAL_I2C_Master_Receive(&hi2c1, 0x2, (uint8_t*)&i2cDataWord[4], 4, HAL_MAX_DELAY) != HAL_OK) {
+                     printf("\r\nHAL_I2C_Master_Receive() FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+                  }
+                  else {
+                     printf("\r\nData read:0x%02x%02x%02x%02x at Addr.: 0x%02x%02x", i2cDataWord[7],i2cDataWord[6], i2cDataWord[5], i2cDataWord[4], i2cDataWord[1], i2cDataWord[2]);
+                  }
+               }
+            }
+            else {
+               printf("\r\nVolatile register %s not recognized.", &paramStr[paramStartPos]);
+            }
+         }
       }
-   }
+   } // READ END
    else {
       printf("\r\nUNKNOWN OR INCORRECT COMMAND FORMAT");
       void promt();
       return;
-   }
-}
-
-void I2C(char* paramStr, int* paramValues) {
-   if (strncmp(paramStr, "GET", 3) == 0) {
-      printf("\r\nI2C Address:0x%02x", i2cAddress);
-   }
-   else if (strncmp(paramStr, "SET", 3) == 0) {
-      // Auto-detect base -> if address is hex, start with 0x... if decimal just type the decimal.
-      i2cAddress = ((uint16_t)strtol(&paramStr[3+1], NULL, 0))<<1;
-   }
-   else {
-      printf("\r\nUNKNOWN OR INCORRECT COMMAND FORMAT");
-      void promt();
-      return;
-   }
-}
-
-void SYS(char* paramStr, int* paramValues){
-   if (strncmp(paramStr, "BN", 2) == 0) {
-      printf("\r\nBuild no.:%d", BUILD);
-   }
-   else if (strncmp(paramStr, "BD", 2) == 0) {
-      printf("\r\nBuild date: %s", BUILD_DATE_AND_TIME);
-   }
-   else if (strncmp(paramStr, "VER", 2) == 0) {
-      printf("\r\nVersion:%d.%d", MAJOR_VERSION, MINOR_VERSION);
    }
 }
 
 /**
+#define COMMAND_PARAMS 10
+#define COMMAND_PARAM_LENGTH 10
+#define COMMAND_NAME_LENGTH 20
+
 // The cmd-line Command structure
 struct command {
   char name[COMMAND_NAME_LENGTH];  // the command name
@@ -566,17 +575,17 @@ struct command {
 
 // Command array initialization
 struct command mcuCmds [] = {
-  {"LED", 2, 6, {"ON", "OFF", "BLINK", "HELP"}, {0, 500}, &LED},
-  {"DRVOFF", 1, 4, {"YES", "NO"}, {1}, &DRVOFF},
-  {"DIR", 1, 4, {"ABC", "ACB"}, {1}, &DIR},
-  {"BRAKE", 1, 4, {"ON", "OFF"}, {1}, &BRAKE},
+  {"led", 3, 6, {"off", "on", "state"}, {0}, &led},
+  {"drv", 3, 6, {"off", "on", "state"}, {0}, &drv},
+  {"dir", 3, 6, {"abc", "acb", "state"}, {0}, &dir},
+  {"brk", 3, 6, {"off", "on", "state"}, {0}, &brk},
+  {"i2c", 2, 4, {"get", "set"}, {0}, &i2c},
+  {"sys", 0, 0, {"__"}, {0}, &sys},
   {"ALGO_CTRL1", 1, 4, {"SET", "GET"}, {0, 0}, &ALGO_CTRL1},
   {"ALGO_CTRL2", 1, 4, {"SET", "GET"}, {0, 0}, &ALGO_CTRL2},
-  {"FAULT", 2, 5, {"GDFS", "CFS"}, {0, 0}, &FAULT},
+//  {"FAULT", 2, 5, {"GDFS", "CFS"}, {0, 0}, &FAULT},
   {"EEPROM", 3, 6, {"READ", "WRITE"}, {0, 0}, &EEPROM},
-  {"RAM", 2, 6, {"READ", "WRITE"}, {0, 0}, &RAM},
-  {"I2C", 2, 3, {"GET", "SET"}, {0, 0}, &I2C},
-  {"SYS", 3, 4, {"BN", "BD", "VER"}, {0, 0, 0}, &SYS}
+  {"RAM", 2, 6, {"READ", "WRITE"}, {0, 0}, &RAM}
 };
 
 void promt() {
@@ -593,19 +602,16 @@ uint8_t executeCmd(char *termInput, int cmdLength) {
  	  if (strncmp(mcuCmds[i].name, termInput, strlen(mcuCmds[i].name)) == 0) {
  	     if (strlen(mcuCmds[i].name) == strlen(termInput)) {
  	        // Single word command!
-
+ 	       mcuCmds[i].cmdFunction((char*)&termInput[0], (struct command*) &mcuCmds[i]);
  	     }
  	     else {
- 	       mcuCmds[i].cmdFunction((char*)&termInput[strlen(mcuCmds[i].name)+1], (int*) &mcuCmds[i].paramValues);
+ 	       //mcuCmds[i].cmdFunction((char*)&termInput[strlen(mcuCmds[i].name)+1], (int*) &mcuCmds[i].paramValues);
+ 	       mcuCmds[i].cmdFunction((char*)&termInput[strlen(mcuCmds[i].name)+1], (struct command*) &mcuCmds[i]);
  	     }
-
-
  		 /*** for test only...
  		 printf("\r\nparamValues[0]: %d, paramValues[1]: %d, paramValues[2]: %d",
                mcuCmds[i].paramValues[0],mcuCmds[i].paramValues[1],mcuCmds[i].paramValues[2]);
        ***/
-
-
  		 promt();
      	 return 0;
       }
