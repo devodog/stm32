@@ -7,12 +7,18 @@
 
 #ifndef INC_MCF8316A_H_
 #define INC_MCF8316A_H_
-uint16_t eeprom2MemAddr = 0x000000EA;
+uint16_t eeprom2MemAddr = 0x000000EA;  // This is a RAM address for the DEVICE_CONTROL Register
+// The 32 bit content of the DEVICE_CONTROL Register manages many device
+// operations like reading and writing to the EEPROM in addition to Clear
+// the Fault indication
+// MAKE A FUNCTION TO SUPPORT THIS ...
+//
 //                        READ EEPROM  WRITE EEPROM
-uint32_t eeprom2MemRW[] = {0x40000000, 0x8A500000};
+uint32_t eeprom2MemRW[] = {0x40000000, 0x8A500000, 0x20000000};
 enum EEPROM_RW {
    READ_EEPROM = 0,
-   WRITE_EEPROM
+   WRITE_EEPROM,
+   CLR_FLT
 };
 
 // Register addresses
@@ -45,10 +51,13 @@ uint16_t eepromAddr[] = {
 
 // Recommended Default Register Values
 uint32_t eepromRegValues[] = {
-   0x64738C20, // ISD_CONFIG,
+   0x64738C20, // ISD_CONFIG,       (0110 0100 0111 0011 1000 1100 0010 0000)
    0x28200000, // REV_DRIVE_CONFIG,
-   0x0B6807D0, // MOTOR_STARTUP1,
-   0x2306600C, // MOTOR_STARTUP2,
+                                 // PARITY | MTR_STARTUP | ALIGN_SLOW_RAMP_RATE | ALIGN_TIME | ALIGN_OR_SLOW_CURRENT_ILIMIT | IPD_CLK_FREQ | IPD_CURR_THR | IPD_RLS_MODE | IPD_ADV_ANGLE | IPD_REPEAT | OL_ILIMIT_CONFIG | IQ_RAMP_EN | ACTIVE_BRAKE_EN | REV_DRV_CONFIG
+                                 //   0          00               0 101              1 011               0 100                     0 00          00 011          1            11               01              0               0              0                   0
+                                 //                                                                                                              = 1A should be 1.25A or 1.5A...
+   0x0B6807D0, // MOTOR_STARTUP1,   (0000 1011 0110 1000 0000 0111 1101 0000)
+   0x2306600C, // MOTOR_STARTUP2,   (0010 0011 0000 0110 0110 0000 0000 1100)
    0x0D3201B5, // CLOSED_LOOP1,
    0x1BAD0000, // CLOSED_LOOP2,
    0x00000000, // CLOSED_LOOP3,
@@ -56,14 +65,14 @@ uint32_t eepromRegValues[] = {
    0x00000000, // SPEED_PROFILES1,
    0x00000000, // SPEED_PROFILES2,
    0x00000000, // SPEED_PROFILES3,
-   0x000D0000, // SPEED_PROFILES4,
+   0x000D0000, // SPEED_PROFILES4,  (0000 0000 0000 1101 0000 0000 0000 0000) clamp speed ??? 0001 1010 = 26 => 26/255 -> ~10% off max speed (?)
    0x00000000, // SPEED_PROFILES5,
    0x00000000, // SPEED_PROFILES6,
    0x3EC80106, // FAULT_CONFIG1,
    0x70D00888, // FAULT_CONFIG2,
    0x00000000, // PIN_CONFIG,
    0x00101462, // DEVICE_CONFIG1, // 31-28 = 0, 27-24 = 0, 23-20 = 1 => i2c ADDRESS = 0x1
-   0x4000F00F, // DEVICE_CONFIG2,
+   0x4000F00F, // DEVICE_CONFIG2, // 
    0x41C01F00, // PERI_CONFIG1,
    0x1C450100, // GD_CONFIG1,
    0x00200000, // GD_CONFIG2,
@@ -71,11 +80,16 @@ uint32_t eepromRegValues[] = {
    0x000001A7  // INT_ALGO_2
 };
 
+// EEPROM data originated from the MCF8316A Tuning Guide (sllu335a.pdf)
+// modification #1: in DEVICE_CONFIG1 for i2c ADDRESS (bitpos:26-20)
+// modification #2: in MOTOR_STARTUP1 for IPD_CURR_THR (bitpos:13-09)
+//
 uint32_t eepromRegValues2[] = {
-   0x44638C20, // ISD_CONFIG,
+   0x44638C20, // ISD_CONFIG,       (0100 0100 0110 0011 1000 1100 0010 0000)
    0x283AF064, // REV_DRIVE_CONFIG,
-   0x0B6807D0, // MOTOR_STARTUP1,
-   0x23066000, // MOTOR_STARTUP2,
+//   0x0B6807D0, // MOTOR_STARTUP1,   (0000 1011 0110 1000 0000 0111 1101 0000)
+   0x0B680BD0, // MOTOR_STARTUP1,   (0000 1011 0110 1000 0000 1001 1101 0000) alt. 9->B from 1.25A to 1.5A
+   0x23066000, // MOTOR_STARTUP2,   (0010 0011 0000 0110 0110 0000 0000 0000)
    0x0C3181B0, // CLOSED_LOOP1,
    0x1AAD0000, // CLOSED_LOOP2,
    0x00000000, // CLOSED_LOOP3,
@@ -89,7 +103,8 @@ uint32_t eepromRegValues2[] = {
    0x5FE80206, // FAULT_CONFIG1,
    0x74000000, // FAULT_CONFIG2,
    0x00000000, // PIN_CONFIG,
-   0x00000000, // DEVICE_CONFIG1, // 20 - 26 i2c ADDRESS
+//   0x00000000, // DEVICE_CONFIG1, // 20 - 26 i2c ADDRESS
+   0x00100000, // DEVICE_CONFIG1, // 20 - 26 i2c ADDRESS
    0x0000B000, // DEVICE_CONFIG2,
    0x40000000, // PERI_CONFIG1,
    0x00000100, // GD_CONFIG1,
@@ -199,53 +214,103 @@ uint16_t ramAddr[] = {
    0x0752,
    0x0756
 };
+
 char* volatileRegNames[] = {
    "GATE_DRIVER_FAULT_STATUS",   // Fault Status Register GATE_DRIVER_FAULT_STATUS Register(Address = E0h) [Reset = 00000000h]
    "CONTROLLER_FAULT_STATUS",    // Fault Status Register CONTROLLER_FAULT_STATUS Register(Address = E2h) [Reset = 00000000h]
-   "ALGO_STATUS",                // System Status Register ALGO_STATUS Register (Address = E4h)[Reset = 00000000h]
-   "MTR_PARAMS",                 // System Status Register MTR_PARAMS Register (Address = E6h)[Reset = 00000000h]
-   "ALGO_STATUS_MPET",           // System Status Register ALGO_STATUS_MPET Register (Address =E8h) [Reset = 00000000h]
-   "DEV_CTRL",                   // DEVICE_CONTROL Register R/W (Address = EAh) [Reset = 00000000h]
-   "ALGO_CTRL1",                 // Algorithm Control Register ALGO_CTRL1 Register R/W (Address = ECh)[Reset = 00000000h]
-   "ALGO_CTRL2",                 // Algorithm Control Register ALGO_CTRL2 Register R/W (Address = EEh)[Reset = 00000000h]
-   "CURRENT_PI",                 // Current PI Controller Register CURRENT_PI Register (Address = F0h)[Reset = 00000000h]
-   "SPEED_PI",                   // Speed PI Controller Register SPEED_PI Register (Address = F2h) [Reset = 00000000h]
-   "ALGORITHM_STATE",            // Current Algorithm State Register ALGORITHM_STATE Register (Address = 210h) [Reset = 00000000h]
-   "FG_SPEED_FDBK",              // FG Speed Feedback Register FG_SPEED_FDBK Register (Address = 216h) [Reset = 00000000h]
-   "BUS_CURRENT",                // Calculated DC Bus Current Register BUS_CURRENT Register (Address = 410h) [Reset = 00000000h]
-   "PHASE_CURRENT_A",            // Measured Current on Phase A Register PHASE_CURRENT_A Register (Address = 43Eh) [Reset = 00000000h]
-   "PHASE_CURRENT_B",            // Measured Current on Phase B Register PHASE_CURRENT_B Register (Address = 440h) [Reset = 00000000h]
-   "PHASE_CURRENT_C",            // Measured Current on Phase C Register PHASE_CURRENT_C Register (Address = 442h) [Reset = 00000000h]
-   "CSA_GAIN_FEEDBACK",          // CSA Gain Register CSA_GAIN_FEEDBACK Register (Address = 466h) [Reset = 00000000h]
+   "ALGO_STATUS",       // System Status Register ALGO_STATUS Register (Address = E4h)[Reset = 00000000h]
+   "MTR_PARAMS",        // System Status Register MTR_PARAMS Register (Address = E6h)[Reset = 00000000h]
+   "ALGO_STATUS_MPET",  // System Status Register ALGO_STATUS_MPET Register (Address =E8h) [Reset = 00000000h]
+   "DEV_CTRL",          // DEVICE_CONTROL Register R/W (Address = EAh) [Reset = 00000000h]
+   "ALGO_CTRL1",        // Algorithm Control Register ALGO_CTRL1 Register R/W (Address = ECh)[Reset = 00000000h]
+   "ALGO_CTRL2",        // Algorithm Control Register ALGO_CTRL2 Register R/W (Address = EEh)[Reset = 00000000h]
+   "CURRENT_PI",        // Current PI Controller Register CURRENT_PI Register (Address = F0h)[Reset = 00000000h]
+   "SPEED_PI",          // Speed PI Controller Register SPEED_PI Register (Address = F2h) [Reset = 00000000h]
+   "ALGORITHM_STATE",   // Current Algorithm State Register ALGORITHM_STATE Register (Address = 210h) [Reset = 00000000h]
+   "FG_SPEED_FDBK",     // FG Speed Feedback Register FG_SPEED_FDBK Register (Address = 216h) [Reset = 00000000h]
+   "BUS_CURRENT",       // Calculated DC Bus Current Register BUS_CURRENT Register (Address = 410h) [Reset = 00000000h]
+   "PHASE_CURRENT_A",   // Measured Current on Phase A Register PHASE_CURRENT_A Register (Address = 43Eh) [Reset = 00000000h]
+   "PHASE_CURRENT_B",   // Measured Current on Phase B Register PHASE_CURRENT_B Register (Address = 440h) [Reset = 00000000h]
+   "PHASE_CURRENT_C",   // Measured Current on Phase C Register PHASE_CURRENT_C Register (Address = 442h) [Reset = 00000000h]
+   "CSA_GAIN_FEEDBACK", // CSA Gain Register CSA_GAIN_FEEDBACK Register (Address = 466h) [Reset = 00000000h]
    "VOLTAGE_GAIN_FEEDBACK",      // Voltage Gain Register VOLTAGE_GAIN_FEEDBACK Register (Address = 476h) [Reset = 00000000h]
-   "VM_VOLTAGE",                 // VM Voltage Register VM_VOLTAGE Register (Address = 478h) [Reset = 00000000h]
-   "PHASE_VOLTAGE_VA",           // Phase Voltage Register PHASE_VOLTAGE_VA Register (Address = 47Eh) [Reset = 00000000h]
-   "PHASE_VOLTAGE_VB",           // Phase Voltage Register PHASE_VOLTAGE_VB Register (Address = 480h) [Reset = 00000000h]
-   "PHASE_VOLTAGE_VC",           // Phase Voltage Register PHASE_VOLTAGE_VC Register (Address = 482h) [Reset = 00000000h]
+   "VM_VOLTAGE",        // VM Voltage Register VM_VOLTAGE Register (Address = 478h) [Reset = 00000000h]
+   "PHASE_VOLTAGE_VA",  // Phase Voltage Register PHASE_VOLTAGE_VA Register (Address = 47Eh) [Reset = 00000000h]
+   "PHASE_VOLTAGE_VB",  // Phase Voltage Register PHASE_VOLTAGE_VB Register (Address = 480h) [Reset = 00000000h]
+   "PHASE_VOLTAGE_VC",  // Phase Voltage Register PHASE_VOLTAGE_VC Register (Address = 482h) [Reset = 00000000h]
    "SIN_COMMUTATION_ANGLE",      // Sine of Commutation Angle SIN_COMMUTATION_ANGLE Register (Address = 4BAh) [Reset = 00000000h]
    "COS_COMMUTATION_ANGLE",      // Cosine of Commutation Angle COS_COMMUTATION_ANGLE Register (Address = 4BCh) [Reset = 00000000h]
-   "IALPHA",                     // IALPHA Current Register IALPHA Register (Address = 4D4h) [Reset = 00000000h]
-   "IBETA",                      // IBETA Current Register IBETA Register (Address = 4D6h) [Reset = 00000000h]
-   "VALPHA",                     // VALPHA Voltage Register VALPHA Register (Address = 4D8h) [Reset = 00000000h]
-   "VBETA",                      // VBETA Voltage Register VBETA Register (Address = 4DAh) [Reset = 00000000h]
-   "ID",                         // Measured d-axis Current Register ID Register (Address = 4E4h) [Reset = 00000000h]
-   "IQ",                         // Measured q-axis Current Register IQ Register (Address = 4E6h) [Reset = 00000000h]
-   "VD",                         // VD Voltage Register VD Register (Address = 4E8h) [Reset = 00000000h]
-   "VQ",                         // VQ Voltage Register VQ Register (Address = 4EAh) [Reset = 00000000h]
-   "IQ_REF_ROTOR_ALIGN",         // Align Current Reference IQ_REF_ROTOR_ALIGN Register (Address = 524h) [Reset = 00000000h]
+   "IALPHA",            // IALPHA Current Register IALPHA Register (Address = 4D4h) [Reset = 00000000h]
+   "IBETA",             // IBETA Current Register IBETA Register (Address = 4D6h) [Reset = 00000000h]
+   "VALPHA",            // VALPHA Voltage Register VALPHA Register (Address = 4D8h) [Reset = 00000000h]
+   "VBETA",             // VBETA Voltage Register VBETA Register (Address = 4DAh) [Reset = 00000000h]
+   "ID",                // Measured d-axis Current Register ID Register (Address = 4E4h) [Reset = 00000000h]
+   "IQ",                // Measured q-axis Current Register IQ Register (Address = 4E6h) [Reset = 00000000h]
+   "VD",                // VD Voltage Register VD Register (Address = 4E8h) [Reset = 00000000h]
+   "VQ",                // VQ Voltage Register VQ Register (Address = 4EAh) [Reset = 00000000h]
+   "IQ_REF_ROTOR_ALIGN",// Align Current Reference IQ_REF_ROTOR_ALIGN Register (Address = 524h) [Reset = 00000000h]
    "SPEED_REF_OPEN_LOOP",        // Open Loop Speed Register SPEED_REF_OPEN_LOOP Register (Address = 53Ah) [Reset = 00000000h]
-   "IQ_REF_OPEN_LOOP",           // Open Loop Current Reference IQ_REF_OPEN_LOOP Register (Address = 548h) [Reset = 00000000h]
+   "IQ_REF_OPEN_LOOP",  // Open Loop Current Reference IQ_REF_OPEN_LOOP Register (Address = 548h) [Reset = 00000000h]
    "SPEED_REF_CLOSED_LOOP",      // Speed Reference Register SPEED_REF_CLOSED_LOOP Register (Address = 5CCh) [Reset = 00000000h]
-   "ID_REF_CLOSED_LOOP",         // Reference for Current Loop Register ID_REF_CLOSED_LOOP Register (Address = 5FCh) [Reset = 00000000h]
-   "IQ_REF_CLOSED_LOOP",         // Reference for Current Loop Register IQ_REF_CLOSED_LOOP Register (Address = 5FEh) [Reset = 00000000h]
-   "ISD_STATE",                  // ISD State Register ISD_STATE Register (Address = 67Ah) [Reset = 00000000h]
-   "ISD_SPEED",                  // ISD Speed Register ISD_SPEED Register (Address = 684h) [Reset = 00000000h]
-   "IPD_STATE",                  // IPD State Register IPD_STATE Register (Address = 6B8h) [Reset = 00000000h]
-   "IPD_ANGLE",                  // Calculated IPD Angle Register IPD_ANGLE Register (Address = 6FCh) [Reset = 00000000h]
-   "ED",                         // Estimated BEMF EQ Register ED Register (Address = 742h) [Reset = 00000000h]
-   "EQ",                         // Estimated BEMF ED Register EQ Register (Address = 744h) [Reset = 00000000h]
-   "SPEED_FDBK",                 // Speed Feedback Register SPEED_FDBK Register (Address = 752h) [Reset = 00000000h]
+   "ID_REF_CLOSED_LOOP",// Reference for Current Loop Register ID_REF_CLOSED_LOOP Register (Address = 5FCh) [Reset = 00000000h]
+   "IQ_REF_CLOSED_LOOP",// Reference for Current Loop Register IQ_REF_CLOSED_LOOP Register (Address = 5FEh) [Reset = 00000000h]
+   "ISD_STATE",         // ISD State Register ISD_STATE Register (Address = 67Ah) [Reset = 00000000h]
+   "ISD_SPEED",         // ISD Speed Register ISD_SPEED Register (Address = 684h) [Reset = 00000000h]
+   "IPD_STATE",         // IPD State Register IPD_STATE Register (Address = 6B8h) [Reset = 00000000h]
+   "IPD_ANGLE",         // Calculated IPD Angle Register IPD_ANGLE Register (Address = 6FCh) [Reset = 00000000h]
+   "ED",                // Estimated BEMF EQ Register ED Register (Address = 742h) [Reset = 00000000h]
+   "EQ",                // Estimated BEMF ED Register EQ Register (Address = 744h) [Reset = 00000000h]
+   "SPEED_FDBK",        // Speed Feedback Register SPEED_FDBK Register (Address = 752h) [Reset = 00000000h]
    "THETA_EST"                   // Estimated Motor Position Register THETA_EST Register (Address = 756h) [Reset = 00000000h]
+};
+
+enum volatileRegisters {
+   GATE_DRIVER_FAULT_STATUS = 0,
+   CONTROLLER_FAULT_STATUS,
+   ALGO_STATUS,
+   MTR_PARAMS,
+   ALGO_STATUS_MPET,
+   DEV_CTRL,
+   ALGO_CTRL1,
+   ALGO_CTRL2,
+   CURRENT_PI,
+   SPEED_PI,
+   ALGORITHM_STATE,
+   FG_SPEED_FDBK,
+   BUS_CURRENT,
+   PHASE_CURRENT_A,
+   PHASE_CURRENT_B,
+   PHASE_CURRENT_C,
+   CSA_GAIN_FEEDBACK,
+   VOLTAGE_GAIN_FEEDBACK,
+   VM_VOLTAGE,
+   PHASE_VOLTAGE_VA,
+   PHASE_VOLTAGE_VB,
+   PHASE_VOLTAGE_VC,
+   SIN_COMMUTATION_ANGLE,
+   COS_COMMUTATION_ANGLE,
+   IALPHA,
+   IBETA,
+   VALPHA,
+   VBETA,
+   ID,
+   IQ,
+   VD,
+   VQ,
+   IQ_REF_ROTOR_ALIGN,
+   SPEED_REF_OPEN_LOOP,
+   IQ_REF_OPEN_LOOP,
+   SPEED_REF_CLOSED_LOOP,
+   ID_REF_CLOSED_LOOP,
+   IQ_REF_CLOSED_LOOP,
+   ISD_STATE,
+   ISD_SPEED,
+   IPD_STATE,
+   IPD_ANGLE,
+   ED,
+   EQ,
+   SPEED_FDBK,
+   THETA_EST
 };
 /******************************************************************************
 reg.addr. 0xe0    GATE_DRIVER_FAULT_STATUS Fault Status Register

@@ -23,11 +23,13 @@ i2c <get|set<i2c-addr[dec]>>
 sys
 - Listing the version and build information.
 
+clear flt
+- Clears all faults
 
 EEPROM <READ <ALL|reg-addr[hex]> | WRITE <DEFAULT1|DEFAULT2|reg.name <reg-value[hex]>>
 - Reading and writing data from/to the non-volatile EEPROM MCF8316A memory.
 
-RAM <READ <ALL|FAULT <GATE|CTRL>|volatile reg. name>>
+RAM <READ <ALL | FAULT <GATE|CTRL> | volatile reg. name>>
 - Reading data from the volatile MCF8316A memory.
 
 ## Algorithm control registers for debug - see data sheet for details.  
@@ -83,13 +85,13 @@ RAM <READ <ALL|FAULT <GATE|CTRL>|volatile reg. name>>
 -----------------------------------------------------------------  
  3 3 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0  
  1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0  
-|1|0|0|0|0|0|0|0|0|1|0|0|0|0|0|0|1|x|x|x|x|x|x|x|x|x|x|x|x|x|x|x|  
+|1|0|0|0|0|0|0|0|0|1|0|0|0|0|0|0|1|x|1|x|x|x|x|x|x|x|x|x|x|x|x|x|  
 
 OVERRIDE = 1  
 DIGITAL_SPEED_CTRL = 0x40 = 64  
 CLOSED_LOOP_DIS = 1  
 FORCE_ALIGN_EN = ?  
-FORCE_SLOW_FIRST_CYCLE_EN  
+FORCE_SLOW_FIRST_CYCLE_EN = 1  
 FORCE_IPD_EN  
 FORCE_ISD_EN  
 FORCE_ALIGN_ANGLE_SRC_SEL  
@@ -148,4 +150,41 @@ FORCE_IQ_REF_SPEED_LOOP_DIS
 [0] MPET_WRITE_SHADOW
 	- Write measured parameters to shadow register when set to 1b
 
-```
+```  
+## Default EEPROM content  
+The default EEPROM setup given in the data sheet mcf8316a.pdf do not give any indication of motor operation of the BULL RUNNING motor, and is listed below.  
+```  
+ISD_CONFIG       = 0x64738C20 = 0110 0100 0111 0011 1000 1100 0010 0000  
+REV_DRIVE_CONFIG = 0x28200000  
+MOTOR_STARTUP1   = 0x0B6807D0 = 0000 1011 0110 1000 0000 0111 1101 0000  
+                                                          |    |  
+                                                          [b13-b09 = IPD_CURR_THR = 0x3 = 1A]  
+```  
+which is assumed to be too low. Should try 0x4 or 0x5 which will set the 
+Initial Position Detection CURRent THReshold to 1.25A or 1.5A.  
+
+! THIS DID NOT CHANGE THE SITUATION, WHICH IS:  
+THE FOC CONTROLLER STARTS TO MEASURE RESISTANCE AND INDUCTION OF THE MOTOR AND THEREBY MAKING THE MOTOR ROTATE A COUPLE OF TURNS AND THE HALTS.
+```  
+MOTOR_STARTUP2   = 0x2306600C  
+CLOSED_LOOP1     = 0x0D3201B5  
+CLOSED_LOOP2     = 0x1BAD0000  
+CLOSED_LOOP3     = 0x00000000  
+CLOSED_LOOP4     = 0x00000000  
+SPEED_PROFILES1  = 0x00000000  
+SPEED_PROFILES2  = 0x00000000  
+SPEED_PROFILES3  = 0x00000000  
+SPEED_PROFILES4  = 0x000D0000  
+SPEED_PROFILES5  = 0x00000000  
+SPEED_PROFILES6  = 0x00000000  
+FAULT_CONFIG1    = 0x3EC80106  
+FAULT_CONFIG2    = 0x70D00888  
+PIN_CONFIG       = 0x00000000  
+DEVICE_CONFIG1   = 0x00101462  
+DEVICE_CONFIG2   = 0x4000F00F  
+PERI_CONFIG1     = 0x41C01F00  
+GD_CONFIG1       = 0x1C450100  
+GD_CONFIG2       = 0x00200000  
+INT_ALGO_1       = 0x2433407D  
+INT_ALGO_2       = 0x000001A7  
+```  

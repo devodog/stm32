@@ -195,7 +195,7 @@ void ramWrite(uint8_t lowPartRegAddr, uint32_t regValue) {
             i2cDataWord[6],i2cDataWord[5], i2cDataWord[4], i2cDataWord[3], i2cDataWord[1], i2cDataWord[2]);
    }
 }
-
+/**
 void ALGO_CTRL1(char* paramStr, struct command* pCmd) {
    uint8_t paramStartPos = 0;
 
@@ -237,7 +237,7 @@ void ALGO_CTRL2(char* paramStr, struct command* pCmd) {
       printf("\r\nUNKNOWN ALGO_CTRL2 COMMAND");
    }
 }
-
+**/
 void EEPROM(char* paramStr, struct command* pCmd) {
    // IN PROGRESS...
    uint8_t paramStartPos = 0;
@@ -441,7 +441,7 @@ void RAM(char* paramStr, struct command* pCmd){
       if ((paramStr[paramStartPos] >= 65 )&&(paramStr[paramStartPos] <= 90 )) {
          // List all eeprom locations...
          if (strncmp(&paramStr[paramStartPos], "ALL", 3) == 0) {
-            for (int i = 0; i < sizeof(ramAddr)/2; i++) {
+            for (int i = 0; i < sizeof(ramAddr)/2; i++) {  // dividing ramAddr by 2 since the sizeof counts bytes and the ramAddr is 16 bit...
                i2cDataWord[1] = (ramAddr[i] >> 8)&(0xff);
                i2cDataWord[2] = (ramAddr[i])&(0xff);
                if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 3, 1000) != HAL_OK) {
@@ -464,33 +464,21 @@ void RAM(char* paramStr, struct command* pCmd){
             uint8_t numOfFaultDescriptions = 0;
             uint32_t ControllerFaultStatus = 0;
             char** faultDescriptions;
-            /****
-            if (strncmp(&paramStr[paramStartPos], "CLEAR", 5) == 0) {
-               paramStartPos = 6;
-               if (strncmp(&paramStr[paramStartPos], "ALL", 3) == 0) {
-                  ramWrite(0xea, 0x20000000); // Clears all faults
-               }
-               else if (strncmp(&paramStr[paramStartPos], "COUNT", 5) == 0) {
-                  ramWrite(0xea, 0x10000000); // Clears fault retry count
-               }
-               else {
-                  printf("\r\nNothing to clear...");
-               }
-            }
-            else
-            ****/
+
             if (strncmp(&paramStr[paramStartPos], "GATE", 4) == 0) {
                i2cDataWord[2] = 0xe0;
                numOfFaultDescriptions = 31-numOfGDFdescriptions;
                faultDescriptions = &gateDriveFaultDescription[0];
+               printf("\r\nGATE_DRIVER_FAULT_STATUS:");
             }
             else if (strncmp(&paramStr[paramStartPos], "CTRL", 4) == 0) {
                i2cDataWord[2] = 0xe4;
                numOfFaultDescriptions = 31-numOfCFdescriptions;
                faultDescriptions = &controllerFaultDescription[0];
+               printf("\r\nCONTROLLER_FAULT_STATUS:");
             }
             else {
-               printf("\r\nUNKNOWN FAULT COMMAND");
+               printf("\r\nUnknown RAM READ FAULT command.\r\n");
                return;
             }
 
@@ -556,6 +544,49 @@ void RAM(char* paramStr, struct command* pCmd){
    }
 }
 
+void clear(char* paramStr, struct command* pCmd){
+
+   if (strncmp(paramStr, "flt", 3) == 0) {
+      printf("\r\nAttempt to clear the fault indication!\r\n");
+      ramWrite((uint8_t) ramAddr[DEV_CTRL], eeprom2MemRW[CLR_FLT]);
+      //ramWrite(0xea, 0x20000000); // Clears all faults
+
+      /****
+      if (strncmp(&paramStr[paramStartPos], "CLEAR", 5) == 0) {
+         paramStartPos = 6;
+         if (strncmp(&paramStr[paramStartPos], "ALL", 3) == 0) {
+            ramWrite(0xea, 0x20000000); // Clears all faults
+         }
+         else if (strncmp(&paramStr[paramStartPos], "COUNT", 5) == 0) {
+            ramWrite(0xea, 0x10000000); // Clears fault retry count
+         }
+         else {
+            printf("\r\nNothing to clear...");
+         }
+      }
+      else
+      ****/
+
+
+
+/****
+      i2cDataWord[0] |= (WRITE_OPERATION << RW_OPERATION_BIT_POS);
+      i2cDataWord[1] = (eeprom2MemAddr >> 8)&(0xff);
+      i2cDataWord[2] = (eeprom2MemAddr)&(0xff);
+      memcpy(&i2cDataWord[3], &eeprom2MemRW[CLR_FLT], 4);
+      //// TEST
+      // printf("\r\nI2C Data Word: "); for (int i = 0; i < 7; i++) {printf("0x%02x ", i2cDataWord[i]);}
+
+      if (HAL_I2C_Master_Transmit(&hi2c1, i2cAddress, (uint8_t*)&i2cDataWord[0], 7, 1000) != HAL_OK) {
+         printf("\r\nHAL_I2C_Master_Transmit for RAM WRITE FAILED! Error code: 0x%x\r\n", (unsigned int)hi2c1.ErrorCode);
+         return;
+      }
+      else {
+         printf("\r\nClearing fault OK!\r\n");
+      }
+*****/
+   }
+}
 /**
 #define COMMAND_PARAMS 10
 #define COMMAND_PARAM_LENGTH 10
@@ -581,9 +612,9 @@ struct command mcuCmds [] = {
   {"brk", 3, 6, {"off", "on", "state"}, {0}, &brk},
   {"i2c", 2, 4, {"get", "set"}, {0}, &i2c},
   {"sys", 0, 0, {"__"}, {0}, &sys},
-  {"ALGO_CTRL1", 1, 4, {"SET", "GET"}, {0, 0}, &ALGO_CTRL1},
-  {"ALGO_CTRL2", 1, 4, {"SET", "GET"}, {0, 0}, &ALGO_CTRL2},
-//  {"FAULT", 2, 5, {"GDFS", "CFS"}, {0, 0}, &FAULT},
+  {"clear", 1, 6, {"flt", "all"}, {0, 0}, &clear},
+//  {"ALGO_CTRL1", 1, 4, {"SET", "GET"}, {0, 0}, &ALGO_CTRL1},
+//  {"ALGO_CTRL2", 1, 4, {"SET", "GET"}, {0, 0}, &ALGO_CTRL2},
   {"EEPROM", 3, 6, {"READ", "WRITE"}, {0, 0}, &EEPROM},
   {"RAM", 2, 6, {"READ", "WRITE"}, {0, 0}, &RAM}
 };
