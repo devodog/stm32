@@ -4,7 +4,7 @@ This STM32 NUCLEO-F446RE software project is to support NUCLEO SHIELD Hardware d
 <img src="../docs/bldcDrvShield/pcbShield.png"  height="350">  
 
 ## The pin assignment used for the Nucleo Shield
-<img src="/../docs/bldcDrvShield/PinAssignment.png" height="350">  
+<img src="../docs/bldcDrvShield/PinAssignment.png" height="350">  
 
 
 ## Driver User interface
