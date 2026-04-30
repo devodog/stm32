@@ -23,6 +23,8 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include <string.h>
+#include "appver.h"
+#include "cmd.h"
 
 /* USER CODE END Includes */
 
@@ -73,6 +75,38 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
    uint16_t hallState = (GPIOB->IDR & 0x70) >> 4;
    printf("\r\nhall state = 0x%02x", hallState);
 }
+
+uint8_t UART1_rxBuffer = 0;
+uint8_t cmdComplete;
+char termInputBuffer[80];
+int bytesReceived = 0;
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+    //uint8_t UARTnewLine = 10;
+    if (UART1_rxBuffer == 13) {
+        //HAL_UART_Transmit(&huart1, &UARTnewLine, 1, 100);
+        if (bytesReceived > 0) {
+            //HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+
+            executeCmd(&termInputBuffer[0], bytesReceived);
+            bytesReceived = 0;
+            memset(termInputBuffer, 0, 80);
+            //HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+        } else {
+            promt();
+        }
+        HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
+        return;
+    }
+    HAL_UART_Transmit(&huart1, &UART1_rxBuffer, 1, 100);
+    termInputBuffer[bytesReceived] = UART1_rxBuffer;
+    bytesReceived++;
+    // re-trigger the interrupt...
+    HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
+}
+
+
+
 /* USER CODE END 0 */
 
 /**
@@ -83,7 +117,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	uint16_t adcValue;
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -107,20 +141,23 @@ int main(void)
   MX_ADC1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
+
   HAL_ADC_Start(&hadc1);
+  printf("\r\n\r\nCommand line ready...");
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */;
-    adcValue = HAL_ADC_GetValue(&hadc1);
-	  printf("\r\n\r\nReading ADC value to be: %d", adcValue);
-	  HAL_Delay(5000);
+     /* USER CODE END WHILE */
+
+     /* USER CODE BEGIN 3 */
+     __WFI(); // optional: wait for interrupt to save power
   }
+
   /* USER CODE END 3 */
 }
 
@@ -310,11 +347,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
                           |GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : B1_Pin */
-  GPIO_InitStruct.Pin = B1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PA0 PA1 PA2 PA3
                            PA4 PA5 */
@@ -325,18 +359,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB10 */
-  GPIO_InitStruct.Pin = GPIO_PIN_10;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
   /*Configure GPIO pins : PB4 PB5 PB6 */
   GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB8 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/

@@ -15,3 +15,9 @@ The potentiometer will control the motor speed by adusting the PWM's duty cycle.
 
 ### Serial com port 
 The Driver software provides also å command line interface that allows the user to set the motor speed.  
+
+### Hall sensors input
+
+### Gate signals to three phase inverter
+
+ 
