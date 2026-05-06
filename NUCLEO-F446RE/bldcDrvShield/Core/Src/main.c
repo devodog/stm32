@@ -46,6 +46,8 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 
+TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
@@ -57,6 +59,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 int _write(int fd, char *ptr, int len) {
@@ -70,9 +73,89 @@ int _write(int fd, char *ptr, int len) {
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+//
+// Using the capital letters A, B, and C as notation for describing the three
+// phases, motivated by the notation used in the DRV8300 documentation.
+// In addition the abbreviation HS = High Side transistor of the each
+// phase and LS = Low Side transistor of each phase.
+
+// The three phase inverter is implemented 6 mosfet transistors, which in total
+// can have only 6 conduction states - Six Step commutation
+// These are as follows:
+// 1. A-HS & B-LS
+// 2. A-HS & C-LS
+// 3. B-HS & C-LS
+// 4. B-HS & A-LS
+// 5. C-HS & A-LS
+// 6. C-HS & B-LS
+//
+// Hardware driver to be used have the following interface
+/******************************************
+-------------------------------------------
+|   1  |   2  |   3  |   4  |   5  |   6  |
+| A-HS | A-LS | B-HS | B-LS | C-HS | C-LS |
+| PA0  | PA1  | PA2  | PA3  | PA4  | PA5  | STATE
+-------------------------------------------------
+    1      0      0      1      0      0      1 (0x09) using that PA0 is the least significant bit.
+    1      0      0      0      0      1      2 (0x21)
+    0      0      1      0      0      1      3 (0x24)
+    0      1      1      0      0      0      4 (0x06)
+    0      1      0      0      1      0      5 (0x12)
+    0      0      0      1      1      0      6 (0x18)
+
+*******************************************/
+uint8_t gateDriverStates[6] = {0x09, 0x21, 0x24, 0x06, 0x12, 0x18};
+
+/******************************************************************************
+ * We will need a gate-signal distribution plan or algorithm.
+ * The gates on the high side transistors will be sourced by a PWM signal,
+ * while the gates on the low side transistor will either on or off depending
+ * on the commutation state.
+ *
+ * We'll assign PA0, PA2 and PA4 for PWM gate signals.
+ * The PA1, PA3 and PA5 are configured for on off logic gate signals.
+ *
+******************************************************************************/
+
+// Need a hall-state to gateDriverState conversion map...
+/////////////////////////////////////////////////////////
+
+/*
+ * Sequence of the hall sensors in forward direction might be as the following:
+ * 0x05, 0x01, 0x03, 0x02, 0x06, 0x04, 0x05,,,,
+ *
+ * We'll assume that the hall sensor states are related to the motor wiring
+ * configuration and these hall sensor states can be used to control the
+ * drivers gate signals.
+ *
+ * To map the hall sensor states to each of the three phases will require a
+ * start up sequence, which will start by exciting each gate driver state in
+ * small steps until a hall state changes. For this change the current gate
+ * driver state is mapped to a hall sensor state. After a complete motor
+ * rotation the mapping between the gate driver state and the hall sensor state
+ * should be also completed.
+
+       [hall readout] - defining the rotor's position
+             v
+   hallState[5] = 1; <-- switching states...(gateDriverState)
+   hallState[1] = 2;
+   hallState[3] = 3;
+   hallState[2] = 4;
+   hallState[6] = 4;
+   hallState[4] = 6;
+
+ * PWM for one of the high side transistors
+ *
+ *
+ */
+
+
+
+
 //HAL_GPIO_EXTI_IRQHandler
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
    uint16_t hallState = (GPIOB->IDR & 0x70) >> 4;
+
    printf("\r\nhall state = 0x%02x", hallState);
 }
 
@@ -80,6 +163,8 @@ uint8_t UART1_rxBuffer = 0;
 uint8_t cmdComplete;
 char termInputBuffer[80];
 int bytesReceived = 0;
+
+uint32_t dutyCycle = 0;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     //uint8_t UARTnewLine = 10;
@@ -104,8 +189,21 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     // re-trigger the interrupt...
     HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 }
+/**
+ * getUserInput reads the voltage on the center pin of a 10k potentiometer
+ * connected to gnd and vcc, by the use of the mcu's adc.
+ * The adc value is then converted to a percentage value of the max adc value,
+ * which is then used as a Duty Cycle value for the PWM signals.
+ */
+void getUserInput() {
+   uint32_t dc = 0;
+   dc = (HAL_ADC_GetValue(&hadc1)/4096)*100;
 
-
+   if ((dc < dutyCycle + 10) || (dc < dutyCycle - 10)) {
+      dutyCycle = dc;
+      printf("Duty Cycle changed to: %ld", dutyCycle);
+   }
+}
 
 /* USER CODE END 0 */
 
@@ -140,6 +238,7 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_USART1_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 
@@ -152,9 +251,13 @@ int main(void)
   while (1)
   {
 
-     /* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
-     /* USER CODE BEGIN 3 */
+    /* USER CODE BEGIN 3 */
+
+     // Polling for user input...
+     getUserInput();
+
      __WFI(); // optional: wait for interrupt to save power
   }
 
@@ -293,6 +396,63 @@ static void MX_ADC1_Init(void)
 }
 
 /**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 0;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 4294967295;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 0;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
+  HAL_TIM_MspPostInit(&htim2);
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -344,16 +504,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PA0 PA1 PA2 PA3
-                           PA4 PA5 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
-                          |GPIO_PIN_4|GPIO_PIN_5;
+  /*Configure GPIO pins : PA3 PA4 PA5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
