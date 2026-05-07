@@ -35,7 +35,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define IDLE_STATE 2048
+#define POTMETER_TOLERANCE 10
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -91,20 +92,21 @@ int _write(int fd, char *ptr, int len) {
 //
 // Hardware driver to be used have the following interface
 /******************************************
+
 -------------------------------------------
-|   1  |   2  |   3  |   4  |   5  |   6  |
-| A-HS | A-LS | B-HS | B-LS | C-HS | C-LS |
+| 1    | 2    |   3  | 4    |   5  |   6  |
+| A-HS | B-HS | C-HS | A-LS | B-LS | C-LS |
 | PA0  | PA1  | PA2  | PA3  | PA4  | PA5  | STATE
 -------------------------------------------------
-    1      0      0      1      0      0      1 (0x09) using that PA0 is the least significant bit.
+    1      0      0      0      1      0      1 (0x11) using that PA0 is the least significant bit.
     1      0      0      0      0      1      2 (0x21)
-    0      0      1      0      0      1      3 (0x24)
-    0      1      1      0      0      0      4 (0x06)
-    0      1      0      0      1      0      5 (0x12)
-    0      0      0      1      1      0      6 (0x18)
+    0      1      0      0      0      1      3 (0x22)
+    0      1      0      1      0      0      4 (0x0A)
+    0      0      1      1      0      0      5 (0x0C)
+    0      0      1      0      1      0      6 (0x14)
 
 *******************************************/
-uint8_t gateDriverStates[6] = {0x09, 0x21, 0x24, 0x06, 0x12, 0x18};
+uint8_t gateDriverStates[6] = {0x11, 0x21, 0x22, 0x0a, 0x0c, 0x14};
 
 /******************************************************************************
  * We will need a gate-signal distribution plan or algorithm.
@@ -150,7 +152,7 @@ uint8_t gateDriverStates[6] = {0x09, 0x21, 0x24, 0x06, 0x12, 0x18};
  */
 
 
-
+void start(int dutyCycle); // should be in driver.h
 
 //HAL_GPIO_EXTI_IRQHandler
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
@@ -165,6 +167,11 @@ char termInputBuffer[80];
 int bytesReceived = 0;
 
 uint32_t dutyCycle = 0;
+enum {
+   IDLE,
+   STARTED,
+   RUNNING
+} motorState = IDLE;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     //uint8_t UARTnewLine = 10;
@@ -196,12 +203,26 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
  * which is then used as a Duty Cycle value for the PWM signals.
  */
 void getUserInput() {
+   uint32_t adcReading = 0;
    uint32_t dc = 0;
-   dc = (HAL_ADC_GetValue(&hadc1)/4096)*100;
 
-   if ((dc < dutyCycle + 10) || (dc < dutyCycle - 10)) {
-      dutyCycle = dc;
-      printf("Duty Cycle changed to: %ld", dutyCycle);
+   adcReading = HAL_ADC_GetValue(&hadc1);
+   if ((adcReading < (IDLE_STATE + POTMETER_TOLERANCE)) && (adcReading > (IDLE_STATE - POTMETER_TOLERANCE))) {
+      motorState = IDLE;
+      return;
+   }
+
+   dc = (adcReading/4096)*100;
+
+   if (motorState == IDLE) {
+      start(dc);
+      motorState = STARTED;
+   }
+   else if (motorState == RUNNING) {
+      if ((dc < dutyCycle + 10) || (dc < dutyCycle - 10)) {
+         dutyCycle = dc;
+         printf("Duty Cycle changed to: %ld", dutyCycle);
+      }
    }
 }
 
