@@ -154,10 +154,17 @@ uint8_t gateDriverStates[6] = {0x11, 0x21, 0x22, 0x0a, 0x0c, 0x14};
 
 void start(int dutyCycle); // should be in driver.h
 
-//HAL_GPIO_EXTI_IRQHandler
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-   uint16_t hallState = (GPIOB->IDR & 0x70) >> 4;
+uint16_t hallState;
+uint8_t hallStateChanged = 0;
 
+uint16 readHallSensors() {
+  return (GPIOB->IDR & 0x70) >> 4;
+}
+
+//HAL_GPIO_EXTI_IRQHandler
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {   
+   hallStateChanged = 1;
+   // the print statment to removed...
    printf("\r\nhall state = 0x%02x", hallState);
 }
 

@@ -9,6 +9,13 @@
 
 extern uint32_t dutyCycle;
 extern TIM_HandleTypeDef htim2;
+extern uint8_t hallStateChanged;
+
+enum {
+   IDLE,
+   STARTED,
+   RUNNING
+} motorState = IDLE;
 
 uint8_t gateState[7];
 void setGates() {
@@ -72,33 +79,54 @@ void pwmChannel(int ch) {
    }
 }
 
-void start(int dutyCycle) {
+int start(int dutyCycle) {
    // Start with 2 - 5% duty cycle...
    // 16 bit => 65535 clock cycles for a max frequency...
    // ~ 1kHz for mcu clock at 72 MHz...
    //
-   pwmChannel(N);
+   int activeHighSidePhase = N;
+   pwmChannel(activeHighSidePhase); // Disabling all high side gates...
    // Make a loop that will include all commutation steps
    for (int i = 0; i < 6; i++) {
       GPIOA->ODR |= 0x38; // set all low side gate signals high as the driver will invert these and cut off the transistors...
       if (i == 0) {
-         pwmChannel(R);
+         activeHighSidePhase = R;
       }
       else if (i == 2) {
-         pwmChannel(S);
+         activeHighSidePhase = S;
       }
       else if (i == 4) {
-         pwmChannel(T);
+         activeHighSidePhase = T;
       }
-      GPIOA->ODR &= low_side[i];
-      // Make a loop for increasing duty cycle to move the motor in either
-      // direction.
+      pwmChannel(activeHighSidePhase);
+
+      // Now that the PWM is "running" on one of the high side gates, the relevant low side transister han be "opened".
+      GPIOA->ODR &= low_side[i]; 
+
+      // Entering a loop for increasing duty cycle to move the motor in either direction? -should know which direction is the user input...
       for (int j = 0; j < dutyCycle; j++) {
-         TIM2->CCR1 = 65535*j/100;
+         if (activeHighSidePhase == R)
+            TIM2->CCR1 = 65535*j/100;
+         else if (activeHighSidePhase == S)
+            TIM2->CCR2 = 65535*j/100;
+         else if (activeHighSidePhase == T)
+            TIM2-CCR3 = 65535*j/100;
+         
+         HAL_Delay(10);
+         if (hallStateChanged == 1) {
+            // trigger interrupt again...
+            
+            return true;
+         }
+            
       }
    }
+   return false;
 }
 
 void run() {
+   hallState = readHallSensors();
+   while (motorState !=IDLE) {
 
+   }
 }
