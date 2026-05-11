@@ -36,7 +36,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define IDLE_STATE 2048
-#define POTMETER_TOLERANCE 10
+#define POTMETER_TOLERANCE 32
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -157,7 +157,7 @@ void start(int dutyCycle); // should be in driver.h
 uint16_t hallState;
 uint8_t hallStateChanged = 0;
 
-uint16 readHallSensors() {
+uint16_t readHallSensors() {
   return (GPIOB->IDR & 0x70) >> 4;
 }
 
@@ -173,12 +173,15 @@ uint8_t cmdComplete;
 char termInputBuffer[80];
 int bytesReceived = 0;
 
-uint32_t dutyCycle = 0;
-enum {
+int dutyCycle = 0;
+enum State{
    IDLE,
    STARTED,
-   RUNNING
-} motorState = IDLE;
+   RUNNING_FORWARD,
+   RUNNING_REVERSE
+};
+
+enum State motorState = IDLE;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     //uint8_t UARTnewLine = 10;
@@ -211,26 +214,46 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
  */
 void getUserInput() {
    uint32_t adcReading = 0;
-   uint32_t dc = 0;
+   float dc = 0;
 
    adcReading = HAL_ADC_GetValue(&hadc1);
+
    if ((adcReading < (IDLE_STATE + POTMETER_TOLERANCE)) && (adcReading > (IDLE_STATE - POTMETER_TOLERANCE))) {
-      motorState = IDLE;
+      if (motorState != IDLE) {
+         motorState = IDLE;
+         printf("Motor is halted...\r\n");
+      }
       return;
    }
 
-   dc = (adcReading/4096)*100;
+   dc = 200*((adcReading-2048.0)/4096.0);
 
    if (motorState == IDLE) {
-      start(dc);
       motorState = STARTED;
-   }
-   else if (motorState == RUNNING) {
-      if ((dc < dutyCycle + 10) || (dc < dutyCycle - 10)) {
-         dutyCycle = dc;
-         printf("Duty Cycle changed to: %ld", dutyCycle);
+      if (dc < 0) {
+         if (motorState != RUNNING_REVERSE) {
+            motorState = RUNNING_REVERSE;
+            printf("Starting the Motor in reverse...\r\n");
+         }
+      }
+      else {
+         if (motorState != RUNNING_FORWARD){
+            motorState = RUNNING_FORWARD;
+            printf("Starting the Motor forward...\r\n");
+         }
       }
    }
+   else if ((motorState == RUNNING_FORWARD) || (motorState == RUNNING_REVERSE)) {
+      if ((dc > dutyCycle + 1) || (dc < dutyCycle - 1)) {
+         // If dc is more than the previous set dutyCycle plus some tolerance, then update the dytyCycle.
+         // If dc is less than the previous set dutyCycle minus some tolerance, then update the dytyCycle.
+         dutyCycle = dc;
+         printf("ADC Readings: %ld\r\n", adcReading);
+         printf("dc: %.3f \r\n", dc);
+         printf("Duty Cycle: %ld \r\n", dutyCycle);
+      }
+   }
+
 }
 
 /* USER CODE END 0 */
@@ -271,7 +294,7 @@ int main(void)
   HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 
   HAL_ADC_Start(&hadc1);
-  printf("\r\n\r\nCommand line ready...");
+  printf("\r\nCommand line ready...\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -285,7 +308,7 @@ int main(void)
 
      // Polling for user input...
      getUserInput();
-
+     HAL_Delay(1000);
      __WFI(); // optional: wait for interrupt to save power
   }
 
@@ -378,7 +401,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Channel = ADC_CHANNEL_11;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)

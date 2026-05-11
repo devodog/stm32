@@ -7,15 +7,17 @@
 #include "main.h"
 #include <stdint.h>
 
+enum State{
+   IDLE,
+   STARTED,
+   RUNNING_FORWARD,
+   RUNNING_REVERSE
+};
+
 extern uint32_t dutyCycle;
 extern TIM_HandleTypeDef htim2;
 extern uint8_t hallStateChanged;
-
-enum {
-   IDLE,
-   STARTED,
-   RUNNING
-} motorState = IDLE;
+extern enum State motorState;
 
 uint8_t gateState[7];
 void setGates() {
@@ -46,7 +48,7 @@ void setGates() {
  * For six step commutiation the switching table is as follows:
  * PA0                                        inverted low side
  *  x    x    x   01    10    01  = (0x10) -> (0x28) using that PA0 is the least significant bit.
- *  x    x    x   01    01    10  = (0x20) -> (0x18
+ *  x    x    x   01    01    10  = (0x20) -> (0x18)
  *  x    x    x   01    01    10  = (0x20) -> (0x18)
  *  x    x    x   10    01    01  = (0x08) -> (0x30)
  *  x    x    x   10    01    01  = (0x08) -> (0x30)
@@ -110,22 +112,21 @@ int start(int dutyCycle) {
          else if (activeHighSidePhase == S)
             TIM2->CCR2 = 65535*j/100;
          else if (activeHighSidePhase == T)
-            TIM2-CCR3 = 65535*j/100;
+            TIM2->CCR3 = 65535*j/100;
          
          HAL_Delay(10);
          if (hallStateChanged == 1) {
-            // trigger interrupt again...
+            // The interrupt is triggered again...
             
-            return true;
+            return 1;
          }
-            
       }
    }
-   return false;
+   return 0;
 }
 
 void run() {
-   hallState = readHallSensors();
+   //hallState = readHallSensors();
    while (motorState !=IDLE) {
 
    }
