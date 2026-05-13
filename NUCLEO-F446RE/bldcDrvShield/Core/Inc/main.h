@@ -31,6 +31,8 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
+#include <string.h>
 
 /* USER CODE END Includes */
 
@@ -67,7 +69,7 @@ void Error_Handler(void);
 #define SWO_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-
+uint16_t readHallSensors();
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

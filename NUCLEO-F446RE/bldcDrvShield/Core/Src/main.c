@@ -21,10 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
-#include <string.h>
 #include "appver.h"
 #include "cmd.h"
+#include "driver.h"
 
 /* USER CODE END Includes */
 
@@ -75,97 +74,31 @@ int _write(int fd, char *ptr, int len) {
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 //
-// Using the capital letters A, B, and C as notation for describing the three
-// phases, motivated by the notation used in the DRV8300 documentation.
-// In addition the abbreviation HS = High Side transistor of the each
-// phase and LS = Low Side transistor of each phase.
+extern uint8_t gateDriverStates[6];
+// mapping between hall states(index) and commutation states(values)
+extern uint8_t hallStates[7];
 
-// The three phase inverter is implemented 6 mosfet transistors, which in total
-// can have only 6 conduction states - Six Step commutation
-// These are as follows:
-// 1. A-HS & B-LS
-// 2. A-HS & C-LS
-// 3. B-HS & C-LS
-// 4. B-HS & A-LS
-// 5. C-HS & A-LS
-// 6. C-HS & B-LS
-//
-// Hardware driver to be used have the following interface
-/******************************************
+extern uint8_t low_side[6];
 
--------------------------------------------
-| 1    | 2    |   3  | 4    |   5  |   6  |
-| A-HS | B-HS | C-HS | A-LS | B-LS | C-LS |
-| PA0  | PA1  | PA2  | PA3  | PA4  | PA5  | STATE
--------------------------------------------------
-    1      0      0      0      1      0      1 (0x11) using that PA0 is the least significant bit.
-    1      0      0      0      0      1      2 (0x21)
-    0      1      0      0      0      1      3 (0x22)
-    0      1      0      1      0      0      4 (0x0A)
-    0      0      1      1      0      0      5 (0x0C)
-    0      0      1      0      1      0      6 (0x14)
-
-*******************************************/
-uint8_t gateDriverStates[6] = {0x11, 0x21, 0x22, 0x0a, 0x0c, 0x14};
-
-/******************************************************************************
- * We will need a gate-signal distribution plan or algorithm.
- * The gates on the high side transistors will be sourced by a PWM signal,
- * while the gates on the low side transistor will either on or off depending
- * on the commutation state.
- *
- * We'll assign PA0, PA2 and PA4 for PWM gate signals.
- * The PA1, PA3 and PA5 are configured for on off logic gate signals.
- *
-******************************************************************************/
-
-// Need a hall-state to gateDriverState conversion map...
-/////////////////////////////////////////////////////////
-
-/*
- * Sequence of the hall sensors in forward direction might be as the following:
- * 0x05, 0x01, 0x03, 0x02, 0x06, 0x04, 0x05,,,,
- *
- * We'll assume that the hall sensor states are related to the motor wiring
- * configuration and these hall sensor states can be used to control the
- * drivers gate signals.
- *
- * To map the hall sensor states to each of the three phases will require a
- * start up sequence, which will start by exciting each gate driver state in
- * small steps until a hall state changes. For this change the current gate
- * driver state is mapped to a hall sensor state. After a complete motor
- * rotation the mapping between the gate driver state and the hall sensor state
- * should be also completed.
-
-       [hall readout] - defining the rotor's position
-             v
-   hallState[5] = 1; <-- switching states...(gateDriverState)
-   hallState[1] = 2;
-   hallState[3] = 3;
-   hallState[2] = 4;
-   hallState[6] = 4;
-   hallState[4] = 6;
-
- * PWM for one of the high side transistors
- *
- *
- */
-
-
-void start(int dutyCycle); // should be in driver.h
 
 uint16_t hallState;
 uint8_t hallStateChanged = 0;
 
-uint16_t readHallSensors() {
-  return (GPIOB->IDR & 0x70) >> 4;
-}
-
-//HAL_GPIO_EXTI_IRQHandler
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {   
-   hallStateChanged = 1;
-   // the print statment to removed...
+   uint8_t highSide = 0;
+   uint8_t hallState = (GPIOB->IDR & 0x70) >> 4;
+   // For test
    printf("\r\nhall state = 0x%02x", hallState);
+   hallStateChanged = 1;
+
+   // Set low side gates according to the current hall sensor states.
+   GPIOA->ODR |= 0x38; //
+   // We should already know which direction the motor is running...
+   // ... so, we'll just source the PWM signal to the commutation state
+   highSide = (gateDriverStates[hallStates[hallState]]) & 0x7;
+   pwmChannel((int)highSide);
+   // Turn on the low side transistor...
+   GPIOA->ODR &= low_side[hallState];
 }
 
 uint8_t UART1_rxBuffer = 0;
@@ -222,6 +155,7 @@ void getUserInput() {
       if (motorState != IDLE) {
          motorState = IDLE;
          printf("Motor is halted...\r\n");
+         //stop();
       }
       return;
    }
@@ -242,15 +176,19 @@ void getUserInput() {
             printf("Starting the Motor forward...\r\n");
          }
       }
+      //phaseTest((int)dc);
+      start((int)dc);
    }
    else if ((motorState == RUNNING_FORWARD) || (motorState == RUNNING_REVERSE)) {
       if ((dc > dutyCycle + 1) || (dc < dutyCycle - 1)) {
          // If dc is more than the previous set dutyCycle plus some tolerance, then update the dytyCycle.
          // If dc is less than the previous set dutyCycle minus some tolerance, then update the dytyCycle.
-         dutyCycle = dc;
+         dutyCycle = (int)dc;
          printf("ADC Readings: %ld\r\n", adcReading);
          printf("dc: %.3f \r\n", dc);
-         printf("Duty Cycle: %ld \r\n", dutyCycle);
+         printf("Duty Cycle: %d \r\n", (int) dutyCycle);
+         //phaseTest((int)dc);
+         //run(dutyCycle);
       }
    }
 
@@ -294,7 +232,9 @@ int main(void)
   HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 
   HAL_ADC_Start(&hadc1);
-  printf("\r\nCommand line ready...\r\n");
+  HAL_TIM_Base_Start(&htim2);
+
+  printf("\r\nCommand line ready...\r\n\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -467,7 +407,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4294967295;
+  htim2.Init.Period = 65535;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
@@ -488,10 +428,12 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
