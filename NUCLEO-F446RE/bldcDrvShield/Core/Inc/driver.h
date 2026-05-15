@@ -10,7 +10,7 @@
 
 uint16_t readHallSensors(void);
 int pwmChannel(int ch);
-void phaseTest(int dutyCycle);
+void phaseTest(int dutyCycle, int ph);
 int start(int dutyCycle);
 void stop(void);
 void run(int dc);

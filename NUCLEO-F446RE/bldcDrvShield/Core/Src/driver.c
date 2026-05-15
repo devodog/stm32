@@ -180,10 +180,25 @@ int pwmChannel(int ch) {
    }
    return ch;
 }
-void phaseTest(int dutyCycle) {
-   int channel = 1;
-   TIM2->CCR3 = 65535*dutyCycle/100;
-   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+
+void phaseTest(int dutyCycle, int phase) {
+   int channel = TIM_CHANNEL_3;
+   uint16_t ccr = 65535*dutyCycle/100;
+
+   if (phase == R) {
+      channel = TIM_CHANNEL_1;
+      TIM2->CCR1 = ccr;
+   }
+   else if (phase == S) {
+      channel = TIM_CHANNEL_2;
+      TIM2->CCR2 = ccr;
+   }
+   else {
+      //channel = TIM_CHANNEL_3;
+      TIM2->CCR3 = ccr;
+   }
+   //HAL_TIM_OC_Start(&htim2, channel);
+   HAL_TIM_PWM_Start(&htim2, channel);
    printf("PWM on channel %d\r\n", channel);
 }
 
@@ -194,6 +209,7 @@ int start(int dutyCycle) {
    //
 
    int activeHighSidePhase = N;
+   uint16_t compare_value = 0;
    pwmChannel(activeHighSidePhase); // Disabling all high side gates...
    printf("Slow start...\r\n");
    // Make a loop that will include all commutation steps
@@ -218,12 +234,16 @@ int start(int dutyCycle) {
       // Clock frequency is 70 MHz => 14,3 ns per tick. For a 16 bit CCR register a full count-down will take approx. 936 µs
       //
       for (int j = 0; j < dutyCycle; j++) {
-         if (activeHighSidePhase == R)
-            TIM2->CCR1 = 65535*j/100;
-         else if (activeHighSidePhase == S)
-            TIM2->CCR2 = 65535*j/100;
-         else if (activeHighSidePhase == T)
-            TIM2->CCR3 = 65535*j/100;
+         compare_value = 65535*j/100;
+         if (activeHighSidePhase == R) {
+            TIM2->CCR1 = compare_value;
+         }
+         else if (activeHighSidePhase == S) {
+            TIM2->CCR2 = compare_value;
+         }
+         else if (activeHighSidePhase == T) {
+            TIM2->CCR3 = compare_value;
+         }
          
          //printf("activeHighSidePhase: %d low-side: 0x%02x\r\n", activeHighSidePhase, (uint8_t)GPIOA->ODR);
          HAL_Delay(200);

@@ -24,7 +24,7 @@
 #include "appver.h"
 #include "cmd.h"
 #include "driver.h"
-
+#include "test.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -73,6 +73,18 @@ int _write(int fd, char *ptr, int len) {
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/************** NOTE on using GPIO PA2, PA3 and PA5 ***************************/
+/*
+ * The NUCLEO-F446RE Development board has excluded PA2 and PA3 from the
+ * Morpho and Arduino extension connectors as the solder bridge (SB62 and SB63)
+ * for these are open. The LED LD2 is connected to the PA5 as SB21 is closed.
+ * So, to make use of these GPIOs the NUCLEO-F446RE Development board has been
+ * modified in order to utilize these pins.
+ *
+ */
+
+
 //
 extern uint8_t gateDriverStates[6];
 // mapping between hall states(index) and commutation states(values)
@@ -176,7 +188,7 @@ void getUserInput() {
             printf("Starting the Motor forward...\r\n");
          }
       }
-      //phaseTest((int)dc);
+      //phaseTest((int)dc, 3); // R-Phase
       start((int)dc);
    }
    else if ((motorState == RUNNING_FORWARD) || (motorState == RUNNING_REVERSE)) {
@@ -187,11 +199,10 @@ void getUserInput() {
          printf("ADC Readings: %ld\r\n", adcReading);
          printf("dc: %.3f \r\n", dc);
          printf("Duty Cycle: %d \r\n", (int) dutyCycle);
-         //phaseTest((int)dc);
+         //phaseTest((int)dc, 3); // R-Phase
          //run(dutyCycle);
       }
    }
-
 }
 
 /* USER CODE END 0 */
@@ -233,6 +244,9 @@ int main(void)
 
   HAL_ADC_Start(&hadc1);
   HAL_TIM_Base_Start(&htim2);
+  //HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+  // Output debug information
+  //debug_PA2_configuration();
 
   printf("\r\nCommand line ready...\r\n\r\n");
   /* USER CODE END 2 */
@@ -249,6 +263,7 @@ int main(void)
      // Polling for user input...
      getUserInput();
      HAL_Delay(1000);
+
      __WFI(); // optional: wait for interrupt to save power
   }
 
@@ -414,7 +429,7 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
@@ -423,17 +438,16 @@ static void MX_TIM2_Init(void)
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
