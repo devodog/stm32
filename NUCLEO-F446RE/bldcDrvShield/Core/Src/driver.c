@@ -128,7 +128,7 @@ uint8_t low_side[6] = {0x28, 0x18, 0x18, 0x30, 0x30, 0x28};
 
 enum State{
    IDLE,
-   STARTED,
+   STARTING,
    RUNNING_FORWARD,
    RUNNING_REVERSE
 };
@@ -137,7 +137,7 @@ extern uint32_t dutyCycle;
 extern TIM_HandleTypeDef htim2;
 extern uint8_t hallStateChanged;
 extern enum State motorState;
-
+int commutiationSate;
 
 //uint8_t gateStates[7];
 
@@ -202,33 +202,50 @@ void phaseTest(int dutyCycle, int phase) {
    printf("PWM on channel %d\r\n", channel);
 }
 
+
 int start(int dutyCycle) {
    // Start with 2 - 5% duty cycle...
    // 16 bit => 65535 clock cycles for a max frequency...
    // ~ 1kHz for mcu clock at 72 MHz...
    //
-
+   int cs = 0; // commutation state...
    int activeHighSidePhase = N;
    uint16_t compare_value = 0;
    pwmChannel(activeHighSidePhase); // Disabling all high side gates...
    printf("Slow start...\r\n");
+
+   if (dutyCycle < 0) { // reverse start...
+
+   }
    // Make a loop that will include all commutation steps
    for (int i = 0; i < 6; i++) {
+      if (motorState == RUNNING_REVERSE) {
+         // reverse...
+         // need to know if the decrement will give an none existent state (negative)...
+         if (--cs < 0) {
+            cs = 5;
+         }
+      }
+      else {
+         if (++cs > 5) {
+            cs = 0;
+         }
+      }
 
       //GPIOA->ODR |= 0x38; // set all low side gate signals high as the driver will invert these and cut off the transistors...
-      if (i == 0) {
+      if ((cs == 0) || (cs == 1)) {
          activeHighSidePhase = R;
       }
-      else if (i == 2) {
+      else if ((cs == 2) || (cs == 3)) {
          activeHighSidePhase = S;
       }
-      else if (i == 4) {
+      else if ((cs == 4) || (cs == 5)) {
          activeHighSidePhase = T;
       }
       pwmChannel(activeHighSidePhase);
 
       // Now that the PWM is "running" on one of the high side gates, the relevant low side transistors can be "opened".
-      //GPIOA->ODR &= low_side[i];
+      GPIOA->ODR &= (low_side[cs] | 0xffc7);
 
       // Entering a loop for increasing duty cycle to move the motor in either direction? -should know which direction is the user input...
       // Clock frequency is 70 MHz => 14,3 ns per tick. For a 16 bit CCR register a full count-down will take approx. 936 µs
@@ -245,26 +262,46 @@ int start(int dutyCycle) {
             TIM2->CCR3 = compare_value;
          }
          
-         //printf("activeHighSidePhase: %d low-side: 0x%02x\r\n", activeHighSidePhase, (uint8_t)GPIOA->ODR);
+         printf("activeHighSidePhase: %d low-side: 0x%x\r\n", activeHighSidePhase, (unsigned int) low_side[cs]);
          HAL_Delay(200);
-         /***
-         uint16_t hall = readHallSensors();
-         if ((hallStateChanged == 1)&&(states < 7)) {
-            // The interrupt is triggered again...
-            if (activeHighSidePhase != N) {
-               gateStates[i] = (GPIOA->ODR & 0b111000) | (0x1 << (activeHighSidePhase - 1));
-               hallStates[i] = hall;
-               states++;
-            }
+
+         if (hallStateChanged == 1) {
             hallStateChanged = 0;
-         }
-         else {
+            // The following is to continue the commutation process and leave
+            // the rest to the interrupt service routine
+            if (motorState == RUNNING_REVERSE) {
+               // reverse...
+               // need to know if the decrement will give an none existent state (negative)...
+               if (--cs < 0) {
+                  cs = 5;
+               }
+            }
+            else {
+               if (++cs > 5) {
+                  cs = 0;
+               }
+            }
+            // What is the difference between the current PWM and the input PWM?
+            // Should the difference be reduced in the interrupt service routine?
+            // If so, the difference should be global in order to let the ISR
+            // reduce this "slowly" until the physical PWM is equal the user
+            // input PWM.
+
+
+            // Set low side gates according to the current hall sensor states.
+            GPIOA->ODR |= 0x38; //
+            // Using the latest user input for PWM settings updated in the run() routine,
+            // and turn on the relevant high side transistor.
+            pwmChannel(gateDriverStates[cs]);
+            // Turn on the low side transistor...
+            GPIOA->ODR &= low_side[cs];
+            //
             return 1;
          }
-         ***/
       }
    }
    pwmChannel(N);
+   motorState = STARTING;
    return 0;
 }
 
@@ -272,11 +309,11 @@ void stop() {
    pwmChannel(N);
 }
 
-void run(int dc) {
+void pwmUpdate(int dc) {
    //hallState = readHallSensors();
    // The run() function will only update the compare register for all timer channels...
    // The hall interrupt service routine will supply the pwm signal to the relevant high side transistor-gate.
-   while (motorState !=IDLE) {
+   if (motorState !=IDLE) {
       TIM2->CCR1 = 65535*dc/100;
       TIM2->CCR2 = 65535*dc/100;
       TIM2->CCR3 = 65535*dc/100;

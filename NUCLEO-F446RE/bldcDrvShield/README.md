@@ -6,6 +6,7 @@ This STM32 NUCLEO-F446RE software project is to support NUCLEO SHIELD Hardware d
 ## The pin assignment used for the Nucleo Shield
 <img src="../docs/bldcDrvShield/PinAssignment.png" height="400">  
 
+Flow chart to be found in R&D/SDL-Symbols/
 
 ## Driver User interface
 Controlling the motor the BLDC Motor Shield provides a single turn potentiometer and a UART to USB interface for serial line communication for command line motor configuration.  

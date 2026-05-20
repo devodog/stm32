@@ -90,27 +90,58 @@ extern uint8_t gateDriverStates[6];
 // mapping between hall states(index) and commutation states(values)
 extern uint8_t hallStates[7];
 
+int highSide[6] = {1,1,2,2,4,4};
 extern uint8_t low_side[6];
 
-
+int dutyCycle = 0;
+enum State{
+   IDLE,
+   STARTING,
+   RUNNING_FORWARD,
+   RUNNING_REVERSE
+};
+enum State motorState = IDLE;
 uint16_t hallState;
 uint8_t hallStateChanged = 0;
-
+/**
+ * The interrupt service routine (ISR) is to drive the motor WHEN the user
+ * input is not zero.
+ * The following must be updated in the ISR.:
+ * - The timer that controls the PWM signals
+ * - Next Commutation State -> activating relevant driver transistors
+ * - - PWM on high-side transistor
+ *
+ *
+ */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {   
-   uint8_t highSide = 0;
-   uint8_t hallState = (GPIOB->IDR & 0x70) >> 4;
+   uint16_t hallState = (GPIOB->IDR & 0x70) >> 4;
+   uint8_t commutationState;
    // For test
-   printf("\r\nhall state = 0x%02x", hallState);
-   hallStateChanged = 1;
+   //printf("\r\nhall state = 0x%x", hs);
+
+   if (motorState == IDLE) {
+      hallStateChanged = 1;
+      return;
+   }
+   commutationState = hallStates[hallState];
+   if (motorState == RUNNING_REVERSE) {
+      // reverse...
+      // need to know if the decrement will give an none existent state (negative)...
+      if (--commutationState < 0) {
+         commutationState = 5;
+      }
+   }
+   if (++commutationState > 5) {
+      commutationState = 0;
+   }
 
    // Set low side gates according to the current hall sensor states.
    GPIOA->ODR |= 0x38; //
-   // We should already know which direction the motor is running...
-   // ... so, we'll just source the PWM signal to the commutation state
-   highSide = (gateDriverStates[hallStates[hallState]]) & 0x7;
-   pwmChannel((int)highSide);
+   // Using the latest user input for PWM settings updated in the run() routine,
+   // and turn on the relevant high side transistor.
+   pwmChannel(highSide[commutationState]);
    // Turn on the low side transistor...
-   GPIOA->ODR &= low_side[hallState];
+   GPIOA->ODR &= low_side[commutationState];
 }
 
 uint8_t UART1_rxBuffer = 0;
@@ -118,15 +149,6 @@ uint8_t cmdComplete;
 char termInputBuffer[80];
 int bytesReceived = 0;
 
-int dutyCycle = 0;
-enum State{
-   IDLE,
-   STARTED,
-   RUNNING_FORWARD,
-   RUNNING_REVERSE
-};
-
-enum State motorState = IDLE;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     //uint8_t UARTnewLine = 10;
@@ -151,6 +173,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     // re-trigger the interrupt...
     HAL_UART_Receive_IT(&huart1, &UART1_rxBuffer, 1);
 }
+
 /**
  * getUserInput reads the voltage on the center pin of a 10k potentiometer
  * connected to gnd and vcc, by the use of the mcu's adc.
@@ -175,7 +198,7 @@ void getUserInput() {
    dc = 200*((adcReading-2048.0)/4096.0);
 
    if (motorState == IDLE) {
-      motorState = STARTED;
+      motorState = STARTING;
       if (dc < 0) {
          if (motorState != RUNNING_REVERSE) {
             motorState = RUNNING_REVERSE;
@@ -188,10 +211,31 @@ void getUserInput() {
             printf("Starting the Motor forward...\r\n");
          }
       }
-      //phaseTest((int)dc, 3); // R-Phase
+
+      if (dc < 0)
+         dc = dc*(-1);
+
+      start((int)dc);
+   }
+   else if (motorState == STARTING) {
+      printf("Starting...\r\n");
+
+      if (dc < 0) {
+         dc = dc*(-1);
+         motorState = RUNNING_REVERSE;
+         printf("Reverse starting...\r\n");
+      }
+      else {
+         motorState = RUNNING_FORWARD;
+         printf("Forward starting...\r\n");
+      }
+
       start((int)dc);
    }
    else if ((motorState == RUNNING_FORWARD) || (motorState == RUNNING_REVERSE)) {
+      if (dc < 0)
+         dc = dc*(-1);
+
       if ((dc > dutyCycle + 1) || (dc < dutyCycle - 1)) {
          // If dc is more than the previous set dutyCycle plus some tolerance, then update the dytyCycle.
          // If dc is less than the previous set dutyCycle minus some tolerance, then update the dytyCycle.
@@ -199,9 +243,8 @@ void getUserInput() {
          printf("ADC Readings: %ld\r\n", adcReading);
          printf("dc: %.3f \r\n", dc);
          printf("Duty Cycle: %d \r\n", (int) dutyCycle);
-         //phaseTest((int)dc, 3); // R-Phase
-         //run(dutyCycle);
       }
+      pwmUpdate(dutyCycle);
    }
 }
 
@@ -525,8 +568,8 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PB4 PB5 PB6 */
   GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PB8 PB9 */

@@ -13,6 +13,6 @@ int pwmChannel(int ch);
 void phaseTest(int dutyCycle, int ph);
 int start(int dutyCycle);
 void stop(void);
-void run(int dc);
+void pwmUpdate(int dc);
 
 #endif /* INC_DRIVER_H_ */
