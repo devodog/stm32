@@ -90,13 +90,14 @@ extern uint8_t gateDriverStates[6];
 // mapping between hall states(index) and commutation states(values)
 extern uint8_t hallStates[7];
 
-int highSide[6] = {1,1,2,2,4,4};
+int highSide[6] = {1,1,2,2,3,3};
 extern uint8_t low_side[6];
 
 int dutyCycle = 0;
 enum State{
    IDLE,
-   STARTING,
+   STARTING_FORWARD,
+   STARTING_REVERSE,
    RUNNING_FORWARD,
    RUNNING_REVERSE
 };
@@ -119,7 +120,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
    // For test
    //printf("\r\nhall state = 0x%x", hs);
 
-   if (motorState == IDLE) {
+   if ((motorState == STARTING_FORWARD) || (motorState == STARTING_REVERSE)) {
       hallStateChanged = 1;
       return;
    }
@@ -141,7 +142,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
    // and turn on the relevant high side transistor.
    pwmChannel(highSide[commutationState]);
    // Turn on the low side transistor...
-   GPIOA->ODR &= low_side[commutationState];
+   GPIOA->ODR = (GPIOA->ODR & ~(0x7 << 3)) | (low_side[commutationState]);
 }
 
 uint8_t UART1_rxBuffer = 0;
@@ -180,9 +181,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
  * The adc value is then converted to a percentage value of the max adc value,
  * which is then used as a Duty Cycle value for the PWM signals.
  */
+int c = 0;
 void getUserInput() {
    uint32_t adcReading = 0;
    float dc = 0;
+
 
    adcReading = HAL_ADC_GetValue(&hadc1);
 
@@ -192,24 +195,24 @@ void getUserInput() {
          printf("Motor is halted...\r\n");
          //stop();
       }
+      // some kind of indication that the motor is idle
+      if (++c > 9) {
+         printf("Motor is idle...\r\n");
+         c = 0;
+      }
       return;
    }
 
    dc = 200*((adcReading-2048.0)/4096.0);
 
    if (motorState == IDLE) {
-      motorState = STARTING;
       if (dc < 0) {
-         if (motorState != RUNNING_REVERSE) {
-            motorState = RUNNING_REVERSE;
-            printf("Starting the Motor in reverse...\r\n");
-         }
+         motorState = STARTING_REVERSE;
+         printf("Starting the Motor in reverse...\r\n");
       }
       else {
-         if (motorState != RUNNING_FORWARD){
-            motorState = RUNNING_FORWARD;
-            printf("Starting the Motor forward...\r\n");
-         }
+         motorState = STARTING_FORWARD;
+         printf("Starting the Motor forward...\r\n");
       }
 
       if (dc < 0)
@@ -217,9 +220,7 @@ void getUserInput() {
 
       start((int)dc);
    }
-   else if (motorState == STARTING) {
-      printf("Starting...\r\n");
-
+   else if ((motorState == STARTING_FORWARD) || (motorState == STARTING_REVERSE)) {
       if (dc < 0) {
          dc = dc*(-1);
          motorState = RUNNING_REVERSE;

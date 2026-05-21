@@ -123,12 +123,12 @@ uint8_t gateDriverStates[6] = {0x29, 0x19, 0x1a, 0x32, 0x34, 0x2c};
 // mapping between hall states(index) and commutation states(values)
 uint8_t hallStates[7] = {0, 2, 4, 3, 6, 1, 5};
 
-uint8_t low_side[6] = {0x28, 0x18, 0x18, 0x30, 0x30, 0x28};
-
+uint16_t low_side[6] = {0x28, 0x18, 0x18, 0x30, 0x30, 0x28};
 
 enum State{
    IDLE,
-   STARTING,
+   STARTING_FORWARD,
+   STARTING_REVERSE,
    RUNNING_FORWARD,
    RUNNING_REVERSE
 };
@@ -137,6 +137,7 @@ extern uint32_t dutyCycle;
 extern TIM_HandleTypeDef htim2;
 extern uint8_t hallStateChanged;
 extern enum State motorState;
+extern int highSide[6];
 int commutiationSate;
 
 //uint8_t gateStates[7];
@@ -245,8 +246,8 @@ int start(int dutyCycle) {
       pwmChannel(activeHighSidePhase);
 
       // Now that the PWM is "running" on one of the high side gates, the relevant low side transistors can be "opened".
-      GPIOA->ODR &= (low_side[cs] | 0xffc7);
-
+      //GPIOA->BSRR = low_side[cs];
+      GPIOA->ODR  = (GPIOA->ODR & ~(0x7 << 3)) | (low_side[cs]);
       // Entering a loop for increasing duty cycle to move the motor in either direction? -should know which direction is the user input...
       // Clock frequency is 70 MHz => 14,3 ns per tick. For a 16 bit CCR register a full count-down will take approx. 936 µs
       //
@@ -262,21 +263,24 @@ int start(int dutyCycle) {
             TIM2->CCR3 = compare_value;
          }
          
-         printf("activeHighSidePhase: %d low-side: 0x%x\r\n", activeHighSidePhase, (unsigned int) low_side[cs]);
+         printf("activeHighSidePhase: %d low-side: 0x%x\r\n", activeHighSidePhase, (unsigned int)GPIOA->ODR);
          HAL_Delay(200);
 
          if (hallStateChanged == 1) {
+            printf("hallStateChanged\r\n");
             hallStateChanged = 0;
             // The following is to continue the commutation process and leave
             // the rest to the interrupt service routine
-            if (motorState == RUNNING_REVERSE) {
+            if (motorState == STARTING_REVERSE) {
                // reverse...
+               motorState = RUNNING_REVERSE;
                // need to know if the decrement will give an none existent state (negative)...
                if (--cs < 0) {
                   cs = 5;
                }
             }
             else {
+               motorState = RUNNING_FORWARD;
                if (++cs > 5) {
                   cs = 0;
                }
@@ -292,16 +296,16 @@ int start(int dutyCycle) {
             GPIOA->ODR |= 0x38; //
             // Using the latest user input for PWM settings updated in the run() routine,
             // and turn on the relevant high side transistor.
-            pwmChannel(gateDriverStates[cs]);
+            pwmChannel(highSide[cs]);
             // Turn on the low side transistor...
-            GPIOA->ODR &= low_side[cs];
+            GPIOA->ODR = (GPIOA->ODR & ~(0x7 << 3)) | (low_side[cs]);
             //
             return 1;
          }
       }
    }
    pwmChannel(N);
-   motorState = STARTING;
+
    return 0;
 }
 
