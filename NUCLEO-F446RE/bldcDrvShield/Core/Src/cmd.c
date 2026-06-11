@@ -16,7 +16,7 @@
 
 #include "cmd.h"
 #include "appver.h"
-
+#include "driver.h"
 
 #define COMMAND_PARAMS 10
 #define COMMAND_PARAM_LENGTH 10
@@ -25,6 +25,8 @@
 
 extern uint8_t led2;
 extern ADC_HandleTypeDef hadc1;
+extern enum State motorState;
+extern uint32_t dutyCycle;
 
 int timRepeat = 1;
 int timRepeatCount = 0;
@@ -32,6 +34,16 @@ int timRepeatCount = 0;
 int msValue = 0; // milliseconds value
 int lastError = 0;
 int sensorReadings = 0;
+
+char *msText[] = {
+   "IDLE",
+   "STARTING_FORWARD",
+   "STARTING_REVERSE",
+   "RUNNING_FORWARD",
+   "RUNNING_REVERSE",
+   "TESTING"
+};
+
 
 // The cmd-line Command structure
 struct command {
@@ -113,13 +125,34 @@ void sys(char* paramStr, int* paramValues){
    else if (strncmp(paramStr, "VER", 2) == 0) {
       printf("\r\nVersion:%d.%d", MAJOR_VERSION, MINOR_VERSION);
    }
+   else {
+      printf("\r\nMotor State: %s, Duty Cycle: %d%%", msText[motorState], (int)dutyCycle);
+   }
 
+}
+
+#define MAX_TEST_CMD 6
+void test(char* paramStr, int* paramValues){
+	//int cmdLength = strlen(paramStr);
+	//printf("\r\nCommand length = %d\r\n", cmdLength);
+
+	if (motorState == IDLE) {
+       printf("\r\nTurn the POTMETER out of center position to start PWM test.\r\n");
+    }
+    motorState = TESTING;
+}
+
+void endTest() {
+  motorState = IDLE;
+  printf("\r\nTest ended...\r\n");
 }
 
 // Commands defined. (Command array initialization)
 // All commands should primerarly be expressed in lower case.
 struct command mcuCmds [] = {
 //	cmd, number_of_parameters, max_parameter_len,
+  {"test", 3, 6, {"on", "off", "blink", "help"}, {0, 500}, &test},
+  {"end", 1, 3, {"on", "off", "blink", "help"}, {0, 500}, &endTest},
   {"led", 3, 6, {"on", "off", "blink", "help"}, {0, 500}, &led},
   {"adc", 3, 6, {"on", "off", "blink", "help"}, {0, 500}, &adc},
   {"speed", 4, 7, {"forward", "revers", "stop", "help"}, {0, 500, 10, 0}, &speed},

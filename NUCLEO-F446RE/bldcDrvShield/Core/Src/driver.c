@@ -125,15 +125,10 @@ uint8_t hallStates[7] = {0, 2, 4, 3, 6, 1, 5};
 
 uint16_t low_side[6] = {0x28, 0x18, 0x18, 0x30, 0x30, 0x28};
 
-enum State{
-   IDLE,
-   STARTING_FORWARD,
-   STARTING_REVERSE,
-   RUNNING_FORWARD,
-   RUNNING_REVERSE
-};
-
+extern ADC_HandleTypeDef hadc1;
+extern int stopTest;
 extern uint32_t dutyCycle;
+extern int dcStart;
 extern TIM_HandleTypeDef htim2;
 extern uint8_t hallStateChanged;
 extern enum State motorState;
@@ -213,14 +208,11 @@ int start(int dutyCycle) {
    int activeHighSidePhase = N;
    uint16_t compare_value = 0;
    pwmChannel(activeHighSidePhase); // Disabling all high side gates...
-   printf("Slow start...\r\n");
+   printf("Slow start...dc = %d%%\r\n", dutyCycle);
 
-   if (dutyCycle < 0) { // reverse start...
-
-   }
    // Make a loop that will include all commutation steps
    for (int i = 0; i < 6; i++) {
-      if (motorState == RUNNING_REVERSE) {
+      if (motorState == STARTING_REVERSE) {
          // reverse...
          // need to know if the decrement will give an none existent state (negative)...
          if (--cs < 0) {
@@ -251,7 +243,7 @@ int start(int dutyCycle) {
       // Entering a loop for increasing duty cycle to move the motor in either direction? -should know which direction is the user input...
       // Clock frequency is 70 MHz => 14,3 ns per tick. For a 16 bit CCR register a full count-down will take approx. 936 µs
       //
-      for (int j = 0; j < dutyCycle; j++) {
+      for (int j = 1; j <= dutyCycle; j++) {
          compare_value = 65535*j/100;
          if (activeHighSidePhase == R) {
             TIM2->CCR1 = compare_value;
@@ -263,9 +255,11 @@ int start(int dutyCycle) {
             TIM2->CCR3 = compare_value;
          }
          
-         printf("activeHighSidePhase: %d low-side: 0x%x\r\n", activeHighSidePhase, (unsigned int)GPIOA->ODR);
-         HAL_Delay(200);
+         //printf("activeHighSidePhase: %d low-side: 0x%x\r\n", activeHighSidePhase, (unsigned int)GPIOA->ODR);
+         HAL_Delay(100);
 
+         // Check if the starting sequence has started to rotate the rotor...
+         // If so, we can assume that the motor is starting to run...
          if (hallStateChanged == 1) {
             printf("hallStateChanged\r\n");
             hallStateChanged = 0;
@@ -295,11 +289,19 @@ int start(int dutyCycle) {
             // Set low side gates according to the current hall sensor states.
             GPIOA->ODR |= 0x38; //
             // Using the latest user input for PWM settings updated in the run() routine,
+            if (++j >= dutyCycle) {
+               dcStart = j;
+            }
+            else {
+               dcStart = dutyCycle;
+            }
+            pwmUpdate(dcStart);
             // and turn on the relevant high side transistor.
             pwmChannel(highSide[cs]);
             // Turn on the low side transistor...
             GPIOA->ODR = (GPIOA->ODR & ~(0x7 << 3)) | (low_side[cs]);
             //
+            // It is now expected that the interrupt service routine is to handle the rest of the show...
             return 1;
          }
       }
@@ -323,3 +325,73 @@ void pwmUpdate(int dc) {
       TIM2->CCR3 = 65535*dc/100;
    }
 }
+int userInput() {
+  uint32_t adcReading = 0;
+  float dc = 0;
+  adcReading = HAL_ADC_GetValue(&hadc1);
+  dc = 200*((adcReading-2048.0)/4096.0);
+  if (dc < 0)
+     dc = (-1)*dc;
+  if (dc > 99)
+     dc = 99.0;
+  else if (dc < 1)
+     dc =1.0;
+
+  return (int)dc;
+}
+/*
+runTest is a function that users can start from the command-line interface by 
+entering the command 'test'. NEEDS TO BE IMPLEMENTED IN cmd.c and main.c ...
+Note! Should be improved...
+*/
+void runTest(int dc) {
+   int dutyCycle = 0;
+   int userInputDC;
+   int cs = 5; // will start at commutation state 0...
+   int activeHighSidePhase = N;
+   // We'll make sure that the motor is stopped.
+   stop();
+   dutyCycle = dc;
+   pwmUpdate(dutyCycle);
+   printf("\r\nTesting...\r\n");
+   while (motorState == TESTING) {
+      // Make a loop that will include all commutation steps, and run in a forward direction.
+      for (int i = 0; i < 6; i++) {
+         if (++cs > 5) {
+            cs = 0;
+         }
+
+         GPIOA->ODR |= 0x38; // set all low side gate signals high as the driver will invert these and cut off the transistors...
+                           // Remember that the low-side gate are assigned A3-A5.
+         
+         if ((cs == 0) || (cs == 1)) {
+            activeHighSidePhase = R;
+         }
+         else if ((cs == 2) || (cs == 3)) {
+            activeHighSidePhase = S;
+         }
+         else if ((cs == 4) || (cs == 5)) {
+            activeHighSidePhase = T;
+         }
+         // Start the relevant high-side transistor
+         pwmChannel(activeHighSidePhase);
+         // Now that the PWM is "running" on one of the high side gates, the relevant low side transistors can be "opened".
+         
+         // Open the relevant low-side transistor according to the commutation state
+         GPIOA->ODR  = (GPIOA->ODR & ~(0x7 << 3)) | (low_side[cs]);
+         // Keep the commutation state for ...
+         HAL_Delay(100);
+         userInputDC = userInput();
+         // Or get new user input...
+         if ((userInputDC > dutyCycle + 1) || (userInputDC < dutyCycle - 1)) {
+            dutyCycle = userInputDC;
+            pwmUpdate(dutyCycle);
+            printf("User input(testing): %d%% Duty Cycle\r\n", (int) dutyCycle);
+         }
+      }
+   }
+   stop();
+   motorState = IDLE;
+   printf("Testing aborted\r\n");
+}
+

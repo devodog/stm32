@@ -94,13 +94,9 @@ int highSide[6] = {1,1,2,2,3,3};
 extern uint8_t low_side[6];
 
 int dutyCycle = 0;
-enum State{
-   IDLE,
-   STARTING_FORWARD,
-   STARTING_REVERSE,
-   RUNNING_FORWARD,
-   RUNNING_REVERSE
-};
+int dcStart = 0;
+int stopTest = 1;
+
 enum State motorState = IDLE;
 uint16_t hallState;
 uint8_t hallStateChanged = 0;
@@ -115,16 +111,16 @@ uint8_t hallStateChanged = 0;
  *
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {   
-   uint16_t hallState = (GPIOB->IDR & 0x70) >> 4;
    uint8_t commutationState;
-   // For test
-   //printf("\r\nhall state = 0x%x", hs);
+   uint16_t hallState = (GPIOB->IDR & 0x70) >> 4;
+   // We'll excite the current position...
 
    if ((motorState == STARTING_FORWARD) || (motorState == STARTING_REVERSE)) {
       hallStateChanged = 1;
       return;
    }
    commutationState = hallStates[hallState];
+
    if (motorState == RUNNING_REVERSE) {
       // reverse...
       // need to know if the decrement will give an none existent state (negative)...
@@ -138,7 +134,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
    // Set low side gates according to the current hall sensor states.
    GPIOA->ODR |= 0x38; //
-   // Using the latest user input for PWM settings updated in the run() routine,
+
+   // Using the initial user input for PWM settings update the pwmUpdate()
+   // routine in steps until it matches the users input
+   if (++dcStart < dutyCycle) {
+      pwmUpdate(dcStart);
+   }
    // and turn on the relevant high side transistor.
    pwmChannel(highSide[commutationState]);
    // Turn on the low side transistor...
@@ -186,20 +187,21 @@ void getUserInput() {
    uint32_t adcReading = 0;
    float dc = 0;
 
-
    adcReading = HAL_ADC_GetValue(&hadc1);
 
    if ((adcReading < (IDLE_STATE + POTMETER_TOLERANCE)) && (adcReading > (IDLE_STATE - POTMETER_TOLERANCE))) {
       if (motorState != IDLE) {
          motorState = IDLE;
-         printf("Motor is halted...\r\n");
-         //stop();
+         printf("Motor is halted...");
+         promt();
       }
       // some kind of indication that the motor is idle
-      if (++c > 9) {
-         printf("Motor is idle...\r\n");
+      if (++c > 19) {
+         printf("Motor is idle...");
+         promt();
          c = 0;
       }
+
       return;
    }
 
@@ -220,32 +222,39 @@ void getUserInput() {
 
       start((int)dc);
    }
+   // The following code is used for TEST of the start up sequence...
    else if ((motorState == STARTING_FORWARD) || (motorState == STARTING_REVERSE)) {
-      if (dc < 0) {
+      if (dc < 0)
          dc = dc*(-1);
-         motorState = RUNNING_REVERSE;
-         printf("Reverse starting...\r\n");
-      }
-      else {
-         motorState = RUNNING_FORWARD;
-         printf("Forward starting...\r\n");
-      }
 
-      start((int)dc);
+      if ((dc > dutyCycle + 2) || (dc < dutyCycle - 2)) { // Only interested in change in user input.
+         // If dc is more than the previous set dutyCycle plus some tolerance, then update the dytyCycle.
+         // If dc is less than the previous set dutyCycle minus some tolerance, then update the dytyCycle.
+         dutyCycle = (int)dc;
+         //printf("ADC Readings: %ld = ", adcReading);
+         //printf("dc: %.3f \r\n", dc);
+         printf("User input(start): %d%% Duty Cycle\r\n", (int) dutyCycle);
+         start((int)dc);
+      }
    }
+   // The following code is to handle dynamic motor speed operation.
    else if ((motorState == RUNNING_FORWARD) || (motorState == RUNNING_REVERSE)) {
       if (dc < 0)
          dc = dc*(-1);
 
-      if ((dc > dutyCycle + 1) || (dc < dutyCycle - 1)) {
+      if ((dc > dutyCycle + 1) || (dc < dutyCycle - 1)) { // Only interested in change in user input.
          // If dc is more than the previous set dutyCycle plus some tolerance, then update the dytyCycle.
          // If dc is less than the previous set dutyCycle minus some tolerance, then update the dytyCycle.
          dutyCycle = (int)dc;
-         printf("ADC Readings: %ld\r\n", adcReading);
-         printf("dc: %.3f \r\n", dc);
-         printf("Duty Cycle: %d \r\n", (int) dutyCycle);
+         //printf("ADC Readings: %ld = ", adcReading);
+         //printf("dc: %.3f \r\n", dc);
+         printf("User input: %d%% Duty Cycle\r\n", (int) dutyCycle);
       }
       pwmUpdate(dutyCycle);
+   }
+   // The following code is for TESTING the PWM dynamics...
+   else if (motorState == TESTING) {
+     runTest((int)dc);
    }
 }
 
@@ -292,7 +301,9 @@ int main(void)
   // Output debug information
   //debug_PA2_configuration();
 
-  printf("\r\nCommand line ready...\r\n\r\n");
+  printf("\r\n>>> BLDC driver Ver. %d.%d >>>", MAJOR_VERSION, MINOR_VERSION);
+  printf("\r\n>>> Build Number: %d, Build Date: %s >>>\r\n", BUILD, BUILD_DATE_AND_TIME);
+  promt();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -303,12 +314,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    // Polling for user potmeter-input...
+    getUserInput();
+    HAL_Delay(1000); // using 5 sec for test without motor...
 
-     // Polling for user input...
-     getUserInput();
-     HAL_Delay(1000);
-
-     __WFI(); // optional: wait for interrupt to save power
+    __WFI(); // optional: wait for interrupt to save power
   }
 
   /* USER CODE END 3 */
