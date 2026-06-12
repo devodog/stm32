@@ -1,0 +1,5 @@
+Make a board-to-board wire-connectors (femal on both ends) for 6 wires.
+Need a LDO 24V to 5V
+TEST equipment
+Y-connected symmetrical load
+Place nucleo board on motor rig

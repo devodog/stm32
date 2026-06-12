@@ -113,13 +113,20 @@ uint8_t hallStateChanged = 0;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {   
    uint8_t commutationState;
    uint16_t hallState = (GPIOB->IDR & 0x70) >> 4;
-   // We'll excite the current position...
 
+   // Switch off the low side transistors (signals inverted in the gate driver)
+   GPIOA->ODR |= 0x38; //
+
+   // If the motor is in starting mode, we'll just set the hallStateChange and
+   // return and hope that the startup process can finish by it self...
    if ((motorState == STARTING_FORWARD) || (motorState == STARTING_REVERSE)) {
       hallStateChanged = 1;
       return;
    }
+   // We now have a running motor and we'll determine the commutation step
+   // to use.
    commutationState = hallStates[hallState];
+   //printf("hallState=0x%x  comm=%d  lowside=0x%x\r\n", hallState, commutationState, low_side[commutationState]);
 
    if (motorState == RUNNING_REVERSE) {
       // reverse...
@@ -132,8 +139,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
       commutationState = 0;
    }
 
-   // Set low side gates according to the current hall sensor states.
-   GPIOA->ODR |= 0x38; //
 
    // Using the initial user input for PWM settings update the pwmUpdate()
    // routine in steps until it matches the users input
@@ -192,6 +197,9 @@ void getUserInput() {
    if ((adcReading < (IDLE_STATE + POTMETER_TOLERANCE)) && (adcReading > (IDLE_STATE - POTMETER_TOLERANCE))) {
       if (motorState != IDLE) {
          motorState = IDLE;
+         // Silence the high side gate signals...
+         stop();
+
          printf("Motor is halted...");
          promt();
       }

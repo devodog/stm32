@@ -12,10 +12,10 @@
 #ifndef INC_APPVER_H_
 #define INC_APPVER_H_
 
-#define BUILD 41
+#define BUILD 58
 #define MAJOR_VERSION 0
 #define MINOR_VERSION 1
 // The "2026-06-05 15:27:06.897016"
-#define BUILD_DATE_AND_TIME "2026-06-11 14:49:45"
+#define BUILD_DATE_AND_TIME "2026-06-12 13:56:33"
 
 #endif /* INC_APPVER_H_ */

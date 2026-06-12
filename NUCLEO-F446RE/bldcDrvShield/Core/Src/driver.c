@@ -107,23 +107,33 @@ inverts the low side gate drivers.
  * should be also completed.
 
        [hall readout] - defining the rotor's position
-             v
-   hallState[5] = 1; <-- switching states...(gateDriverState)
-   hallState[1] = 2;
-   hallState[3] = 3;
-   hallState[2] = 4;
-   hallState[6] = 5;
-   hallState[4] = 6;
+             v                v
+   hallState[5] = 0; 5; 4; 3; 2; 1; <-- switching states...(gateDriverState)
+   hallState[1] = 1; 0; 5; 4; 3; 2;
+   hallState[3] = 2; 1; 0; 5; 4; 3;
+   hallState[2] = 3; 2; 1; 0; 5; 4;
+   hallState[6] = 4; 3; 2; 1; 0; 5;
+   hallState[4] = 5; 4; 3; 2; 1; 0;
 
  * PWM for one of the high side transistors
  *
  *
  */
-uint8_t gateDriverStates[6] = {0x29, 0x19, 0x1a, 0x32, 0x34, 0x2c};
-// mapping between hall states(index) and commutation states(values)
-uint8_t hallStates[7] = {0, 2, 4, 3, 6, 1, 5};
 
-uint16_t low_side[6] = {0x28, 0x18, 0x18, 0x30, 0x30, 0x28};
+//uint8_t gateDriverStates[6] = {0x29, 0x19, 0x1a, 0x32, 0x34, 0x2c};
+// mapping between hall states(index) and commutation states(values)
+
+//uint8_t hallStates[7] = {0, 1, 3, 2, 5, 0, 4};
+//uint8_t hallStates[7] = {0, 0, 2, 1, 4, 5, 3};
+//uint8_t hallStates[7] = {0, 5, 1, 0, 3, 4, 2};
+//uint8_t hallStates[7] = {0, 4, 0, 5, 2, 3, 1};
+ uint8_t hallStates[7] = {0, 3, 5, 4, 1, 2, 0}; //(ok forward and reverse)
+//uint8_t hallStates[7] = {0, 2, 4, 3, 0, 1, 5};
+
+// The zero position in the array above is never used since the hall sensors
+// readout will never be 0 - the index is the hall sensor readout.
+
+uint8_t low_side[6] = {0x28, 0x18, 0x18, 0x30, 0x30, 0x28};
 
 extern ADC_HandleTypeDef hadc1;
 extern int stopTest;
